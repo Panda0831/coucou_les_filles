@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion | Ma Plateforme</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-6">
+
+    <div class="max-w-md w-full bg-white rounded-3xl shadow-2xl p-8 md:p-10 border border-gray-100">
+        
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 text-white rounded-2xl shadow-lg mb-4">
+                <i class="fas fa-lock text-2xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-900">Ravi de vous revoir</h1>
+            <p class="text-gray-500 text-sm mt-1">Accédez à votre espace client</p>
+        </div>
+
+        {% if messages %}
+            <div class="mb-6 space-y-2">
+                {% for message in messages %}
+                    <div class="p-3 rounded-xl bg-red-50 border border-red-100 text-red-600 text-xs font-medium flex items-center">
+                        <i class="fas fa-circle-exclamation mr-2"></i>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'users:connexion' %}" class="space-y-5">
+            {% csrf_token %}
+            
+            <div class="flex flex-col space-y-1.5">
+                <label for="username" class="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">
+                    Nom d'utilisateur
+                </label>
+                <div class="relative group">
+                    <input type="text" name="username" id="username" required placeholder="Votre pseudo">
+                </div>
+            </div>
+
+            <div class="flex flex-col space-y-1.5">
+                <label for="password" class="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">
+                    Mot de passe
+                </label>
+                <div class="relative group">
+                    <input type="password" name="password" id="password" required placeholder="••••••••">
+                </div>
+            </div>
+
+            <div class="pt-2">
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 rounded-2xl transition duration-300 shadow-lg shadow-indigo-200 active:scale-95">
+                    Se connecter
+                </button>
+            </div>
+        </form>
+
+        <div class="mt-8 text-center">
+            <p class="text-gray-500 text-xs">
+                Pas encore inscrit ? 
+                <a href="{% url 'users:inscription' %}" class="text-indigo-600 font-bold hover:text-indigo-800 underline-offset-4 hover:underline">Créer un compte</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('input').forEach(el => {
+            if (el.type !== 'file') {
+                el.classList.add('w-full', 'px-4', 'py-3', 'rounded-2xl', 'bg-gray-50', 'border-0', 'ring-1', 'ring-gray-200', 'focus:ring-2', 'focus:ring-indigo-500', 'outline-none', 'transition', 'text-gray-700', 'text-sm');
+            }
+        });
+    </script>
+</body>
+</html>

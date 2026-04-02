@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Hackathon{% endblock %}</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+    <style>
+        /* ══════════════════════════════════════════════════════
+           TOKENS — Light
+        ══════════════════════════════════════════════════════ */
+        :root {
+            --ink:     #0f0e17;
+            --paper:   #faf9f6;
+            --surface: #ffffff;
+            --accent:  #e8552b;
+            --muted:   #6b6970;
+            --line:    #e4e2dd;
+            --radius:  12px;
+            --nav-h:   72px;
+        }
+
+        /* ── Dark tokens ─────────────────────────────────────── */
+        [data-theme="dark"] {
+            --ink:     #f0efe8;
+            --paper:   #0f0e17;
+            --surface: #1a1926;
+            --accent:  #e8552b;
+            --muted:   #8c8a96;
+            --line:    #2a2838;
+        }
+
+        /* ══════════════════════════════════════════════════════
+           BASE
+        ══════════════════════════════════════════════════════ */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+            transition: background .35s ease, color .35s ease;
+        }
+
+        /* ══════════════════════════════════════════════════════
+           NAVBAR
+        ══════════════════════════════════════════════════════ */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: var(--nav-h);
+            background: color-mix(in srgb, var(--paper) 88%, transparent);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--line);
+            display: flex;
+            align-items: center;
+            transition: background .35s, border-color .35s;
+        }
+
+        .navbar-inner {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+        .logo-mark {
+            width: 36px; height: 36px;
+            background: var(--ink);
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            transition: transform .2s, background .35s;
+        }
+        .logo:hover .logo-mark { transform: rotate(-8deg) scale(1.08); }
+        .logo-mark i { color: var(--paper); font-size: 14px; transition: color .35s; }
+        .logo-text {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.25rem;
+            color: var(--ink);
+            letter-spacing: -.02em;
+            transition: color .35s;
+        }
+
+        .nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+        .nav-links a {
+            font-size: .875rem;
+            font-weight: 500;
+            color: var(--muted);
+            text-decoration: none;
+            transition: color .15s;
+            position: relative;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -3px; left: 0;
+            width: 0; height: 2px;
+            background: var(--accent);
+            border-radius: 2px;
+            transition: width .2s;
+        }
+        .nav-links a:hover { color: var(--ink); }
+        .nav-links a:hover::after { width: 100%; }
+
+        .nav-actions { display: flex; align-items: center; gap: 12px; }
+
+        /* User pill */
+        .user-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 999px;
+            padding: 4px 14px 4px 4px;
+            text-decoration: none;
+            transition: background .35s, border-color .2s;
+        }
+        .user-pill:hover { border-color: var(--muted); }
+        .avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
+        .avatar-initials {
+            width: 30px; height: 30px;
+            border-radius: 50%;
+            background: var(--ink);
+            color: var(--paper);
+            font-size: .7rem;
+            font-weight: 700;
+            display: flex; align-items: center; justify-content: center;
+            transition: background .35s, color .35s;
+        }
+        .user-name { font-size: .8rem; font-weight: 600; color: var(--ink); transition: color .35s; }
+
+        /* ── THEME TOGGLE ────────────────────────────────────── */
+        .theme-btn {
+            width: 38px; height: 38px;
+            border-radius: 10px;
+            border: 1.5px solid var(--line);
+            background: var(--surface);
+            color: var(--muted);
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            font-size: .9rem;
+            transition: border-color .2s, color .2s, transform .2s, background .35s;
+            position: relative;
+            overflow: hidden;
+        }
+        .theme-btn:hover { border-color: var(--ink); color: var(--ink); }
+
+        /* Animated icon swap */
+        .theme-btn .icon-sun,
+        .theme-btn .icon-moon {
+            position: absolute;
+            transition: opacity .3s ease, transform .3s ease;
+        }
+        /* Light mode: show moon, hide sun */
+        [data-theme="light"] .theme-btn .icon-sun  { opacity: 0; transform: rotate(90deg) scale(.5); }
+        [data-theme="light"] .theme-btn .icon-moon { opacity: 1; transform: rotate(0deg) scale(1); }
+        /* Dark mode: show sun, hide moon */
+        [data-theme="dark"]  .theme-btn .icon-sun  { opacity: 1; transform: rotate(0deg) scale(1); }
+        [data-theme="dark"]  .theme-btn .icon-moon { opacity: 0; transform: rotate(-90deg) scale(.5); }
+
+        /* ── BUTTONS ─────────────────────────────────────────── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 9px 20px;
+            border-radius: var(--radius);
+            font-size: .875rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            transition: all .15s;
+            font-family: inherit;
+            letter-spacing: .01em;
+        }
+        .btn-ghost  { background: transparent; color: var(--muted); }
+        .btn-ghost:hover { color: var(--ink); background: var(--line); }
+        .btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
+        .btn-outline:hover { border-color: var(--ink); }
+        .btn-primary { background: var(--ink); color: var(--paper); box-shadow: 0 2px 8px rgba(15,14,23,.15); }
+        .btn-primary:hover { box-shadow: 0 4px 16px rgba(15,14,23,.25); transform: translateY(-1px); }
+        .btn-primary:active { transform: translateY(0); }
+        .btn-danger { background: transparent; color: #c0392b; border: 1.5px solid #f5c6c2; }
+        .btn-danger:hover { background: #fdf3f2; }
+
+        /* ══════════════════════════════════════════════════════
+           FLASH MESSAGES
+        ══════════════════════════════════════════════════════ */
+        .flash-container { max-width: 1200px; margin: 0 auto; padding: 16px 24px 0; }
+        .flash {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 13px 16px;
+            border-radius: var(--radius);
+            font-size: .875rem;
+            font-weight: 500;
+            border: 1px solid transparent;
+            margin-bottom: 8px;
+            animation: slideDown .25s ease;
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-8px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        [data-theme="light"] .flash-success { background:#edfbf3; border-color:#b2edcc; color:#1a6640; }
+        [data-theme="light"] .flash-error   { background:#fdf3f2; border-color:#f5c6c2; color:#922b21; }
+        [data-theme="light"] .flash-warning { background:#fffbeb; border-color:#fde68a; color:#92400e; }
+        [data-theme="light"] .flash-info    { background:#eff6ff; border-color:#bfdbfe; color:#1e40af; }
+
+        [data-theme="dark"] .flash-success  { background:#0a2016; border-color:#1a6640; color:#6ee89b; }
+        [data-theme="dark"] .flash-error    { background:#200a0a; border-color:#7b2020; color:#f5a3a0; }
+        [data-theme="dark"] .flash-warning  { background:#20180a; border-color:#7a3a0a; color:#fcd585; }
+        [data-theme="dark"] .flash-info     { background:#0a1020; border-color:#1a30a0; color:#93c5fd; }
+
+        .flash-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: inherit;
+            opacity: .6;
+            font-size: .75rem;
+            padding: 0;
+        }
+        .flash-close:hover { opacity: 1; }
+
+        /* ══════════════════════════════════════════════════════
+           MAIN
+        ══════════════════════════════════════════════════════ */
+        .main {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 48px 24px;
+        }
+
+        /* ══════════════════════════════════════════════════════
+           FOOTER
+        ══════════════════════════════════════════════════════ */
+        footer {
+            background: var(--surface);
+            border-top: 1px solid var(--line);
+            transition: background .35s, border-color .35s;
+        }
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            align-items: center;
+            gap: 24px;
+        }
+        .footer-brand { display: flex; align-items: center; gap: 8px; }
+        .footer-mark {
+            width: 28px; height: 28px;
+            background: var(--ink);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            transition: background .35s;
+        }
+        .footer-mark i { color: var(--paper); font-size: 11px; transition: color .35s; }
+        .footer-brand-name { font-family: 'DM Serif Display', serif; font-size: 1rem; color: var(--ink); transition: color .35s; }
+        .footer-copy { font-size: .8rem; color: var(--muted); text-align: center; }
+        .footer-links { display: flex; gap: 16px; justify-content: flex-end; }
+        .footer-links a {
+            width: 34px; height: 34px;
+            border-radius: 8px;
+            border: 1px solid var(--line);
+            display: flex; align-items: center; justify-content: center;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: .875rem;
+            transition: all .15s;
+        }
+        .footer-links a:hover { border-color: var(--ink); color: var(--ink); }
+
+        /* ══════════════════════════════════════════════════════
+           MOBILE
+        ══════════════════════════════════════════════════════ */
+        .burger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px;
+            color: var(--ink);
+            font-size: 1.1rem;
+        }
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: var(--nav-h); left: 0; right: 0; bottom: 0;
+            background: var(--paper);
+            z-index: 99;
+            padding: 32px 24px;
+            flex-direction: column;
+            gap: 24px;
+            animation: fadeIn .2s ease;
+            transition: background .35s;
+        }
+        @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+        .mobile-menu.open { display: flex; }
+        .mobile-nav-links { list-style: none; display: flex; flex-direction: column; }
+        .mobile-nav-links a {
+            display: block;
+            padding: 14px 0;
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: var(--ink);
+            text-decoration: none;
+            border-bottom: 1px solid var(--line);
+            transition: color .35s;
+        }
+        .mobile-actions { display: flex; flex-direction: column; gap: 10px; margin-top: auto; }
+
+        /* Mobile theme toggle */
+        .mobile-theme-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            transition: background .35s, border-color .35s;
+        }
+        .mobile-theme-row span { font-size: .9rem; font-weight: 500; color: var(--ink); transition: color .35s; }
+
+        /* Toggle pill */
+        .toggle-pill {
+            width: 44px; height: 24px;
+            border-radius: 999px;
+            background: var(--line);
+            border: none;
+            cursor: pointer;
+            position: relative;
+            transition: background .3s;
+            flex-shrink: 0;
+        }
+        .toggle-pill::after {
+            content: '';
+            position: absolute;
+            top: 3px; left: 3px;
+            width: 18px; height: 18px;
+            border-radius: 50%;
+            background: #fff;
+            box-shadow: 0 1px 4px rgba(0,0,0,.2);
+            transition: transform .3s ease;
+        }
+        [data-theme="dark"] .toggle-pill { background: var(--accent); }
+        [data-theme="dark"] .toggle-pill::after { transform: translateX(20px); }
+
+        @media (max-width: 768px) {
+            .desktop-nav  { display: none !important; }
+            .burger       { display: flex; }
+            .footer-inner { grid-template-columns: 1fr; text-align: center; }
+            .footer-links { justify-content: center; }
+            .footer-copy  { order: 3; }
+            .main         { padding: 32px 16px; }
+        }
+
+        .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+        /* ══════════════════════════════════════════════════════
+   WIDGET CHAT FLOTTANT
+══════════════════════════════════════════════════════ */
+.chat-wrapper {
+    position: fixed;
+    bottom: 120px;
+    right: 24px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+/* Bulle flottante */
+.chat-trigger {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: black;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.chat-trigger:hover {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+/* Fenêtre de chat */
+.chat-window {
+    width: 350px;
+    height: 450px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+    display: none; /* Caché par défaut */
+    flex-direction: column;
+    overflow: hidden;
+    margin-bottom: 16px;
+    animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.chat-window.active {
+    display: flex;
+}
+
+/* Header du chat */
+.chat-header {
+    padding: 16px;
+    background: var(--ink);
+    color: var(--paper);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chat-header h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+}
+
+/* Zone des messages */
+#chat-box {
+    flex: 1;
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: var(--paper);
+}
+
+.msg {
+    max-width: 85%;
+    padding: 10px 14px;
+    border-radius: 14px;
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
+
+.user-msg {
+    align-self: flex-end;
+    background: black;
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.ai-msg {
+    align-self: flex-start;
+    background: var(--line);
+    color: var(--ink);
+    border-bottom-left-radius: 4px;
+}
+
+/* Zone d'input */
+.chat-footer {
+    padding: 12px;
+    border-top: 1px solid var(--line);
+    display: flex;
+    gap: 8px;
+    background: var(--surface);
+}
+
+.chat-footer input {
+    flex: 1;
+    border: 1px solid var(--line);
+    background: var(--paper);
+    color: var(--ink);
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    outline: none;
+}
+
+.chat-footer input:focus {
+    border-color: black;
+}
+
+@media (max-width: 480px) {
+    .chat-window {
+        width: calc(100vw - 48px);
+        height: 60vh;
+    }
+}
+    </style>
+
+
+    <script>
+        (function() {
+            const saved = localStorage.getItem('myapp-theme')
+                || '{{ request.session.theme|default:"light" }}';
+            document.documentElement.setAttribute('data-theme', saved);
+        })();
+    </script>
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+
+<nav class="navbar" role="navigation" aria-label="Navigation principale">
+    <div class="navbar-inner">
+
+        <a href="{%url 'users:user_home'%}" class="logo" aria-label="Hackathon — Accueil">
+            <div class="logo-mark"><i class="fas fa-rocket"></i></div>
+            <span class="logo-text">Hackathon</span>
+        </a>
+
+        <ul class="nav-links desktop-nav" role="list">
+            <li><a href="{%url 'users:user_home'%}">Accueil</a></li>
+            <li><a href="#">Fonctionnalités</a></li>
+            <li><a href="#">À propos</a></li>
+        </ul>
+
+        <div class="nav-actions desktop-nav">
+
+            <button class="theme-btn" id="theme-toggle" aria-label="Changer le thème">
+                <i class="fas fa-sun icon-sun"></i>
+                <i class="fas fa-moon icon-moon"></i>
+            </button>
+
+            {% if user.is_authenticated %}
+
+                <a href="{% url 'users:profile' %}" class="user-pill">
+                    {% if user.photo %}
+                        <img src="{{ user.photo.url }}" class="avatar" alt="{{ user.username }}">
+                    {% else %}
+                        <div class="avatar-initials">{{ user.username|first|upper }}</div>
+                    {% endif %}
+                    <span class="user-name">{{ user.username }}</span>
+                </a>
+
+
+            {% endif %}
+        </div>
+
+        <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
+            <i class="fas fa-bars" id="burger-icon"></i>
+        </button>
+    </div>
+</nav>
+
+
+<div class="mobile-menu" id="mobile-menu" role="dialog" aria-label="Menu mobile">
+    <ul class="mobile-nav-links" role="list">
+        <li><a href="{%url 'users:user_home'%}">Accueil</a></li>
+        <li><a href="#">Fonctionnalités</a></li>
+        <li><a href="#">À propos</a></li>
+        {% if user.is_authenticated %}{% endif %}
+    </ul>
+
+    <div class="mobile-actions">
+
+        <div class="mobile-theme-row">
+            <span id="theme-label-mobile">Mode sombre</span>
+            <button class="toggle-pill" id="theme-toggle-mobile" aria-label="Changer le thème"></button>
+        </div>
+
+        {% if user.is_authenticated %}
+            <a href="{% url 'users:profile' %}" class="user-pill" style="justify-content:center;">
+                {% if user.photo %}
+                    <img src="{{ user.photo.url }}" class="avatar" alt="{{ user.username }}">
+                {% else %}
+                    <div class="avatar-initials">{{ user.username|first|upper }}</div>
+                {% endif %}
+                <span class="user-name">{{ user.username }}</span>
+            </a>
+
+        {% else %}
+            <a href="{% url 'users:connexion' %}" class="btn btn-outline" style="justify-content:center;">Connexion</a>
+            <a href="{% url 'users:inscription' %}" class="btn btn-primary" style="justify-content:center;">
+                Commencer <i class="fas fa-arrow-right" style="font-size:.75rem;"></i>
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+
+{% if messages %}
+<div class="flash-container" role="alert" aria-live="polite">
+    {% for message in messages %}
+        <div class="flash flash-{{ message.tags }}">
+            <i class="fas {% if message.tags == 'success' %}fa-circle-check{% elif message.tags == 'error' %}fa-circle-xmark{% elif message.tags == 'warning' %}fa-triangle-exclamation{% else %}fa-circle-info{% endif %}"></i>
+            <span>{{ message }}</span>
+            <button class="flash-close" aria-label="Fermer" onclick="this.parentElement.remove()">
+                <i class="fas fa-xmark"></i>
+            </button>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<main class="main">
+    {% block content %}{% endblock %}
+</main>
+
+
+<footer>
+    <div class="footer-inner">
+        <div class="footer-brand">
+            <div class="footer-mark"><i class="fas fa-rocket"></i></div>
+            <span class="footer-brand-name">Hackathon</span>
+        </div>
+        <p class="footer-copy">Hackathon III<sup>ème</sup> Édition · © 2026</p>
+        <div class="footer-links">
+            <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="#" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+        </div>
+    </div>
+</footer>
+
+<script>
+
+    const html       = document.documentElement;
+    const THEME_KEY  = 'myapp-theme';
+    const themeLabel = document.getElementById('theme-label-mobile');
+
+    function getTheme()  { return html.getAttribute('data-theme') || 'light'; }
+
+    function applyTheme(theme) {
+        html.setAttribute('data-theme', theme);
+        localStorage.setItem(THEME_KEY, theme);
+
+  
+        if (themeLabel) themeLabel.textContent = theme === 'dark' ? 'Mode clair' : 'Mode sombre';
+
+      
+        fetch("{% url 'users:changer_theme' %}", {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': getCsrf(),
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: 'theme=' + theme
+        }).catch(() => {});
+    }
+
+    function toggleTheme() {
+        applyTheme(getTheme() === 'dark' ? 'light' : 'dark');
+    }
+
+  
+    if (themeLabel) themeLabel.textContent = getTheme() === 'dark' ? 'Mode clair' : 'Mode sombre';
+
+  
+    document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+    document.getElementById('theme-toggle-mobile').addEventListener('click', toggleTheme);
+
+
+    function getCsrf() {
+        const m = document.cookie.match('(^|;)\\s*csrftoken\\s*=\\s*([^;]+)');
+        return m ? m.pop() : '';
+    }
+
+
+    const burger     = document.getElementById('burger');
+    const burgerIcon = document.getElementById('burger-icon');
+    const mobileMenu = document.getElementById('mobile-menu');
+
+    burger.addEventListener('click', () => {
+        const open = mobileMenu.classList.toggle('open');
+        burgerIcon.className = open ? 'fas fa-xmark' : 'fas fa-bars';
+        burger.setAttribute('aria-expanded', open);
+        document.body.style.overflow = open ? 'hidden' : '';
+    });
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            mobileMenu.classList.remove('open');
+            burgerIcon.className = 'fas fa-bars';
+            burger.setAttribute('aria-expanded', 'false');
+            document.body.style.overflow = '';
+        }
+    });
+
+
+    document.querySelectorAll('.flash').forEach(flash => {
+        setTimeout(() => {
+            flash.style.transition = 'opacity .4s, transform .4s';
+            flash.style.opacity = '0';
+            flash.style.transform = 'translateY(-6px)';
+            setTimeout(() => flash.remove(), 400);
+        }, 5000);
+    });
+    function toggleChat() {
+    const chatWindow = document.getElementById('chat-window');
+    const chatIcon = document.getElementById('chat-icon');
+    
+    chatWindow.classList.toggle('active');
+    
+    if (chatWindow.classList.contains('active')) {
+        chatIcon.className = 'fas fa-chevron-down';
+        document.getElementById('user-input').focus();
+    } else {
+        chatIcon.className = 'fas fa-comment-dots';
+    }
+}
+
+function handleKeyPress(e) {
+    if (e.key === 'Enter') {
+        sendMessage();
+    }
+}
+
+async function sendMessage() {
+    const inputField = document.getElementById("user-input");
+    const chatBox = document.getElementById("chat-box");
+    const message = inputField.value.trim();
+    
+    if (!message) return;
+
+    chatBox.innerHTML += `<div class="msg user-msg">${message}</div>`;
+    inputField.value = "";
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    try {
+        const response = await fetch("/api/chat/", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCsrf()
+            },
+            body: JSON.stringify({ message })
+        });
+        
+        const data = await response.json();
+        
+        if (data.reply) {
+            chatBox.innerHTML += `<div class="msg ai-msg">${data.reply}</div>`;
+        } else {
+            chatBox.innerHTML += `<div class="msg ai-msg" style="color:var(--accent);">Désolé, une erreur est survenue.</div>`;
+        }
+    } catch (error) {
+        console.error("Erreur Fetch:", error);
+    }
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+</script>
+
+{% block extra_scripts %}{% endblock %}
+<div class="chat-wrapper">
+    <div class="chat-window" id="chat-window">
+        <div class="chat-header">
+            <h3><i class="fas fa-robot mr-2"></i> IA de Ryan</h3>
+            <button onclick="toggleChat()" style="background:none; border:none; color:inherit; cursor:pointer;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div id="chat-box">
+            <div class="msg ai-msg">Bonjour ! Comment puis-je vous aider aujourd'hui ?</div>
+        </div>
+
+        <div class="chat-footer">
+            <input type="text" id="user-input" placeholder="Posez votre question..." onkeypress="handleKeyPress(event)">
+            <button class="btn btn-primary" style="padding: 8px 12px;" onclick="sendMessage()">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="chat-trigger" onclick="toggleChat()">
+        <i class="fas fa-comment-dots" id="chat-icon"></i>
+    </div>
+</div>
+</body>
+</html>

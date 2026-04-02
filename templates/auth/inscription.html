@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Création de compte | Ma Plateforme</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-6">
+
+    <div class="max-w-md w-full bg-white rounded-3xl shadow-2xl p-8 md:p-10 border border-gray-100">
+        
+        <div class="text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-indigo-600 text-white rounded-2xl shadow-lg mb-4">
+                <i class="fas fa-user-plus text-2xl"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-gray-900">Bienvenue parmi nous</h1>
+            <p class="text-gray-500 text-sm mt-1">Créez votre profil client en un instant</p>
+        </div>
+
+        <form method="post" enctype="multipart/form-data" class="space-y-5">
+            {% csrf_token %}
+            
+            {% for field in form %}
+                <div class="flex flex-col space-y-1.5">
+                    <label for="{{ field.id_for_label }}" class="text-xs font-bold text-gray-700 uppercase tracking-wider ml-1">
+                        {{ field.label }}
+                    </label>
+                    
+                    <div class="relative group">
+                        {{ field }}
+                    </div>
+
+                    {% if field.errors %}
+                        {% for error in field.errors %}
+                            <p class="text-red-500 text-[10px] font-medium mt-1 ml-1 leading-tight italic">{{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <div class="pt-2">
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3.5 rounded-2xl transition duration-300 shadow-lg shadow-indigo-200 active:scale-95">
+                    Créer mon profil
+                </button>
+            </div>
+        </form>
+
+        <div class="mt-8 text-center">
+            <p class="text-gray-500 text-xs">
+                Vous avez déjà un compte ? 
+                <a href="{% url 'users:connexion' %}" class="text-indigo-600 font-bold hover:text-indigo-800 underline-offset-4 hover:underline">Connectez-vous</a>
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.querySelectorAll('input').forEach(el => {
+            if (el.type !== 'file') {
+                el.classList.add('w-full', 'px-4', 'py-3', 'rounded-2xl', 'bg-gray-50', 'border-0', 'ring-1', 'ring-gray-200', 'focus:ring-2', 'focus:ring-indigo-500', 'outline-none', 'transition', 'text-gray-700', 'text-sm');
+                // Placeholder par défaut si vide
+                if(!el.placeholder) el.placeholder = "...";
+            } else {
+                el.classList.add('block', 'w-full', 'text-xs', 'text-slate-500', 'file:mr-4', 'file:py-2', 'file:px-4', 'file:rounded-full', 'file:border-0', 'file:text-xs', 'file:font-bold', 'file:bg-indigo-50', 'file:text-indigo-700', 'hover:file:bg-indigo-100', 'cursor-pointer', 'bg-slate-50', 'rounded-2xl', 'p-2');
+            }
+        });
+    </script>
+</body>
+</html>
