@@ -573,7 +573,9 @@
                     <span class="user-name">{{ user.username }}</span>
                 </a>
 
-
+            {% else %}
+                <a href="{% url 'users:connexion' %}" class="btn btn-ghost">Connexion</a>
+                <a href="{% url 'users:inscription' %}" class="btn btn-primary">Démarrer</a>
             {% endif %}
         </div>
 
@@ -588,7 +590,7 @@
     <ul class="mobile-nav-links" role="list">
         <li><a href="{%url 'users:user_home'%}">Accueil</a></li>
         <li><a href="#">Fonctionnalités</a></li>
-        <li><a href="#">À propos</a></li>
+        <li><a href="{%url 'users:about'%}">Qui sommes-nous</a></li>
         {% if user.is_authenticated %}{% endif %}
     </ul>
 

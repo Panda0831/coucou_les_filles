@@ -1,7 +1,14 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import User
+from .models import User, ChatMessage
 from .forms import CustomUserCreationForm, CustomUserChangeForm
+
+@admin.register(ChatMessage)
+class ChatMessageAdmin(admin.ModelAdmin):
+    list_display = ('user', 'message', 'created_at')
+    list_filter = ('user', 'created_at')
+    search_fields = ('message', 'response')
+    ordering = ('-created_at',)
 
 class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm

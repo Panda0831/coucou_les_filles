@@ -1,49 +1,70 @@
-{% extends "Base/base.html" %}
-{% block content %}
-  <body>
+{% extends "Base/base.html" %} {% block content %}
+<body>
     <main>
-      <h2>Discuter avec l'IA de Ryan</h2>
-      <div id="chat-box"></div>
-      <input type="text" id="user-input" placeholder="Tapez votre message ici..." />
-      <button id="send-btn" onclick="sendMessage()">Envoyer</button>
+        <h2>Discuter avec l'IA de Ryan</h2>
+        <div
+            id="chat-box"
+            style="
+                height: 400px;
+                overflow-y: auto;
+                border: 1px solid #ccc;
+                padding: 15px;
+                margin-bottom: 20px;
+                border-radius: 10px;
+                background: #f9f9f9;
+            "
+        >
+            {% for chat in messages_history %}
+            <p class="user-msg"><b>Vous:</b> {{ chat.message }}</p>
+            <p class="ai-msg"><b>IA:</b> {{ chat.response }}</p>
+            {% endfor %}
+        </div>
+        <div class="input-group mb-3">
+            <input
+                type="text"
+                id="user-input"
+                class="form-control"
+                placeholder="Tapez votre message ici..."
+            />
+            <button
+                id="send-btn"
+                class="btn btn-primary"
+                onclick="sendMessage()"
+            >
+                Envoyer
+            </button>
+        </div>
     </main>
 
- 
-
-    <a href="#" class="chat-bubble" title="Discuter avec l'IA">
-      <i class="fas fa-robot"></i>
-    </a>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-      function toggleMenu() {
-        document.getElementById("nav-links").classList.toggle("open");
-      }
-
-      async function sendMessage() {
-        const inputField = document.getElementById("user-input");
+        // scroll vers le bas du chat à l'ouverture de la page
         const chatBox = document.getElementById("chat-box");
-        const message = inputField.value;
-        if (!message) return;
-        chatBox.innerHTML += `<p class="user-msg"><b>Vous:</b> ${message}</p>`;
-        inputField.value = "";
-        try {
-          const response = await fetch("/api/chat/", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ message })
-          });
-          const data = await response.json();
-          if (data.reply) {
-            chatBox.innerHTML += `<p class="ai-msg"><b>IA:</b> ${data.reply}</p>`;
-          } else {
-            chatBox.innerHTML += `<p class="ai-msg" style="color:red;">Erreur: ${data.error}</p>`;
-          }
-        } catch (error) {
-          console.error("Erreur Fetch:", error);
-        }
         chatBox.scrollTop = chatBox.scrollHeight;
-      }
+
+        async function sendMessage() {
+            const inputField = document.getElementById("user-input");
+            const chatBox = document.getElementById("chat-box");
+            const message = inputField.value;
+            if (!message) return;
+            chatBox.innerHTML += `<p class="user-msg"><b>Vous:</b> ${message}</p>`;
+            inputField.value = "";
+            try {
+                const response = await fetch("/api/chat/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message }),
+                });
+                const data = await response.json();
+                if (data.reply) {
+                    chatBox.innerHTML += `<p class="ai-msg"><b>IA:</b> ${data.reply}</p>`;
+                } else {
+                    chatBox.innerHTML += `<p class="ai-msg" style="color:red;">Erreur: ${data.error}</p>`;
+                }
+            } catch (error) {
+                console.error("Erreur Fetch:", error);
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
     </script>
-  </body>
+</body>
 {% endblock %}
