@@ -1,4 +1,4 @@
-# 🚀 Projet Hackathon 2026 - Plateforme Intelligente avec IA
+### TEMPLATE
 
 ### 1. Cloner le projet
 
