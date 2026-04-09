@@ -15,15 +15,37 @@ Copiez le fichier d'exemple et ajoutez votre clé API Groq :
 cp .env.example .env
 ```
 
-### 3. Lancer l'installation et le serveur
+### 3. Lancer le projet
 
-Exécutez simplement notre script de démarrage :
+Exécutez notre script de démarrage interactif :
 
 ```bash
 ./start.sh
 ```
 
-_Le script va créer l'environnement virtuel, installer les dépendances, appliquer les migrations et lancer le serveur sur http://127.0.0.1:8000/._
+_Le script vous demandera si vous souhaitez utiliser **Docker** ou une installation **locale**._
+
+---
+
+## 🐳 Utilisation avec Docker (Recommandé)
+
+L'utilisation de Docker garantit que le projet fonctionnera de la même manière sur toutes les machines.
+
+### Démarrage rapide avec Docker
+1.  **Lancer le projet** : `./start.sh` (répondre `y` à la question sur Docker).
+2.  **Créer un Admin** (pendant que le conteneur tourne) :
+    ```bash
+    docker-compose exec web python manage.py createsuperuser --username admin --email admin@example.com
+    ```
+
+### Commandes Docker utiles
+- **Arrêter le projet** : `docker-compose down`
+- **Reconstruire l'image** : `docker-compose build`
+- **Voir les logs** : `docker-compose logs -f`
+
+---
+
+## 📦 Utilisation en Local (sans Docker)
 
 ## ⚡ Commandes Utiles (Trousse à outils)
 

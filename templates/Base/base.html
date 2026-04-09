@@ -449,6 +449,118 @@
         }
 
         .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+        /* ── FLOATING CHAT WIDGET ────────────────────────────── */
+        .chat-widget {
+            position: fixed;
+            bottom: 32px;
+            right: 32px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 16px;
+        }
+
+        .chat-bubble {
+            width: 64px;
+            height: 64px;
+            border-radius: 24px;
+            background: var(--ink);
+            color: var(--paper);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 12px 32px rgba(15,14,23,0.25);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 2px solid var(--surface);
+        }
+        .chat-bubble:hover {
+            transform: scale(1.1) rotate(-8deg);
+            background: var(--accent);
+            box-shadow: 0 16px 40px rgba(232,85,43,0.3);
+        }
+
+        .chat-panel {
+            width: 380px;
+            height: 520px;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 32px;
+            box-shadow: 0 24px 64px rgba(0,0,0,0.15);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            animation: widgetPop 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: bottom right;
+        }
+        .chat-panel.active { display: flex; }
+
+        @keyframes widgetPop {
+            from { opacity: 0; transform: scale(0.8) translateY(40px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .chat-panel-header {
+            padding: 24px;
+            background: var(--ink);
+            color: var(--paper);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-panel-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            background: var(--paper);
+        }
+
+        .w-msg {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            animation: fadeIn 0.3s ease;
+        }
+        .w-user-msg {
+            align-self: flex-end;
+            background: var(--ink);
+            color: var(--paper);
+            border-bottom-right-radius: 4px;
+        }
+        .w-ai-msg {
+            align-self: flex-start;
+            background: var(--surface);
+            color: var(--ink);
+            border: 1px solid var(--line);
+            border-bottom-left-radius: 4px;
+        }
+
+        .chat-panel-footer {
+            padding: 16px;
+            background: var(--surface);
+            border-top: 1px solid var(--line);
+            display: flex;
+            gap: 8px;
+        }
+
+        @media (max-width: 480px) {
+            .chat-panel {
+                width: calc(100vw - 40px);
+                height: 60vh;
+                right: 20px;
+                bottom: 100px;
+            }
+            .chat-widget { right: 20px; bottom: 20px; }
+        }
     </style>
 
 
@@ -659,6 +771,73 @@
         }, 5000);
     });
 </script>
+
+{% if request.resolver_match.url_name != 'chat_home' and user.is_authenticated %}
+    <div class="chat-widget">
+        <div class="chat-panel" id="chat-panel">
+            <div class="chat-panel-header">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-xl bg-[var(--accent)] flex items-center justify-center">
+                        <i class="fas fa-robot text-xs"></i>
+                    </div>
+                    <span class="font-bold text-sm">Assistant Ryan</span>
+                </div>
+                <button onclick="toggleWidget()" class="opacity-50 hover:opacity-100"><i class="fas fa-times"></i></button>
+            </div>
+            
+            <div id="widget-messages" class="chat-panel-messages">
+                <div class="w-msg w-ai-msg">Bonjour ! Besoin d'aide rapide ? Je suis là.</div>
+            </div>
+
+            <div class="chat-panel-footer">
+                <input type="text" id="widget-input" class="cool-input !py-3 !text-sm" placeholder="Votre message..." onkeypress="if(event.key==='Enter') sendWidgetMessage()">
+                <button onclick="sendWidgetMessage()" class="btn btn-primary !p-3">
+                    <i class="fas fa-paper-plane text-xs"></i>
+                </button>
+            </div>
+        </div>
+
+        <button class="chat-bubble" onclick="toggleWidget()">
+            <i class="fas fa-comment-dots" id="widget-icon"></i>
+        </button>
+    </div>
+
+    <script>
+        function toggleWidget() {
+            const panel = document.getElementById('chat-panel');
+            const icon = document.getElementById('widget-icon');
+            const isOpen = panel.classList.toggle('active');
+            
+            icon.className = isOpen ? 'fas fa-chevron-down' : 'fas fa-comment-dots';
+            if(isOpen) document.getElementById('widget-input').focus();
+        }
+
+        async function sendWidgetMessage() {
+            const input = document.getElementById('widget-input');
+            const container = document.getElementById('widget-messages');
+            const msg = input.value.trim();
+            if(!msg) return;
+
+            container.innerHTML += `<div class="w-msg w-user-msg">${msg}</div>`;
+            input.value = '';
+            container.scrollTop = container.scrollHeight;
+
+            try {
+                const response = await fetch("/api/chat/", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "X-CSRFToken": getCsrf() },
+                    body: JSON.stringify({ message: msg })
+                });
+                const data = await response.json();
+                if(data.reply) {
+                    container.innerHTML += `<div class="w-msg w-ai-msg">${data.reply}</div>`;
+                }
+            } catch (e) { console.error(e); }
+            container.scrollTop = container.scrollHeight;
+        }
+    </script>
+{% endif %}
+
 {% block extra_scripts %}{% endblock %}
 </body>
 </html>
