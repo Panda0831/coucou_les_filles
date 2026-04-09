@@ -1,58 +1,93 @@
 {% extends "Base/base.html" %}
 
-{% block title %}Inscription | Hackathon{% endblock %}
+{% block title %}Inscription | MamaSafe{% endblock %}
 
 {% block content %}
-<div class="flex items-center justify-center min-h-[70vh] py-12">
-    <div class="max-w-lg w-full bg-[var(--surface)] rounded-[40px] shadow-2xl p-10 md:p-12 border border-[var(--line)] transition-colors duration-350 relative overflow-hidden">
+<div class="flex items-center justify-center min-h-[70vh] py-12 px-4">
+    <div class="max-w-2xl w-full bg-[var(--surface)] rounded-[40px] shadow-2xl p-8 md:p-12 border border-[var(--line)] transition-colors duration-350 relative overflow-hidden">
         
-        <!-- Decoration background -->
         <div class="absolute -top-24 -right-24 w-48 h-48 bg-[var(--accent)] opacity-5 rounded-full blur-3xl"></div>
         <div class="absolute -bottom-24 -left-24 w-48 h-48 bg-[var(--ink)] opacity-5 rounded-full blur-3xl"></div>
 
-        <div class="text-center mb-12 relative">
-            <div class="inline-flex items-center justify-center w-20 h-20 bg-[var(--ink)] text-[var(--paper)] rounded-3xl shadow-xl mb-8 transform -rotate-6 hover:rotate-0 transition-transform duration-500">
-                <i class="fas fa-rocket text-3xl"></i>
+        <div class="text-center mb-10 relative">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-[var(--ink)] text-[var(--paper)] rounded-2xl shadow-xl mb-6 transform -rotate-6 hover:rotate-0 transition-transform duration-500">
+                <i class="fas fa-heartbeat text-2xl"></i>
             </div>
-            <h1 class="text-3xl font-bold text-[var(--ink)] tracking-tight font-serif-display">Rejoignez l'aventure</h1>
-            <p class="text-[var(--muted)] text-sm mt-3 max-w-[280px] mx-auto leading-relaxed">Prêt à explorer les possibilités de l'IA ? Créez votre compte en quelques secondes.</p>
+            <h1 class="text-3xl font-bold text-[var(--ink)] tracking-tight font-serif-display">Créer mon profil MamaSafe</h1>
+            <p class="text-[var(--muted)] text-sm mt-3 max-w-[320px] mx-auto leading-relaxed">Suivez votre santé et celle de votre bébé en toute sécurité.</p>
         </div>
 
-        <form method="post" enctype="multipart/form-data" class="space-y-6 relative">
+        <form method="post" enctype="multipart/form-data" class="space-y-8 relative">
             {% csrf_token %}
             
-            <div class="grid grid-cols-1 gap-6">
-                {% for field in form %}
-                    <div class="flex flex-col space-y-2">
-                        <label for="{{ field.id_for_label }}" class="text-[10px] font-black text-[var(--muted)] uppercase tracking-[0.2em] ml-2">
-                            {{ field.label }}
-                        </label>
-                        <div class="relative group">
-                            {{ field }}
-                            {% if field.errors %}
-                                {% for error in field.errors %}
-                                    <p class="text-red-500 text-[10px] mt-1.5 ml-2 font-bold flex items-center">
-                                        <i class="fas fa-exclamation-triangle mr-1.5"></i> {{ error }}
-                                    </p>
-                                {% endfor %}
-                            {% endif %}
-                        </div>
-                    </div>
-                {% endfor %}
+            <div class="space-y-6">
+                <div class="flex items-center gap-3">
+                    <span class="flex-none w-8 h-8 rounded-full bg-[var(--line)] text-[var(--ink)] flex items-center justify-center text-xs font-bold">1</span>
+                    <h3 class="text-[10px] font-black text-[var(--ink)] uppercase tracking-[0.2em]">Informations de connexion</h3>
+                    <div class="flex-grow h-px bg-[var(--line)]"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    {% for field in form %}
+                        {% if field.name == 'username' or field.name == 'email' or field.name == 'photo' %}
+                            <div class="flex flex-col space-y-2 {% if field.name == 'photo' or field.name == 'email' %}md:col-span-2{% endif %}">
+                                <label for="{{ field.id_for_label }}" class="text-[10px] font-black text-[var(--muted)] uppercase tracking-[0.2em] ml-2">
+                                    {{ field.label }}
+                                </label>
+                                <div class="relative group">
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        <p class="text-red-500 text-[10px] mt-1.5 ml-2 font-bold flex items-center">
+                                            <i class="fas fa-exclamation-triangle mr-1.5"></i> {{ field.errors.0 }}
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="space-y-6 pt-4">
+                <div class="flex items-center gap-3">
+                    <span class="flex-none w-8 h-8 rounded-full bg-[var(--line)] text-[var(--ink)] flex items-center justify-center text-xs font-bold">2</span>
+                    <h3 class="text-[10px] font-black text-[var(--ink)] uppercase tracking-[0.2em]">Données Médicales</h3>
+                    <div class="flex-grow h-px bg-[var(--line)]"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    {% for field in form %}
+                        {% if field.name != 'username' and field.name != 'email' and field.name != 'photo' %}
+                            <div class="flex flex-col space-y-2 {% if field.name == 'antecedents_medicaux' %}md:col-span-2{% endif %}">
+                                <label for="{{ field.id_for_label }}" class="text-[10px] font-black text-[var(--muted)] uppercase tracking-[0.2em] ml-2">
+                                    {{ field.label }}
+                                </label>
+                                <div class="relative group">
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        <p class="text-red-500 text-[10px] mt-1.5 ml-2 font-bold flex items-center">
+                                            <i class="fas fa-exclamation-triangle mr-1.5"></i> {{ field.errors.0 }}
+                                        </p>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
             </div>
 
             <div class="pt-8">
-                <button type="submit" class="w-full bg-[var(--ink)] hover:bg-[var(--accent)] text-[var(--paper)] font-bold py-4.5 rounded-2xl transition-all duration-300 shadow-xl hover:shadow-[var(--accent)]/30 active:scale-[0.97] flex items-center justify-center gap-3 group overflow-hidden">
-                    <span class="relative z-10">Créer mon profil</span>
-                    <i class="fas fa-sparkles text-sm group-hover:rotate-12 transition-transform relative z-10"></i>
+                <button type="submit" class="w-full bg-[var(--ink)] hover:bg-[var(--accent)] text-[var(--paper)] font-bold py-4.5 rounded-2xl transition-all duration-300 shadow-xl hover:shadow-[var(--accent)]/30 active:scale-[0.97] flex items-center justify-center gap-3 group">
+                    <span>Finaliser mon inscription</span>
+                    <i class="fas fa-arrow-right text-sm group-hover:translate-x-1 transition-transform"></i>
                 </button>
             </div>
         </form>
 
-        <div class="mt-12 pt-10 border-t border-[var(--line)] text-center relative">
+        <div class="mt-10 pt-8 border-t border-[var(--line)] text-center">
             <p class="text-[var(--muted)] text-sm font-medium">
-                Déjà l'un des nôtres ? 
-                <a href="{% url 'users:connexion' %}" class="text-[var(--ink)] font-black hover:text-[var(--accent)] transition-colors underline-offset-8 hover:underline decoration-2">Connectez-vous</a>
+                Déjà inscrite ? 
+                <a href="{% url 'users:connexion' %}" class="text-[var(--ink)] font-black hover:text-[var(--accent)] transition-colors underline-offset-8 hover:underline decoration-2">Se connecter</a>
             </p>
         </div>
     </div>
@@ -62,7 +97,8 @@
     .font-serif-display { font-family: 'DM Serif Display', serif; }
     
     /* Dynamic field styling */
-    input[type="text"], input[type="email"], input[type="password"], input[type="number"], select, textarea {
+    input[type="text"], input[type="email"], input[type="password"], 
+    input[type="number"], input[type="date"], select, textarea {
         width: 100% !important;
         padding: 0.875rem 1.25rem !important;
         border-radius: 1rem !important;
@@ -80,32 +116,33 @@
         background-color: var(--surface) !important;
     }
 
+    /* File input custom styling */
     input[type="file"] {
-        width: 100%;
-        font-size: 0.75rem;
-        color: var(--muted);
-        padding: 0.75rem;
-        background: var(--paper);
-        border-radius: 1rem;
-        border: 1px dashed var(--line);
+        padding: 0.5rem !important;
+        border: 1px dashed var(--line) !important;
+        background: var(--paper) !important;
+        cursor: pointer;
     }
 
     input[type="file"]::-webkit-file-upload-button {
         background: var(--ink);
         color: var(--paper);
         border: none;
-        padding: 0.5rem 1rem;
-        border-radius: 0.5rem;
+        padding: 0.4rem 1rem;
+        border-radius: 0.75rem;
         margin-right: 1rem;
         font-weight: bold;
+        font-size: 0.75rem;
         cursor: pointer;
-        transition: background 0.2s;
     }
 
-    input[type="file"]::-webkit-file-upload-button:hover {
-        background: var(--accent);
-    }
-
+    textarea { min-height: 100px; resize: none; }
+    
     .py-4\.5 { padding-top: 1.125rem; padding-bottom: 1.125rem; }
+
+    /* For smooth layout on mobile */
+    @media (max-width: 768px) {
+        .max-w-2xl { border-radius: 25px; padding: 1.5rem; }
+    }
 </style>
 {% endblock %}
