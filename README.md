@@ -64,3 +64,4 @@ L'utilisation de Docker garantit que le projet fonctionnera de la même manière
 
 ajout des membre dans about.html juste tape /about aminy url
 Retrouvez plus de détails sur l'équipe sur la page `/about/` de l'application.
+# hackathon2
