@@ -592,6 +592,7 @@
         <ul class="nav-links desktop-nav" role="list">
             <li><a href="{% url 'users:landing' %}">Accueil</a></li>
             <li><a href="{% url 'users:about' %}">L'Équipe</a></li>
+            <li><a href="{% url 'pregancy:ajouter_suivi' %}">Ajouter suivi</a></li>
             {% if user.is_authenticated %}
                 <li><a href="{% url 'users:user_home' %}">Dashboard</a></li>
                 <li><a href="{% url 'users:chat_home' %}">IA Ryan</a></li>
@@ -633,8 +634,9 @@
     <ul class="mobile-nav-links" role="list">
         <li><a href="{% url 'users:landing' %}">Accueil</a></li>
         <li><a href="{% url 'users:about' %}">L'Équipe</a></li>
+        <li><a href="{% url 'pregancy:ajouter_suivi' %}">Ajouter suivi</a></li>
         {% if user.is_authenticated %}
-            <li><a href="{% url 'pregancy:ajouter_suivi' %}">Ajouter suivi</a></li>
+            
             <li><a href="{% url 'users:user_home' %}">Dashboard</a></li>
             <li><a href="{% url 'users:chat_home' %}">IA Ryan</a></li>
             <li><a href="{% url 'users:profile' %}">Mon Profil</a></li>
