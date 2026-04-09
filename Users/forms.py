@@ -59,19 +59,79 @@ class CustomUserChangeForm(UserChangeForm):
 class SuiviHebdomadaireForm(forms.ModelForm):
     class Meta:
         model = SuiviHebdomadaire
-        fields = [
-            "semaine_grossesse",
-            "poids",
-            "tension_systolique",
-            "tension_diastolique",
-            "temperature",
-            "niveau_fatigue",
-            "niveau_stress",
-            "qualite_sommeil",
-            "douleur",
-            "nausees",
-            "vomissements",
-            "saignement",
-            "mouvement_bebe",
-            "commentaire",
-        ]
+        exclude = ["mere", "semaine_grossesse", "niveau_risque"]
+
+        widgets = {
+            "poids": forms.NumberInput(attrs={
+                "class": "form-control",
+                "step": "0.1",
+                "min": "20"
+            }),
+            "tension_systolique": forms.NumberInput(attrs={
+                "class": "form-control",
+                "min": "5",
+                "max": "25"
+            }),
+            "tension_diastolique": forms.NumberInput(attrs={
+                "class": "form-control",
+                "min": "3",
+                "max": "15"
+            }),
+            "temperature": forms.NumberInput(attrs={
+                "class": "form-control",
+                "step": "0.1",
+                "min": "30",
+                "max": "45"
+            }),
+            "niveau_fatigue": forms.Select(
+                choices=[(i, i) for i in range(1, 6)],
+                attrs={"class": "form-control"}
+            ),
+            "niveau_stress": forms.Select(
+                choices=[(i, i) for i in range(1, 6)],
+                attrs={"class": "form-control"}
+            ),
+            "qualite_sommeil": forms.Select(
+                choices=[(i, i) for i in range(1, 6)],
+                attrs={"class": "form-control"}
+            ),
+            "commentaire": forms.Textarea(attrs={
+                "rows": 4,
+                "class": "form-control"
+            }),
+            "douleur": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "nausees": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "vomissements": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "saignement": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+            "mouvement_bebe": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        }
+
+    def clean_temperature(self):
+        temperature = self.cleaned_data.get("temperature")
+
+        if temperature is not None and (temperature < 30 or temperature > 45):
+            raise forms.ValidationError("Température invalide.")
+
+        return temperature
+
+    def clean_poids(self):
+        poids = self.cleaned_data.get("poids")
+
+        if poids is not None and poids < 20:
+            raise forms.ValidationError("Poids invalide.")
+
+        return poids
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        systolique = cleaned_data.get("tension_systolique")
+        diastolique = cleaned_data.get("tension_diastolique")
+
+        if systolique is not None and diastolique is not None:
+            if diastolique >= systolique:
+                raise forms.ValidationError(
+                    "La tension diastolique doit être inférieure à la systolique."
+                )
+
+        return cleaned_data

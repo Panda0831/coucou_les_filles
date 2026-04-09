@@ -1,7 +1,9 @@
 from datetime import timedelta
+import datetime
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+
 
 class User(AbstractUser):
     GROUPE_SANGUIN_CHOIX = [
@@ -10,17 +12,26 @@ class User(AbstractUser):
         ('AB+', 'AB+'), ('AB-', 'AB-'),
         ('O+', 'O+'), ('O-', 'O-'),
     ]
+
     is_admin_user = models.BooleanField(default=False)
     is_customer = models.BooleanField(default=True)
-    age = models.PositiveIntegerField(null=True, blank=True,help_text="25")
-    taille = models.PositiveIntegerField(null=True, blank=True, help_text="En cm")
-    date_dernieres_regles = models.DateField(null=True)
+
+    age = models.PositiveIntegerField(null=True, blank=True, help_text="25")
+    date_dernieres_regles = models.DateField(null=True, blank=True)
     date_prevue_accouchement = models.DateField(null=True, blank=True)
     taille = models.PositiveIntegerField(null=True, blank=True, help_text="En cm")
-    poids_initial = models.FloatField(null=True,help_text="En kg")
-    groupe_sanguin = models.CharField(null=True, blank=True, max_length=5, choices=GROUPE_SANGUIN_CHOIX)
-    antecedents_medicaux = models.TextField(null=True,blank=True)
+    poids_initial = models.FloatField(null=True, blank=True, help_text="En kg")
+
+    groupe_sanguin = models.CharField(
+        null=True,
+        blank=True,
+        max_length=5,
+        choices=GROUPE_SANGUIN_CHOIX
+    )
+
+    antecedents_medicaux = models.TextField(null=True, blank=True)
     nombre_grossesses_precedentes = models.PositiveIntegerField(default=0)
+
     photo = models.ImageField(
         upload_to="profile_pictures/",
         default="profile_pictures/default.png",
@@ -30,22 +41,82 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
-    
+
     def accouchement(self):
         if self.date_dernieres_regles:
             return self.date_dernieres_regles + timedelta(days=280)
         return None
+
     @property
     def semaine_actuelle(self):
-        import datetime
+        if not self.date_dernieres_regles:
+            return 0
+
         delta = datetime.date.today() - self.date_dernieres_regles
-        return delta.days // 7
-    
+        return max(delta.days // 7, 0)
+
+    @property
+    def imc(self):
+        if self.taille and self.poids_initial:
+            taille_m = self.taille / 100
+            return round(self.poids_initial / (taille_m ** 2), 1)
+        return None
+
+    @property
+    def categorie_imc(self):
+        imc = self.imc
+
+        if imc is None:
+            return None
+        elif imc < 18.5:
+            return "Maigreur"
+        elif imc < 25:
+            return "Normal"
+        elif imc < 30:
+            return "Surpoids"
+        return "Obésité"
+
     def save(self, *args, **kwargs):
-        if not self.date_prevue_accouchement:
+        if self.date_dernieres_regles and not self.date_prevue_accouchement:
             self.date_prevue_accouchement = self.accouchement()
+
         super().save(*args, **kwargs)
 
+    def a_deja_rempli_suivi_cette_semaine(self):
+        return self.suivis_grossesse.filter(
+            semaine_grossesse=self.semaine_actuelle
+        ).exists()
+
+    def dernier_suivi(self):
+        return self.suivis_grossesse.order_by("-date_creation").first()
+
+    def poids_actuel(self):
+        dernier = self.dernier_suivi()
+        if dernier:
+            return dernier.poids
+        return self.poids_initial
+
+    def prise_poids_totale(self):
+        poids_actuel = self.poids_actuel()
+
+        if poids_actuel is not None and self.poids_initial is not None:
+            return round(poids_actuel - self.poids_initial, 1)
+
+        return 0
+
+    def risque_global(self):
+        dernier = self.dernier_suivi()
+        if dernier:
+            return dernier.niveau_risque
+        return "faible"
+
+    def nombre_alertes_non_lues(self):
+        return self.alertemedicale_set.filter(lu=False).count()
+
+    def alertes_non_lues(self):
+        return self.alertemedicale_set.filter(lu=False).order_by("-date_creation")
+    
+    
 class ChatMessage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="messages")
     message = models.TextField()
