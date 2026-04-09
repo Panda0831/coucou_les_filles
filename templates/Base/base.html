@@ -16,24 +16,24 @@
            TOKENS — Light
         ══════════════════════════════════════════════════════ */
         :root {
-            --ink:     #0f0e17;
-            --paper:   #faf9f6;
-            --surface: #ffffff;
-            --accent:  #e8552b;
-            --muted:   #6b6970;
-            --line:    #e4e2dd;
+            --ink:     #880E4F; /* Darker pink for text */
+            --paper:   #FCE4EC; /* Light pink background */
+            --surface: #FFFFFF;
+            --accent:  #E91E63; /* Vibrant pink accent */
+            --muted:   #AD1457; /* Muted pink */
+            --line:    #F8BBD0; /* Lighter pink for lines/borders */
             --radius:  12px;
             --nav-h:   72px;
         }
 
         /* ── Dark tokens ─────────────────────────────────────── */
         [data-theme="dark"] {
-            --ink:     #f0efe8;
-            --paper:   #0f0e17;
-            --surface: #1a1926;
-            --accent:  #e8552b;
-            --muted:   #8c8a96;
-            --line:    #2a2838;
+            --ink:     #F8BBD0; /* Light pink for text */
+            --paper:   #2C0B1B; /* Very dark pink background */
+            --surface: #3A1028; /* Darker pink surface */
+            --accent:  #E91E63; /* Vibrant pink accent */
+            --muted:   #A04070; /* Muted dark pink */
+            --line:    #5C203A; /* Dark pink for lines/borders */
         }
 
         /* ══════════════════════════════════════════════════════
@@ -45,12 +45,16 @@
         body {
             font-family: 'DM Sans', sans-serif;
             background: var(--paper);
+            background-image: var(--theme-background-pattern, url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23F8BBD0' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M11 0L0 11 11 22 22 11zM40 0L30 10 40 20 50 10z'/%3E%3C/g%3E%3C/svg%3E"));
             color: var(--ink);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             -webkit-font-smoothing: antialiased;
             transition: background .35s ease, color .35s ease;
+        }
+        [data-theme="dark"] {
+            --theme-background-pattern: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23A04070' fill-opacity='0.2' fill-rule='evenodd'%3E%3Cpath d='M11 0L0 11 11 22 22 11zM40 0L30 10 40 20 50 10z'/%3E%3E%3C/g%3E%3C/svg%3E");
         }
 
         /* ══════════════════════════════════════════════════════
