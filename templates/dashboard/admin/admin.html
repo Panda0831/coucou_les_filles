@@ -1,11 +1,154 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <p>je suis admin</p>
-</body>
-</html>
+{% extends "Base/base.html" %}
+
+{% block title %}Admin Dashboard · Hackathon{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto space-y-10 py-6">
+    
+    <!-- Admin Header -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 px-2">
+        <div class="flex items-center gap-5">
+            <div class="w-16 h-16 rounded-3xl bg-[var(--accent)] text-[var(--paper)] flex items-center justify-center shadow-xl rotate-3 hover:rotate-0 transition-transform duration-500">
+                <i class="fas fa-user-shield text-2xl"></i>
+            </div>
+            <div>
+                <h1 class="text-3xl font-black text-[var(--ink)] font-serif-display tracking-tight">Panneau d'Administration</h1>
+                <p class="text-[var(--muted)] text-sm font-bold uppercase tracking-widest mt-1">Gestion Système & Utilisateurs</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="px-4 py-2 rounded-2xl bg-[var(--surface)] border border-[var(--line)] flex items-center gap-3">
+                <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                <span class="text-xs font-bold text-[var(--ink)]">Serveur en ligne</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Stats Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="cool-card !p-6 flex items-center gap-6">
+            <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-500 flex items-center justify-center text-xl">
+                <i class="fas fa-users"></i>
+            </div>
+            <div>
+                <div class="text-[10px] font-black text-[var(--muted)] uppercase tracking-[0.1em]">Utilisateurs</div>
+                <div class="text-2xl font-black text-[var(--ink)]">--</div>
+            </div>
+        </div>
+        
+        <div class="cool-card !p-6 flex items-center gap-6">
+            <div class="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-500 flex items-center justify-center text-xl">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div>
+                <div class="text-[10px] font-black text-[var(--muted)] uppercase tracking-[0.1em]">Requêtes IA</div>
+                <div class="text-2xl font-black text-[var(--ink)]">--</div>
+            </div>
+        </div>
+
+        <div class="cool-card !p-6 flex items-center gap-6">
+            <div class="w-12 h-12 rounded-2xl bg-orange-500/10 text-orange-500 flex items-center justify-center text-xl">
+                <i class="fas fa-database"></i>
+            </div>
+            <div>
+                <div class="text-[10px] font-black text-[var(--muted)] uppercase tracking-[0.1em]">Données (Mo)</div>
+                <div class="text-2xl font-black text-[var(--ink)]">--</div>
+            </div>
+        </div>
+
+        <div class="cool-card !p-6 flex items-center gap-6">
+            <div class="w-12 h-12 rounded-2xl bg-green-500/10 text-green-500 flex items-center justify-center text-xl">
+                <i class="fas fa-microchip"></i>
+            </div>
+            <div>
+                <div class="text-[10px] font-black text-[var(--muted)] uppercase tracking-[0.1em]">CPU Load</div>
+                <div class="text-2xl font-black text-[var(--ink)]">--%</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Management Sections -->
+    <div class="grid lg:grid-cols-3 gap-8">
+        
+        <!-- User List Area -->
+        <div class="lg:col-span-2 space-y-8">
+            <div class="cool-card !p-0 overflow-hidden">
+                <div class="px-8 py-6 border-b border-[var(--line)] flex items-center justify-between bg-[var(--surface)]">
+                    <h3 class="text-xl font-bold font-serif-display">Derniers Utilisateurs</h3>
+                    <button class="btn btn-ghost !py-2 !px-4 text-xs font-bold uppercase tracking-widest">Voir Tout</button>
+                </div>
+                <div class="p-4">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="text-[10px] font-black text-[var(--muted)] uppercase tracking-[0.2em] border-b border-[var(--line)]">
+                                    <th class="px-4 py-4">Utilisateur</th>
+                                    <th class="px-4 py-4">Email</th>
+                                    <th class="px-4 py-4">Date Inscription</th>
+                                    <th class="px-4 py-4 text-right">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-[var(--line)]">
+                                <!-- Example row -->
+                                <tr class="hover:bg-[var(--paper)]/50 transition-colors">
+                                    <td class="px-4 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-full bg-[var(--line)]"></div>
+                                            <span class="font-bold text-sm">Chargement...</span>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4 text-sm text-[var(--muted)]">--</td>
+                                    <td class="px-4 py-4 text-sm text-[var(--muted)]">--</td>
+                                    <td class="px-4 py-4 text-right">
+                                        <button class="text-[var(--muted)] hover:text-[var(--accent)]"><i class="fas fa-ellipsis-v"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar / Tools -->
+        <div class="space-y-8">
+            <div class="cool-card">
+                <h3 class="text-xl font-bold font-serif-display mb-6">Actions Systèmes</h3>
+                <div class="space-y-4">
+                    <button class="w-full btn btn-outline !justify-start gap-4">
+                        <i class="fas fa-broom opacity-40"></i>
+                        <span>Vider le cache</span>
+                    </button>
+                    <button class="w-full btn btn-outline !justify-start gap-4">
+                        <i class="fas fa-file-export opacity-40"></i>
+                        <span>Exporter Logs</span>
+                    </button>
+                    <button class="w-full btn btn-outline !justify-start gap-4 text-red-500 hover:!border-red-500 hover:!bg-red-50">
+                        <i class="fas fa-power-off opacity-40"></i>
+                        <span>Maintenance</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="cool-card bg-[var(--ink)] text-[var(--paper)]">
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-10 h-10 rounded-xl bg-[var(--accent)] text-[var(--paper)] flex items-center justify-center">
+                        <i class="fas fa-bell"></i>
+                    </div>
+                    <h3 class="text-lg font-bold font-serif-display">Notifications</h3>
+                </div>
+                <div class="space-y-4 opacity-70 text-sm">
+                    <div class="p-3 rounded-xl bg-white/5 border border-white/10">
+                        <div class="font-bold text-[var(--accent)] text-[10px] uppercase mb-1">Système</div>
+                        <p>Nouvelle mise à jour de sécurité disponible.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .font-serif-display { font-family: 'DM Serif Display', serif; }
+</style>
+{% endblock %}

@@ -1,70 +1,177 @@
-{% extends "Base/base.html" %} {% block content %}
-<body>
-    <main>
-        <h2>Discuter avec l'IA de Ryan</h2>
-        <div
-            id="chat-box"
-            style="
-                height: 400px;
-                overflow-y: auto;
-                border: 1px solid #ccc;
-                padding: 15px;
-                margin-bottom: 20px;
-                border-radius: 10px;
-                background: #f9f9f9;
-            "
-        >
+{% extends "Base/base.html" %}
+
+{% block title %}Assistant IA · Hackathon{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto h-[calc(100vh-var(--nav-h)-120px)] flex flex-col gap-6">
+    
+    <!-- Chat Header -->
+    <div class="flex items-center justify-between px-2">
+        <div class="flex items-center gap-4">
+            <div class="w-12 h-12 rounded-2xl bg-[var(--ink)] text-[var(--paper)] flex items-center justify-center shadow-lg transform -rotate-3">
+                <i class="fas fa-robot text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-2xl font-black text-[var(--ink)] font-serif-display tracking-tight">Assistant IA Ryan</h1>
+                <div class="flex items-center gap-2 text-[var(--muted)] text-xs font-bold uppercase tracking-widest">
+                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                    En ligne · Propulsé par Llama 3.3
+                </div>
+            </div>
+        </div>
+        <a href="{% url 'users:user_home' %}" class="btn btn-ghost text-xs">
+            <i class="fas fa-times mr-2"></i> Quitter
+        </a>
+    </div>
+
+    <!-- Chat Interface Card -->
+    <div class="flex-1 cool-card !p-0 overflow-hidden flex flex-col relative">
+        <!-- Background Decoration -->
+        <div class="absolute inset-0 opacity-[0.03] pointer-events-none">
+            <div class="absolute top-0 left-0 w-full h-full" style="background-image: radial-gradient(var(--ink) 1px, transparent 1px); background-size: 24px 24px;"></div>
+        </div>
+
+        <!-- Messages Area -->
+        <div id="chat-box" class="flex-1 overflow-y-auto p-6 md:p-10 space-y-8 scroll-smooth relative z-10">
             {% for chat in messages_history %}
-            <p class="user-msg"><b>Vous:</b> {{ chat.message }}</p>
-            <p class="ai-msg"><b>IA:</b> {{ chat.response }}</p>
+                <!-- User Message -->
+                <div class="flex flex-col items-end animate-slide-in-right">
+                    <div class="max-w-[80%] p-4 md:p-5 rounded-[24px] rounded-tr-none bg-[var(--ink)] text-[var(--paper)] shadow-xl text-sm md:text-base leading-relaxed">
+                        {{ chat.message }}
+                    </div>
+                    <span class="text-[10px] font-bold text-[var(--muted)] uppercase tracking-widest mt-2 mr-2">Vous</span>
+                </div>
+
+                <!-- AI Message -->
+                <div class="flex flex-col items-start animate-slide-in-left">
+                    <div class="max-w-[80%] p-4 md:p-5 rounded-[24px] rounded-tl-none bg-[var(--paper)] border border-[var(--line)] text-[var(--ink)] shadow-sm text-sm md:text-base leading-relaxed">
+                        {{ chat.response|linebreaks }}
+                    </div>
+                    <span class="text-[10px] font-bold text-[var(--accent)] uppercase tracking-widest mt-2 ml-2">Ryan AI</span>
+                </div>
+            {% empty %}
+                <div class="h-full flex flex-col items-center justify-center text-center space-y-4 opacity-40">
+                    <i class="fas fa-comments text-5xl text-[var(--line)]"></i>
+                    <p class="text-[var(--muted)] font-medium">Commencez la conversation.<br>Posez-moi n'importe quelle question !</p>
+                </div>
             {% endfor %}
         </div>
-        <div class="input-group mb-3">
-            <input
-                type="text"
-                id="user-input"
-                class="form-control"
-                placeholder="Tapez votre message ici..."
-            />
-            <button
-                id="send-btn"
-                class="btn btn-primary"
-                onclick="sendMessage()"
-            >
-                Envoyer
-            </button>
-        </div>
-    </main>
 
-    <script>
-        // scroll vers le bas du chat à l'ouverture de la page
-        const chatBox = document.getElementById("chat-box");
+        <!-- Input Area -->
+        <div class="p-6 border-t border-[var(--line)] bg-[var(--surface)] relative z-10">
+            <div class="relative group">
+                <input type="text" id="user-input" 
+                       class="cool-input !pl-6 !pr-32 !py-5 shadow-lg group-focus-within:shadow-[var(--accent)]/10 transition-all"
+                       placeholder="Posez votre question à l'IA..."
+                       onkeypress="if(event.key === 'Enter') sendMessage()">
+                
+                <button id="send-btn" onclick="sendMessage()"
+                        class="absolute right-2 top-2 bottom-2 px-6 rounded-xl bg-[var(--ink)] text-[var(--paper)] hover:bg-[var(--accent)] transition-all duration-300 font-bold flex items-center gap-2 group/btn">
+                    <span>Envoyer</span>
+                    <i class="fas fa-paper-plane text-xs group-hover/btn:translate-x-1 group-hover/btn:-translate-y-1 transition-transform"></i>
+                </button>
+            </div>
+            <p class="text-[10px] text-center text-[var(--muted)] mt-4 font-bold uppercase tracking-[0.2em]">
+                Appuyez sur <span class="text-[var(--ink)]">Entrée</span> pour envoyer
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .font-serif-display { font-family: 'DM Serif Display', serif; }
+    
+    @keyframes slide-in-right {
+        from { opacity: 0; transform: translateX(20px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slide-in-left {
+        from { opacity: 0; transform: translateX(-20px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+    .animate-slide-in-right { animation: slide-in-right 0.4s cubic-bezier(0.4, 0, 0.2, 1) both; }
+    .animate-slide-in-left { animation: slide-in-left 0.4s cubic-bezier(0.4, 0, 0.2, 1) both; }
+
+    /* Custom Scrollbar */
+    #chat-box::-webkit-scrollbar { width: 6px; }
+    #chat-box::-webkit-scrollbar-track { background: transparent; }
+    #chat-box::-webkit-scrollbar-thumb { background: var(--line); border-radius: 10px; }
+    #chat-box::-webkit-scrollbar-thumb:hover { background: var(--muted); }
+</style>
+
+<script>
+    const chatBox = document.getElementById("chat-box");
+    chatBox.scrollTop = chatBox.scrollHeight;
+
+    function getCsrf() {
+        const m = document.cookie.match('(^|;)\\s*csrftoken\\s*=\\s*([^;]+)');
+        return m ? m.pop() : '';
+    }
+
+    async function sendMessage() {
+        const inputField = document.getElementById("user-input");
+        const sendBtn = document.getElementById("send-btn");
+        const message = inputField.value.trim();
+        
+        if (!message) return;
+
+        // Disable input
+        inputField.disabled = true;
+        sendBtn.disabled = true;
+        sendBtn.innerHTML = '<i class="fas fa-spinner animate-spin"></i>';
+
+        // Add user message to UI
+        const userMsgHtml = `
+            <div class="flex flex-col items-end animate-slide-in-right">
+                <div class="max-w-[80%] p-4 md:p-5 rounded-[24px] rounded-tr-none bg-[var(--ink)] text-[var(--paper)] shadow-xl text-sm md:text-base leading-relaxed">
+                    ${message}
+                </div>
+                <span class="text-[10px] font-bold text-[var(--muted)] uppercase tracking-widest mt-2 mr-2">Vous</span>
+            </div>
+        `;
+        chatBox.insertAdjacentHTML('beforeend', userMsgHtml);
+        inputField.value = "";
         chatBox.scrollTop = chatBox.scrollHeight;
 
-        async function sendMessage() {
-            const inputField = document.getElementById("user-input");
-            const chatBox = document.getElementById("chat-box");
-            const message = inputField.value;
-            if (!message) return;
-            chatBox.innerHTML += `<p class="user-msg"><b>Vous:</b> ${message}</p>`;
-            inputField.value = "";
-            try {
-                const response = await fetch("/api/chat/", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ message }),
-                });
-                const data = await response.json();
-                if (data.reply) {
-                    chatBox.innerHTML += `<p class="ai-msg"><b>IA:</b> ${data.reply}</p>`;
-                } else {
-                    chatBox.innerHTML += `<p class="ai-msg" style="color:red;">Erreur: ${data.error}</p>`;
-                }
-            } catch (error) {
-                console.error("Erreur Fetch:", error);
+        try {
+            const response = await fetch("/api/chat/", {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "X-CSRFToken": getCsrf()
+                },
+                body: JSON.stringify({ message }),
+            });
+            const data = await response.json();
+            
+            if (data.reply) {
+                const aiMsgHtml = `
+                    <div class="flex flex-col items-start animate-slide-in-left">
+                        <div class="max-w-[80%] p-4 md:p-5 rounded-[24px] rounded-tl-none bg-[var(--paper)] border border-[var(--line)] text-[var(--ink)] shadow-sm text-sm md:text-base leading-relaxed">
+                            ${data.reply.replace(/\n/g, '<br>')}
+                        </div>
+                        <span class="text-[10px] font-bold text-[var(--accent)] uppercase tracking-widest mt-2 ml-2">Ryan AI</span>
+                    </div>
+                `;
+                chatBox.insertAdjacentHTML('beforeend', aiMsgHtml);
+            } else {
+                chatBox.insertAdjacentHTML('beforeend', `
+                    <div class="flex justify-center p-4">
+                        <div class="bg-red-50 text-red-500 text-xs font-bold px-4 py-2 rounded-full border border-red-100">
+                            Erreur: ${data.error}
+                        </div>
+                    </div>
+                `);
             }
-            chatBox.scrollTop = chatBox.scrollHeight;
+        } catch (error) {
+            console.error("Erreur Fetch:", error);
         }
-    </script>
-</body>
+
+        inputField.disabled = false;
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = '<span>Envoyer</span><i class="fas fa-paper-plane text-xs"></i>';
+        inputField.focus();
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+</script>
 {% endblock %}

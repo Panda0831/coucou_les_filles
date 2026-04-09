@@ -1,0 +1,99 @@
+{% extends "Base/base.html" %}
+
+{% block title %}Hackathon 2026 · L'IA à votre service{% endblock %}
+
+{% block content %}
+<div class="space-y-32 py-12">
+    
+    <!-- Hero Section -->
+    <section class="relative min-h-[70vh] flex flex-col items-center justify-center text-center space-y-10">
+        <!-- Floating Elements Decoration -->
+        <div class="absolute top-10 left-10 w-24 h-24 bg-[var(--accent)] opacity-10 rounded-3xl rotate-12 blur-2xl animate-pulse"></div>
+        <div class="absolute bottom-10 right-10 w-32 h-32 bg-[var(--ink)] opacity-5 rounded-full blur-3xl animate-bounce"></div>
+
+        <div class="space-y-6 relative z-10">
+            <div class="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-[var(--ink)] text-[var(--paper)] text-[10px] font-black uppercase tracking-[0.25em] shadow-2xl">
+                <span class="w-2 h-2 rounded-full bg-[var(--accent)] animate-ping"></span>
+                Maintenant disponible en Beta
+            </div>
+            
+            <h1 class="text-6xl md:text-8xl font-black text-[var(--ink)] font-serif-display tracking-tight leading-[0.9] max-w-4xl mx-auto">
+                L'Intelligence <br> <span class="text-[var(--accent)]">Redéfinie.</span>
+            </div>
+            
+            <p class="text-[var(--muted)] text-lg md:text-xl max-w-2xl mx-auto leading-relaxed font-medium">
+                Découvrez une nouvelle façon d'interagir avec la technologie. Notre IA est conçue pour comprendre, créer et innover à vos côtés.
+            </p>
+        </div>
+
+        <div class="flex flex-col sm:flex-row items-center gap-6 relative z-10 pt-4">
+            <a href="{% url 'users:inscription' %}" class="btn btn-primary !px-10 !py-5 text-base shadow-[0_20px_40px_rgba(0,0,0,0.1)] hover:shadow-[var(--accent)]/30">
+                Démarrer l'expérience <i class="fas fa-arrow-right ml-2 text-xs"></i>
+            </a>
+            <a href="#features" class="btn btn-outline !px-10 !py-5 text-base">
+                En savoir plus
+            </a>
+        </div>
+
+        <!-- Scroll Indicator -->
+        <div class="absolute bottom-0 left-1/2 -translate-x-1/2 animate-bounce opacity-30">
+            <i class="fas fa-chevron-down text-2xl"></i>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="space-y-20">
+        <div class="text-center space-y-4">
+            <h2 class="text-4xl md:text-5xl font-black text-[var(--ink)] font-serif-display tracking-tight">Puissance & Simplicité</h2>
+            <p class="text-[var(--muted)] font-medium">Tout ce dont vous avez besoin, réuni au même endroit.</p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-10">
+            <div class="cool-card group">
+                <div class="w-16 h-16 rounded-2xl bg-[var(--paper)] text-[var(--ink)] flex items-center justify-center text-2xl mb-8 group-hover:bg-[var(--accent)] group-hover:text-[var(--paper)] transition-all duration-500 shadow-sm">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-[var(--ink)] font-serif-display mb-4">IA conversationnelle</h3>
+                <p class="text-[var(--muted)] leading-relaxed">Discutez naturellement avec Ryan, notre IA entraînée pour vous accompagner dans tous vos projets.</p>
+            </div>
+
+            <div class="cool-card group">
+                <div class="w-16 h-16 rounded-2xl bg-[var(--paper)] text-[var(--ink)] flex items-center justify-center text-2xl mb-8 group-hover:bg-[var(--ink)] group-hover:text-[var(--paper)] transition-all duration-500 shadow-sm">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-[var(--ink)] font-serif-display mb-4">Performance éclair</h3>
+                <p class="text-[var(--muted)] leading-relaxed">Une interface ultra-réactive conçue pour ne jamais freiner votre créativité.</p>
+            </div>
+
+            <div class="cool-card group">
+                <div class="w-16 h-16 rounded-2xl bg-[var(--paper)] text-[var(--ink)] flex items-center justify-center text-2xl mb-8 group-hover:bg-[var(--accent)] group-hover:text-[var(--paper)] transition-all duration-500 shadow-sm">
+                    <i class="fas fa-shield-halved"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-[var(--ink)] font-serif-display mb-4">Sécurité native</h3>
+                <p class="text-[var(--muted)] leading-relaxed">Vos données vous appartiennent. Nous utilisons les derniers standards de chiffrement.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cool-card !p-12 md:!p-24 bg-[var(--ink)] text-[var(--paper)] text-center space-y-10 relative overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-br from-[var(--accent)]/20 to-transparent pointer-events-none"></div>
+        
+        <h2 class="text-4xl md:text-6xl font-black font-serif-display tracking-tight relative z-10">
+            Prêt à faire le <br> <span class="text-[var(--accent)]">grand saut ?</span>
+        </h2>
+        <p class="text-lg opacity-70 max-w-xl mx-auto relative z-10">
+            Rejoignez des centaines d'utilisateurs qui ont déjà transformé leur façon de travailler.
+        </p>
+        <div class="relative z-10 pt-4">
+            <a href="{% url 'users:inscription' %}" class="btn btn-primary !bg-[var(--paper)] !text-[var(--ink)] hover:!bg-[var(--accent)] hover:!text-[var(--paper)] !px-12 !py-5 text-lg">
+                Créer un compte maintenant
+            </a>
+        </div>
+    </section>
+</div>
+
+<style>
+    .font-serif-display { font-family: 'DM Serif Display', serif; }
+</style>
+{% endblock %}

@@ -187,27 +187,86 @@
         .btn {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            padding: 9px 20px;
-            border-radius: var(--radius);
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 24px;
+            border-radius: 16px;
             font-size: .875rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             border: none;
             text-decoration: none;
-            transition: all .15s;
+            transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
             font-family: inherit;
-            letter-spacing: .01em;
+            letter-spacing: .02em;
+            position: relative;
+            overflow: hidden;
         }
+        .btn:active { transform: scale(0.96); }
+
         .btn-ghost  { background: transparent; color: var(--muted); }
         .btn-ghost:hover { color: var(--ink); background: var(--line); }
-        .btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--line); }
-        .btn-outline:hover { border-color: var(--ink); }
-        .btn-primary { background: var(--ink); color: var(--paper); box-shadow: 0 2px 8px rgba(15,14,23,.15); }
-        .btn-primary:hover { box-shadow: 0 4px 16px rgba(15,14,23,.25); transform: translateY(-1px); }
-        .btn-primary:active { transform: translateY(0); }
-        .btn-danger { background: transparent; color: #c0392b; border: 1.5px solid #f5c6c2; }
-        .btn-danger:hover { background: #fdf3f2; }
+
+        .btn-outline { background: transparent; color: var(--ink); border: 2px solid var(--line); }
+        .btn-outline:hover { border-color: var(--ink); transform: translateY(-2px); }
+
+        .btn-primary { 
+            background: var(--ink); 
+            color: var(--paper); 
+            box-shadow: 0 4px 12px rgba(15,14,23,0.1);
+        }
+        .btn-primary:hover { 
+            background: var(--accent); 
+            box-shadow: 0 8px 20px rgba(232,85,43,0.2);
+            transform: translateY(-3px);
+        }
+
+        .btn-danger { 
+            background: #fdf3f2; 
+            color: #c0392b; 
+            border: 2px solid #f5c6c2; 
+        }
+        .btn-danger:hover { 
+            background: #c0392b; 
+            color: white; 
+            border-color: #c0392b;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(192,57,43,0.2);
+        }
+
+        /* ── GLOBAL CARD STYLE ───────────────────────────────── */
+        .cool-card {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 32px;
+            padding: 32px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+        }
+        .cool-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05);
+            border-color: var(--accent);
+        }
+
+        /* ── INPUTS ──────────────────────────────────────────── */
+        .cool-input {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 16px;
+            background: var(--paper);
+            border: 2px solid transparent;
+            color: var(--ink);
+            font-size: 0.95rem;
+            transition: all 0.3s;
+            outline: none;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+        }
+        .cool-input:focus {
+            border-color: var(--accent);
+            background: var(--surface);
+            box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 15%, transparent);
+        }
 
         /* ══════════════════════════════════════════════════════
            FLASH MESSAGES
@@ -390,141 +449,6 @@
         }
 
         .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
-        /* ══════════════════════════════════════════════════════
-   WIDGET CHAT FLOTTANT
-══════════════════════════════════════════════════════ */
-.chat-wrapper {
-    position: fixed;
-    bottom: 120px;
-    right: 24px;
-    z-index: 1000;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-}
-
-/* Bulle flottante */
-.chat-trigger {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: black;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-    cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-
-.chat-trigger:hover {
-    transform: scale(1.1) rotate(-5deg);
-}
-
-/* Fenêtre de chat */
-.chat-window {
-    width: 350px;
-    height: 450px;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: var(--radius);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
-    display: none; /* Caché par défaut */
-    flex-direction: column;
-    overflow: hidden;
-    margin-bottom: 16px;
-    animation: slideUp 0.3s ease-out;
-}
-
-@keyframes slideUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
-.chat-window.active {
-    display: flex;
-}
-
-/* Header du chat */
-.chat-header {
-    padding: 16px;
-    background: var(--ink);
-    color: var(--paper);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.chat-header h3 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 1.1rem;
-}
-
-/* Zone des messages */
-#chat-box {
-    flex: 1;
-    padding: 16px;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    background: var(--paper);
-}
-
-.msg {
-    max-width: 85%;
-    padding: 10px 14px;
-    border-radius: 14px;
-    font-size: 0.9rem;
-    line-height: 1.4;
-}
-
-.user-msg {
-    align-self: flex-end;
-    background: black;
-    color: white;
-    border-bottom-right-radius: 4px;
-}
-
-.ai-msg {
-    align-self: flex-start;
-    background: var(--line);
-    color: var(--ink);
-    border-bottom-left-radius: 4px;
-}
-
-/* Zone d'input */
-.chat-footer {
-    padding: 12px;
-    border-top: 1px solid var(--line);
-    display: flex;
-    gap: 8px;
-    background: var(--surface);
-}
-
-.chat-footer input {
-    flex: 1;
-    border: 1px solid var(--line);
-    background: var(--paper);
-    color: var(--ink);
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 0.875rem;
-    outline: none;
-}
-
-.chat-footer input:focus {
-    border-color: black;
-}
-
-@media (max-width: 480px) {
-    .chat-window {
-        width: calc(100vw - 48px);
-        height: 60vh;
-    }
-}
     </style>
 
 
@@ -544,15 +468,18 @@
 <nav class="navbar" role="navigation" aria-label="Navigation principale">
     <div class="navbar-inner">
 
-        <a href="{%url 'users:user_home'%}" class="logo" aria-label="Hackathon — Accueil">
+        <a href="{% url 'users:landing' %}" class="logo" aria-label="Hackathon — Accueil">
             <div class="logo-mark"><i class="fas fa-rocket"></i></div>
             <span class="logo-text">Hackathon</span>
         </a>
 
         <ul class="nav-links desktop-nav" role="list">
-            <li><a href="{%url 'users:user_home'%}">Accueil</a></li>
-            <li><a href="#">Fonctionnalités</a></li>
-            <li><a href="#">À propos</a></li>
+            <li><a href="{% url 'users:landing' %}">Accueil</a></li>
+            <li><a href="{% url 'users:about' %}">L'Équipe</a></li>
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'users:user_home' %}">Dashboard</a></li>
+                <li><a href="{% url 'users:chat_home' %}">IA Ryan</a></li>
+            {% endif %}
         </ul>
 
         <div class="nav-actions desktop-nav">
@@ -588,10 +515,13 @@
 
 <div class="mobile-menu" id="mobile-menu" role="dialog" aria-label="Menu mobile">
     <ul class="mobile-nav-links" role="list">
-        <li><a href="{%url 'users:user_home'%}">Accueil</a></li>
-        <li><a href="#">Fonctionnalités</a></li>
-        <li><a href="{%url 'users:about'%}">Qui sommes-nous</a></li>
-        {% if user.is_authenticated %}{% endif %}
+        <li><a href="{% url 'users:landing' %}">Accueil</a></li>
+        <li><a href="{% url 'users:about' %}">L'Équipe</a></li>
+        {% if user.is_authenticated %}
+            <li><a href="{% url 'users:user_home' %}">Dashboard</a></li>
+            <li><a href="{% url 'users:chat_home' %}">IA Ryan</a></li>
+            <li><a href="{% url 'users:profile' %}">Mon Profil</a></li>
+        {% endif %}
     </ul>
 
     <div class="mobile-actions">
@@ -728,86 +658,7 @@
             setTimeout(() => flash.remove(), 400);
         }, 5000);
     });
-    function toggleChat() {
-    const chatWindow = document.getElementById('chat-window');
-    const chatIcon = document.getElementById('chat-icon');
-    
-    chatWindow.classList.toggle('active');
-    
-    if (chatWindow.classList.contains('active')) {
-        chatIcon.className = 'fas fa-chevron-down';
-        document.getElementById('user-input').focus();
-    } else {
-        chatIcon.className = 'fas fa-comment-dots';
-    }
-}
-
-function handleKeyPress(e) {
-    if (e.key === 'Enter') {
-        sendMessage();
-    }
-}
-
-async function sendMessage() {
-    const inputField = document.getElementById("user-input");
-    const chatBox = document.getElementById("chat-box");
-    const message = inputField.value.trim();
-    
-    if (!message) return;
-
-    chatBox.innerHTML += `<div class="msg user-msg">${message}</div>`;
-    inputField.value = "";
-    chatBox.scrollTop = chatBox.scrollHeight;
-
-    try {
-        const response = await fetch("/api/chat/", {
-            method: "POST",
-            headers: { 
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCsrf()
-            },
-            body: JSON.stringify({ message })
-        });
-        
-        const data = await response.json();
-        
-        if (data.reply) {
-            chatBox.innerHTML += `<div class="msg ai-msg">${data.reply}</div>`;
-        } else {
-            chatBox.innerHTML += `<div class="msg ai-msg" style="color:var(--accent);">Désolé, une erreur est survenue.</div>`;
-        }
-    } catch (error) {
-        console.error("Erreur Fetch:", error);
-    }
-    chatBox.scrollTop = chatBox.scrollHeight;
-}
 </script>
-
 {% block extra_scripts %}{% endblock %}
-<div class="chat-wrapper">
-    <div class="chat-window" id="chat-window">
-        <div class="chat-header">
-            <h3><i class="fas fa-robot mr-2"></i> IA de Ryan</h3>
-            <button onclick="toggleChat()" style="background:none; border:none; color:inherit; cursor:pointer;">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-        
-        <div id="chat-box">
-            <div class="msg ai-msg">Bonjour ! Comment puis-je vous aider aujourd'hui ?</div>
-        </div>
-
-        <div class="chat-footer">
-            <input type="text" id="user-input" placeholder="Posez votre question..." onkeypress="handleKeyPress(event)">
-            <button class="btn btn-primary" style="padding: 8px 12px;" onclick="sendMessage()">
-                <i class="fas fa-paper-plane"></i>
-            </button>
-        </div>
-    </div>
-
-    <div class="chat-trigger" onclick="toggleChat()">
-        <i class="fas fa-comment-dots" id="chat-icon"></i>
-    </div>
-</div>
 </body>
 </html>

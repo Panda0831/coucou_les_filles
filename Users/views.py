@@ -17,6 +17,11 @@ from .forms import CustomUserChangeForm, CustomUserCreationForm
 from .models import User, ChatMessage
 
 
+def landing(request):
+    if request.user.is_authenticated:
+        return redirect("users:user_home")
+    return render(request, "Base/landing.html")
+
 def about(request):
     return render(request, "Base/about.html")
 

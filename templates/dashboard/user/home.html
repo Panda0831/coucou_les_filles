@@ -1,10 +1,79 @@
 {% extends 'Base/base.html' %}
 
-{% block content %}
-    <body>
-        <p>salut, bienvenue sur notre site !{{user.username}}</p>
-        <img src="{{user.photo.url}}" alt="Photo de profil de {{user.username}}" style="width: 150px; height: 150px; border-radius: 50%;">
+{% block title %}Accueil · {{ user.username }}{% endblock %}
 
-        <button><a href="{%url 'users:profile'%}">voir profil</a></button>
-    </body>
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-12">
+    <!-- Hero Section -->
+    <div class="text-center space-y-6 py-12">
+        <div class="inline-block px-4 py-1.5 rounded-full bg-[var(--accent)]/10 border border-[var(--accent)]/20 text-[var(--accent)] text-xs font-bold uppercase tracking-widest animate-pulse">
+            Ravi de vous revoir
+        </div>
+        <h1 class="text-5xl md:text-6xl font-black text-[var(--ink)] tracking-tight font-serif-display leading-tight">
+            Bonjour, <span class="text-[var(--accent)]">{{ user.username }}</span> !
+        </h1>
+        <p class="text-[var(--muted)] text-lg max-w-xl mx-auto leading-relaxed">
+            Votre espace personnel est prêt. Explorez vos fonctionnalités, discutez avec notre IA ou personnalisez votre expérience.
+        </p>
+    </div>
+
+    <!-- Quick Stats / Profile Card -->
+    <div class="grid md:grid-cols-2 gap-8 items-stretch">
+        <div class="cool-card flex flex-col items-center text-center">
+            <div class="relative group mb-6">
+                <div class="absolute -inset-1 bg-gradient-to-r from-[var(--accent)] to-[var(--ink)] rounded-full blur opacity-25 group-hover:opacity-50 transition duration-1000"></div>
+                {% if user.photo %}
+                    <img src="{{ user.photo.url }}" alt="Photo de profil" class="relative w-32 h-32 rounded-full object-cover border-4 border-[var(--surface)] shadow-2xl">
+                {% else %}
+                    <div class="relative w-32 h-32 rounded-full bg-[var(--ink)] text-[var(--paper)] flex items-center justify-center text-4xl font-serif-display border-4 border-[var(--surface)] shadow-2xl">
+                        {{ user.username|first|upper }}
+                    </div>
+                {% endif %}
+            </div>
+            <h2 class="text-2xl font-bold text-[var(--ink)] mb-2">{{ user.username }}</h2>
+            <p class="text-[var(--muted)] text-sm mb-8">Membre de la communauté Hackathon</p>
+            
+            <a href="{% url 'users:profile' %}" class="btn btn-primary w-full">
+                <i class="fas fa-user-circle"></i> Gérer mon profil
+            </a>
+        </div>
+
+        <div class="cool-card flex flex-col justify-between">
+            <div>
+                <h3 class="text-xl font-bold text-[var(--ink)] mb-4 font-serif-display">Accès Rapide</h3>
+                <div class="space-y-4">
+                    <a href="{% url 'users:chat_home' %}" class="flex items-center gap-4 p-4 rounded-2xl bg-[var(--paper)] border border-[var(--line)] hover:border-[var(--accent)] transition-colors group">
+                        <div class="w-12 h-12 rounded-xl bg-[var(--ink)] text-[var(--paper)] flex items-center justify-center group-hover:bg-[var(--accent)] transition-colors">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <div class="text-left">
+                            <div class="font-bold text-[var(--ink)]">Assistant IA</div>
+                            <div class="text-xs text-[var(--muted)]">Une question ? Ryan est là.</div>
+                        </div>
+                    </a>
+                    
+                    <a href="{% url 'users:about' %}" class="flex items-center gap-4 p-4 rounded-2xl bg-[var(--paper)] border border-[var(--line)] hover:border-[var(--accent)] transition-colors group">
+                        <div class="w-12 h-12 rounded-xl bg-[var(--line)] text-[var(--ink)] flex items-center justify-center group-hover:bg-[var(--ink)] group-hover:text-[var(--paper)] transition-colors">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="text-left">
+                            <div class="font-bold text-[var(--ink)]">L'Équipe</div>
+                            <div class="text-xs text-[var(--muted)]">Découvrez qui nous sommes.</div>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="mt-8 p-4 rounded-2xl bg-[var(--accent)]/5 border border-[var(--accent)]/10 text-center">
+                <p class="text-xs text-[var(--muted)] font-medium italic">
+                    "L'avenir appartient à ceux qui codent leurs rêves."
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .font-serif-display { font-family: 'DM Serif Display', serif; }
+</style>
 {% endblock %}

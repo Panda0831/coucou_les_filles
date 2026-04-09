@@ -3,886 +3,246 @@
 
 {% block extra_head %}
 <style>
-    /* ── TOKENS (hérite des variables du base) ───────────────── */
-    :root {
-        --pro-card-radius: 16px;
-        --cover-h: 160px;
-    }
-
-    /* ── LAYOUT ─────────────────────────────────────────────── */
-    .profile-layout {
-        max-width: 900px;
-        margin: 0 auto;
-        display: grid;
-        grid-template-columns: 300px 1fr;
-        gap: 24px;
-        align-items: start;
-    }
-
-    /* ── CARD BASE ───────────────────────────────────────────── */
-    .card {
-        background: var(--surface);
-        border: 1px solid var(--line);
-        border-radius: var(--pro-card-radius);
-        overflow: hidden;
-    }
-
-    .card-body { padding: 24px; }
-
-    .card-title {
-        font-size: .7rem;
-        font-weight: 700;
-        letter-spacing: .1em;
-        text-transform: uppercase;
-        color: var(--muted);
-        margin-bottom: 16px;
-    }
-
-    /* ── LEFT COLUMN: IDENTITY CARD ─────────────────────────── */
-    .identity-card { position: sticky; top: calc(var(--nav-h) + 16px); }
-
-    /* Cover */
-    .cover {
-        height: var(--cover-h);
-        background: linear-gradient(135deg, #0f0e17 0%, #2a1a35 50%, #1a0e17 100%);
-        position: relative;
-        overflow: hidden;
-    }
-
-    .cover::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        background-image: radial-gradient(circle at 20% 50%, rgba(232,85,43,.25) 0%, transparent 50%),
-                          radial-gradient(circle at 80% 20%, rgba(100,60,200,.2) 0%, transparent 40%);
-    }
-
-    .cover-edit-btn {
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        background: rgba(255,255,255,.15);
-        backdrop-filter: blur(8px);
-        border: 1px solid rgba(255,255,255,.2);
-        color: #fff;
-        font-size: .7rem;
+    .font-serif-display { font-family: 'DM Serif Display', serif; }
+    
+    .profile-nav-item {
         display: flex;
         align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: background .15s;
-    }
-    .cover-edit-btn:hover { background: rgba(255,255,255,.25); }
-
-    /* Avatar zone */
-    .avatar-zone {
-        padding: 0 24px;
-        margin-top: -42px;
-        margin-bottom: 16px;
-        display: flex;
-        align-items: flex-end;
-        justify-content: space-between;
-    }
-
-    .avatar-wrap { position: relative; display: inline-block; }
-
-    .avatar-img, .avatar-initials {
-        width: 84px;
-        height: 84px;
-        border-radius: 50%;
-        border: 4px solid var(--surface);
-        display: block;
-        object-fit: cover;
-    }
-
-    .avatar-initials {
-        background: var(--ink);
-        color: var(--paper);
-        font-family: 'DM Serif Display', serif;
-        font-size: 2rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .avatar-upload-btn {
-        position: absolute;
-        bottom: 2px;
-        right: 2px;
-        width: 26px;
-        height: 26px;
-        border-radius: 50%;
-        background: var(--ink);
-        color: var(--paper);
-        border: 2px solid var(--surface);
-        font-size: .6rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: background .15s;
-    }
-    .avatar-upload-btn:hover { background: var(--accent); }
-
-    /* Hidden file input */
-    #avatar-input { display: none; }
-
-    /* Identity info */
-    .identity-info { padding: 0 24px 20px; }
-
-    .identity-name {
-        font-family: 'DM Serif Display', serif;
-        font-size: 1.3rem;
-        color: var(--ink);
-        margin-bottom: 2px;
-    }
-
-    .identity-handle {
-        font-size: .8rem;
-        color: var(--muted);
-        margin-bottom: 14px;
-    }
-
-    .identity-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 5px;
-        background: #edfbf3;
-        border: 1px solid #b2edcc;
-        color: #1a6640;
-        font-size: .7rem;
+        gap: 12px;
+        padding: 14px 20px;
+        border-radius: 16px;
+        font-size: 0.9rem;
         font-weight: 600;
-        padding: 3px 10px;
-        border-radius: 999px;
-        margin-bottom: 16px;
-    }
-
-    .identity-meta { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
-
-    .meta-item {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-size: .8rem;
         color: var(--muted);
-    }
-
-    .meta-item i {
-        width: 28px;
-        height: 28px;
-        border-radius: 7px;
-        background: var(--paper);
-        border: 1px solid var(--line);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: .7rem;
-        color: var(--ink);
-        flex-shrink: 0;
-    }
-
-    .meta-value { color: var(--ink); font-weight: 500; }
-
-    /* Stats strip */
-    .stats-strip {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        border-top: 1px solid var(--line);
-        padding: 16px 24px;
-        gap: 0;
-    }
-
-    .stat-item { text-align: center; }
-
-    .stat-item + .stat-item { border-left: 1px solid var(--line); }
-
-    .stat-value {
-        font-family: 'DM Serif Display', serif;
-        font-size: 1.4rem;
-        color: var(--ink);
-        line-height: 1;
-        margin-bottom: 2px;
-    }
-
-    .stat-label { font-size: .7rem; color: var(--muted); font-weight: 500; }
-
-    /* Quick nav */
-    .quick-nav { padding: 16px 12px; display: flex; flex-direction: column; gap: 2px; }
-
-    .qnav-item {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 10px 12px;
-        border-radius: 10px;
-        font-size: .85rem;
-        font-weight: 500;
-        color: var(--muted);
-        text-decoration: none;
-        cursor: pointer;
-        transition: all .15s;
-        border: none;
-        background: none;
+        transition: all 0.3s;
         width: 100%;
         text-align: left;
-        font-family: inherit;
     }
-
-    .qnav-item i { width: 16px; font-size: .8rem; text-align: center; }
-    .qnav-item:hover { background: var(--paper); color: var(--ink); }
-    .qnav-item.active { background: var(--paper); color: var(--ink); font-weight: 600; }
-    .qnav-item.danger { color: #c0392b; }
-    .qnav-item.danger:hover { background: #fdf3f2; }
-
-    .qnav-sep { height: 1px; background: var(--line); margin: 6px 12px; }
-
-    /* ── RIGHT COLUMN ────────────────────────────────────────── */
-    .right-col { display: flex; flex-direction: column; gap: 20px; }
-
-    /* Tab panels */
-    .tab-panel { display: none; flex-direction: column; gap: 20px; }
-    .tab-panel.active { display: flex; }
-
-    /* Section header */
-    .section-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 20px;
-    }
-
-    .section-title {
-        font-family: 'DM Serif Display', serif;
-        font-size: 1.1rem;
-        color: var(--ink);
-    }
-
-    /* ── FORM FIELDS ─────────────────────────────────────────── */
-    .field-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 16px; }
-
-    .field-label {
-        font-size: .75rem;
-        font-weight: 600;
-        color: var(--muted);
-        letter-spacing: .03em;
-    }
-
-    .field-input {
-        padding: 10px 14px;
-        border: 1.5px solid var(--line);
-        border-radius: 10px;
-        font-size: .875rem;
-        font-family: inherit;
-        color: var(--ink);
-        background: var(--surface);
-        outline: none;
-        transition: border-color .15s;
-        width: 100%;
-    }
-
-    .field-input:focus { border-color: var(--ink); }
-    .field-input::placeholder { color: #bbb; }
-
-    .field-hint { font-size: .72rem; color: var(--muted); margin-top: 2px; }
-
-    .field-row {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 14px;
-    }
-
-    .field-select {
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236b6970' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 12px center;
-        padding-right: 36px;
-        cursor: pointer;
-    }
-
-    textarea.field-input { resize: vertical; min-height: 80px; }
-
-    /* Password strength */
-    .strength-bar {
-        height: 4px;
-        border-radius: 4px;
-        background: var(--line);
-        margin-top: 6px;
-        overflow: hidden;
-    }
-
-    .strength-fill {
-        height: 100%;
-        border-radius: 4px;
-        width: 0%;
-        transition: width .3s ease, background .3s ease;
-    }
-
-    .strength-label {
-        font-size: .7rem;
-        font-weight: 600;
-        color: var(--muted);
-        margin-top: 4px;
-        transition: color .3s;
-    }
-
-    /* Toggle password */
-    .field-icon-wrap { position: relative; }
-
-    .field-icon-wrap .field-input { padding-right: 40px; }
-
-    .toggle-pw {
-        position: absolute;
-        right: 12px;
-        top: 50%;
-        transform: translateY(-50%);
-        background: none;
-        border: none;
-        cursor: pointer;
-        color: var(--muted);
-        font-size: .85rem;
-        padding: 0;
-    }
-    .toggle-pw:hover { color: var(--ink); }
-
-    /* ── DANGER ZONE ─────────────────────────────────────────── */
-    .danger-zone {
-        border: 1.5px solid #f5c6c2;
-        border-radius: var(--pro-card-radius);
-        padding: 20px 24px;
-        background: #fff;
-    }
-
-    .danger-zone-title {
-        font-size: .8rem;
-        font-weight: 700;
-        color: #c0392b;
-        letter-spacing: .06em;
-        text-transform: uppercase;
-        margin-bottom: 12px;
-    }
-
-    .danger-item {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 16px;
-        padding: 12px 0;
-        border-bottom: 1px solid #fdf3f2;
-    }
-
-    .danger-item:last-child { border-bottom: none; padding-bottom: 0; }
-
-    .danger-desc p { font-size: .85rem; font-weight: 500; color: var(--ink); margin-bottom: 2px; }
-    .danger-desc span { font-size: .75rem; color: var(--muted); }
-
-    /* ── ACTIVITY FEED ───────────────────────────────────────── */
-    .activity-feed { display: flex; flex-direction: column; gap: 0; }
-
-    .activity-item {
-        display: flex;
-        align-items: flex-start;
-        gap: 12px;
-        padding: 14px 0;
-        border-bottom: 1px solid var(--line);
-    }
-    .activity-item:last-child { border-bottom: none; }
-
-    .activity-dot {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: .75rem;
-        flex-shrink: 0;
-        margin-top: 2px;
-    }
-
-    .activity-text p { font-size: .85rem; color: var(--ink); font-weight: 500; margin-bottom: 2px; }
-    .activity-text span { font-size: .75rem; color: var(--muted); }
-
-    /* ── PHOTO UPLOAD MODAL ──────────────────────────────────── */
-    .modal-overlay {
-        display: none;
-        position: fixed;
-        inset: 0;
-        background: rgba(15,14,23,.55);
-        backdrop-filter: blur(4px);
-        z-index: 200;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .modal-overlay.open { display: flex; }
-
-    .modal-box {
-        background: var(--surface);
-        border-radius: 20px;
-        width: 100%;
-        max-width: 460px;
-        margin: 20px;
-        overflow: hidden;
-        box-shadow: 0 24px 64px rgba(15,14,23,.2);
-        animation: modalIn .25s ease;
-    }
-
-    @keyframes modalIn {
-        from { opacity:0; transform: translateY(16px) scale(.97); }
-        to   { opacity:1; transform: translateY(0) scale(1); }
-    }
-
-    .modal-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 20px 24px 16px;
-        border-bottom: 1px solid var(--line);
-    }
-
-    .modal-title { font-family: 'DM Serif Display', serif; font-size: 1.1rem; }
-
-    .modal-close {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        border: 1px solid var(--line);
-        background: none;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--muted);
-        font-size: .8rem;
-        transition: all .15s;
-    }
-    .modal-close:hover { background: var(--paper); color: var(--ink); }
-
-    .modal-body { padding: 24px; }
-
-    .drop-zone {
-        border: 2px dashed var(--line);
-        border-radius: 12px;
-        padding: 40px 20px;
-        text-align: center;
-        cursor: pointer;
-        transition: all .2s;
+    .profile-nav-item:hover {
         background: var(--paper);
+        color: var(--ink);
+        transform: translateX(4px);
     }
-
-    .drop-zone:hover, .drop-zone.dragging {
-        border-color: var(--ink);
-        background: #f5f4f1;
-    }
-
-    .drop-icon {
-        width: 52px;
-        height: 52px;
-        border-radius: 12px;
+    .profile-nav-item.active {
         background: var(--ink);
         color: var(--paper);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 12px;
-        font-size: 1.1rem;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+    .profile-nav-item.danger:hover {
+        background: #fdf3f2;
+        color: #c0392b;
     }
 
-    .drop-label { font-size: .9rem; font-weight: 600; color: var(--ink); margin-bottom: 4px; }
-    .drop-sub   { font-size: .75rem; color: var(--muted); }
-
-    .preview-img {
-        display: none;
-        width: 120px;
-        height: 120px;
-        border-radius: 50%;
-        object-fit: cover;
-        margin: 0 auto 16px;
-        border: 4px solid var(--line);
+    .tab-panel { display: none; animation: fadeIn 0.4s ease; }
+    .tab-panel.active { display: block; }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
     }
 
-    .modal-footer {
-        display: flex;
-        gap: 10px;
-        padding: 16px 24px 20px;
-        border-top: 1px solid var(--line);
-    }
-
-    /* ── SAVE BUTTON (floating) ──────────────────────────────── */
-    .form-footer {
-        display: flex;
-        align-items: center;
-        justify-content: flex-end;
-        gap: 12px;
-        padding-top: 8px;
-    }
-
-    /* ── RESPONSIVE ──────────────────────────────────────────── */
-    @media (max-width: 720px) {
-        .profile-layout { grid-template-columns: 1fr; }
-        .identity-card  { position: static; }
-        .field-row      { grid-template-columns: 1fr; }
-        .stats-strip    { grid-template-columns: repeat(3, 1fr); }
+    .avatar-ring {
+        position: relative;
+        padding: 6px;
+        border-radius: full;
+        background: linear-gradient(135deg, var(--accent) 0%, var(--ink) 100%);
     }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="profile-layout">
-
-    <!-- ════════════════════════ LEFT: IDENTITY CARD -->
-    <aside>
-        <div class="card identity-card">
-            <!-- Cover -->
-            <div class="cover">
-                <button class="cover-edit-btn" title="Modifier la couverture">
-                    <i class="fas fa-image"></i>
-                </button>
-            </div>
-
-            <!-- Avatar -->
-            <div class="avatar-zone">
-                <div class="avatar-wrap">
-                    {% if user.photo %}
-                        <img src="{{ user.photo.url }}" class="avatar-img" id="avatar-preview-main" alt="Photo de {{ user.username }}">
-                    {% else %}
-                        <div class="avatar-initials" id="avatar-preview-main">{{ user.username|first|upper }}</div>
-                    {% endif %}
-                    <button class="avatar-upload-btn" onclick="openAvatarModal()" title="Modifier la photo">
-                        <i class="fas fa-camera"></i>
+<div class="max-w-6xl mx-auto py-10">
+    <div class="flex flex-col md:flex-row gap-10">
+        
+        <!-- Sidebar Navigation -->
+        <aside class="w-full md:w-80 space-y-6">
+            <div class="cool-card !p-8 text-center">
+                <div class="relative inline-block mb-6">
+                    <div class="w-32 h-32 rounded-full p-1 bg-gradient-to-tr from-[var(--accent)] to-[var(--ink)] shadow-2xl">
+                        {% if user.photo %}
+                            <img src="{{ user.photo.url }}" class="w-full h-full rounded-full object-cover border-4 border-[var(--surface)]" alt="{{ user.username }}">
+                        {% else %}
+                            <div class="w-full h-full rounded-full bg-[var(--surface)] flex items-center justify-center text-4xl font-serif-display text-[var(--ink)] border-4 border-[var(--surface)]">
+                                {{ user.username|first|upper }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <button onclick="openAvatarModal()" class="absolute bottom-1 right-1 w-10 h-10 bg-[var(--ink)] text-[var(--paper)] rounded-full border-4 border-[var(--surface)] flex items-center justify-center hover:bg-[var(--accent)] transition-colors shadow-lg">
+                        <i class="fas fa-camera text-sm"></i>
                     </button>
                 </div>
-            </div>
-
-         
-            <div class="identity-info">
-                <div class="identity-handle">@{{ user.username }}</div>
-                <div class="identity-badge">
-                    <i class="fas fa-circle-check" style="font-size:.6rem;"></i> Compte actif
+                <h2 class="text-2xl font-bold text-[var(--ink)] font-serif-display tracking-tight">{{ user.username }}</h2>
+                <p class="text-[var(--muted)] text-sm mt-1 font-medium">{{ user.email }}</p>
+                
+                <div class="mt-8 pt-8 border-t border-[var(--line)] space-y-2">
+                    <button class="profile-nav-item active" onclick="showTab('info', this)">
+                        <i class="fas fa-id-card w-5"></i> Mon Profil
+                    </button>
+                    <button class="profile-nav-item" onclick="showTab('security', this)">
+                        <i class="fas fa-shield-halved w-5"></i> Sécurité
+                    </button>
+                    <button class="profile-nav-item" onclick="showTab('activity', this)">
+                        <i class="fas fa-bolt w-5"></i> Activité
+                    </button>
+                    <div class="h-px bg-[var(--line)] my-4"></div>
+                    <a href="{% url 'users:deconnexion' %}" class="profile-nav-item danger">
+                        <i class="fas fa-power-off w-5"></i> Déconnexion
+                    </a>
                 </div>
-                <div class="identity-meta">
-                    <div class="meta-item">
-                        <i class="fas fa-envelope"></i>
-                        <span class="meta-value">{{ user.email }}</span>
+            </div>
+
+            <div class="cool-card !p-6 bg-[var(--ink)] text-[var(--paper)]">
+                <p class="text-xs font-bold uppercase tracking-[0.2em] opacity-50 mb-4">Statut Compte</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-green-500/20 text-green-400 flex items-center justify-center">
+                        <i class="fas fa-check-circle"></i>
                     </div>
-                    <div class="meta-item">
-                        <i class="fas fa-calendar"></i>
-                        <span>Membre depuis <strong class="meta-value">{{ user.date_joined|date:"d/m/Y" }}</strong></span>
+                    <div>
+                        <div class="font-bold">Utilisateur Vérifié</div>
+                        <div class="text-[10px] opacity-60">Membre depuis {{ user.date_joined|date:"M Y" }}</div>
                     </div>
                 </div>
             </div>
+        </aside>
 
-
-
-        <!-- Quick nav -->
-        <div class="card" style="margin-top:16px;">
-            <div class="quick-nav">
-                <button class="qnav-item active" onclick="showTab('info')">
-                    <i class="fas fa-user"></i> Informations
-                </button>
-                <button class="qnav-item" onclick="showTab('password')">
-                    <i class="fas fa-lock"></i> Mot de passe
-                </button>
-                <button class="qnav-item" onclick="showTab('notifs')">
-                    <i class="fas fa-bell"></i> Notifications
-                </button>
-                <button class="qnav-item" onclick="showTab('activity')">
-                    <i class="fas fa-clock-rotate-left"></i> Activité
-                </button>
-                <div class="qnav-sep"></div>
-                <a href="{% url 'users:user_home' %}" class="qnav-item">
-                    <i class="fas fa-house"></i> Accueil
-                </a>
-                <button class="qnav-item danger" onclick="document.getElementById('logout-form').submit()">
-                    <i class="fas fa-arrow-right-from-bracket"></i> Déconnexion
-                </button>
-                <form id="logout-form" action="{% url 'users:deconnexion' %}" method="post" style="display:none;">{% csrf_token %}</form>
-            </div>
-        </div>
-    </aside>
-
-    <!-- ════════════════════════ RIGHT COLUMN -->
-    <div class="right-col">
-
-        <!-- ── TAB: INFORMATIONS ── -->
-        <div class="tab-panel active" id="tab-info">
-            <div class="card">
-                <div class="card-body">
-                    <div class="section-header">
-                        <h2 class="section-title">Informations personnelles</h2>
-                    </div>
-                    <form method="post" action="{% url 'users:modifier_profil' %}">
+        <!-- Main Content -->
+        <div class="flex-1 space-y-8">
+            
+            <!-- Tab: Info -->
+            <div id="tab-info" class="tab-panel active">
+                <div class="cool-card">
+                    <h3 class="text-2xl font-bold text-[var(--ink)] font-serif-display mb-8">Informations Générales</h3>
+                    <form method="post" action="{% url 'users:modifier_profil' %}" class="space-y-6">
                         {% csrf_token %}
-                        <div class="field-row">
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black text-[var(--muted)] uppercase tracking-widest ml-2">Nom d'utilisateur</label>
+                                <input type="text" name="username" value="{{ user.username }}" class="cool-input" required>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black text-[var(--muted)] uppercase tracking-widest ml-2">Adresse E-mail</label>
+                                <input type="email" name="email" value="{{ user.email }}" class="cool-input" required>
+                            </div>
                         </div>
-                        <div class="field-group">
-                            <label class="field-label">Nom d'utilisateur</label>
-                            <input type="text" class="field-input" name="username" value="{{ user.username }}">
-                            <span class="field-hint">Visible publiquement · Utilisé pour vous identifier</span>
+                        <div class="pt-4 flex justify-end">
+                            <button type="submit" class="btn btn-primary px-10">Mettre à jour</button>
                         </div>
-                        <div class="field-group">
-                            <label class="field-label">Adresse e-mail</label>
-                            <input type="email" class="field-input" name="email" value="{{ user.email }}">
+                    </form>
+                </div>
+                
+                <div class="mt-8 cool-card border-red-100 bg-red-50/10">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <h4 class="text-lg font-bold text-red-600">Supprimer le compte</h4>
+                            <p class="text-sm text-[var(--muted)]">Cette action supprimera définitivement toutes vos données.</p>
                         </div>
+                        <button onclick="confirmDelete()" class="btn btn-danger">Supprimer</button>
+                    </div>
+                </div>
+            </div>
 
-                        <div class="form-footer">
-                            <button type="reset" class="btn btn-ghost">Annuler</button>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-check" style="font-size:.75rem;"></i> Enregistrer
-                            </button>
+            <!-- Tab: Security -->
+            <div id="tab-security" class="tab-panel">
+                <div class="cool-card">
+                    <h3 class="text-2xl font-bold text-[var(--ink)] font-serif-display mb-8">Sécurité du compte</h3>
+                    <form method="post" action="{% url 'users:modifier_mot_de_passe' %}" class="space-y-6">
+                        {% csrf_token %}
+                        <div class="space-y-2">
+                            <label class="text-[10px] font-black text-[var(--muted)] uppercase tracking-widest ml-2">Mot de passe actuel</label>
+                            <input type="password" name="current_password" class="cool-input" required placeholder="••••••••">
+                        </div>
+                        <div class="grid md:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black text-[var(--muted)] uppercase tracking-widest ml-2">Nouveau mot de passe</label>
+                                <input type="password" name="new_password" class="cool-input" required placeholder="••••••••">
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[10px] font-black text-[var(--muted)] uppercase tracking-widest ml-2">Confirmer</label>
+                                <input type="password" name="confirm_password" class="cool-input" required placeholder="••••••••">
+                            </div>
+                        </div>
+                        <div class="pt-4 flex justify-end">
+                            <button type="submit" class="btn btn-primary px-10">Modifier le mot de passe</button>
                         </div>
                     </form>
                 </div>
             </div>
 
-            <!-- Danger zone -->
-            <div class="danger-zone">
-                <div class="danger-zone-title"><i class="fas fa-triangle-exclamation"></i> Zone de danger</div>
-                <div class="danger-item">
-                    <div class="danger-desc">
-                        <p>Confidentialité</p>
-                        <span>Pour plus de protection de vos données , veuillez trouver un mot de passe robuste </span>
-                    </div>
-                    <button class="btn btn-outline" style="font-size:.8rem;flex-shrink:0;">voir plus</button>
-                </div>
-                <div class="danger-item">
-                    <div class="danger-desc">
-                        <p>Supprimer le compte</p>
-                        <span>Action irréversible — toutes vos données seront effacées.</span>
-                    </div>
-                    <button class="btn btn-danger" style="font-size:.8rem;flex-shrink:0;">Supprimer</button>
-                </div>
-            </div>
-        </div>
-
-     
-        <div class="tab-panel" id="tab-password">
-            <div class="card">
-                <div class="card-body">
-                    <div class="section-header">
-                        <h2 class="section-title">Changer le mot de passe</h2>
-                    </div>
-                    <form method="post" action="{% url 'users:modifier_mot_de_passe' %}">
-                        {% csrf_token %}
-                        <div class="field-group">
-                            <label class="field-label">Mot de passe actuel</label>
-                            <div class="field-icon-wrap">
-                                <input type="password" class="field-input" id="pw-current" name="current_password" placeholder="••••••••">
-                                <button type="button" class="toggle-pw" onclick="togglePw('pw-current', this)"><i class="fas fa-eye"></i></button>
+            <!-- Tab: Activity -->
+            <div id="tab-activity" class="tab-panel">
+                <div class="cool-card">
+                    <h3 class="text-2xl font-bold text-[var(--ink)] font-serif-display mb-8">Dernières Activités</h3>
+                    <div class="space-y-6">
+                        <div class="flex items-start gap-4 p-4 rounded-2xl bg-[var(--paper)]">
+                            <div class="w-10 h-10 rounded-xl bg-[var(--ink)] text-[var(--paper)] flex items-center justify-center">
+                                <i class="fas fa-sign-in-alt"></i>
+                            </div>
+                            <div>
+                                <div class="font-bold text-[var(--ink)]">Dernière connexion</div>
+                                <div class="text-xs text-[var(--muted)]">Il y a quelques minutes depuis votre navigateur actuel.</div>
                             </div>
                         </div>
-                        <div class="field-group">
-                            <label class="field-label">Nouveau mot de passe</label>
-                            <div class="field-icon-wrap">
-                                <input type="password" class="field-input" id="pw-new" name="new_password" placeholder="••••••••" oninput="checkStrength(this.value)">
-                                <button type="button" class="toggle-pw" onclick="togglePw('pw-new', this)"><i class="fas fa-eye"></i></button>
+                        <div class="flex items-start gap-4 p-4 rounded-2xl bg-[var(--paper)] opacity-50">
+                            <div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-500 flex items-center justify-center">
+                                <i class="fas fa-edit"></i>
                             </div>
-                            <div class="strength-bar"><div class="strength-fill" id="strength-fill"></div></div>
-                            <div class="strength-label" id="strength-label">Entrez un mot de passe</div>
-                        </div>
-                        <div class="field-group">
-                            <label class="field-label">Confirmer le nouveau mot de passe</label>
-                            <div class="field-icon-wrap">
-                                <input type="password" class="field-input" id="pw-confirm" name="confirm_password" placeholder="••••••••">
-                                <button type="button" class="toggle-pw" onclick="togglePw('pw-confirm', this)"><i class="fas fa-eye"></i></button>
+                            <div>
+                                <div class="font-bold text-[var(--ink)]">Mise à jour du profil</div>
+                                <div class="text-xs text-[var(--muted)]">Il y a 2 jours.</div>
                             </div>
                         </div>
-                        <div class="form-footer">
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-lock" style="font-size:.75rem;"></i> Mettre à jour
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-
-       
-        <div class="tab-panel" id="tab-notifs">
-            <div class="card">
-                <div class="card-body">
-                    <div class="section-header">
-                        <h2 class="section-title">Préférences de notifications</h2>
-                    </div>
-                    {% for label, key in notif_options %}
-                    <div class="danger-item">
-                        <div class="danger-desc">
-                            <p>{{ label }}</p>
-                        </div>
-
-                    </div>
-                    {% empty %}
-
-                    {% endfor %}
-                    <div class="form-footer" style="margin-top:12px;">
-                        <button class="btn btn-primary">
-                            <i class="fas fa-check" style="font-size:.75rem;"></i> Sauvegarder
-                        </button>
                     </div>
                 </div>
             </div>
-        </div>
 
-     
-        <div class="tab-panel" id="tab-activity">
-            <div class="card">
-                <div class="card-body">
-                    <div class="section-header">
-                        <h2 class="section-title">Activité récente</h2>
-                    </div>
-                    <div class="activity-feed">
-                        {% for log in activity_logs %}
-                        <div class="activity-item">
-                            <div class="activity-dot" style="background:{{ log.color }};color:#fff;">
-                                <i class="fas {{ log.icon }}"></i>
-                            </div>
-                            <div class="activity-text">
-                                <p>{{ log.description }}</p>
-                                <span>{{ log.created_at|timesince }} ago</span>
-                            </div>
-                        </div>
-                        {% empty %}
-                        <!-- Exemple statique -->
-                        <div class="activity-item">
-                            <div class="activity-dot" style="background:#edfbf3;color:#1a6640;"><i class="fas fa-user-check"></i></div>
-                            <div class="activity-text"><p>Profil mis à jour</p><span>Il y a 2 heures</span></div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-dot" style="background:#eff6ff;color:#1e40af;"><i class="fas fa-right-to-bracket"></i></div>
-                            <div class="activity-text"><p>Connexion depuis Antananarivo</p><span>Il y a 1 jour</span></div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-dot" style="background:#fffbeb;color:#92400e;"><i class="fas fa-lock"></i></div>
-                            <div class="activity-text"><p>Mot de passe modifié</p><span>Il y a 5 jours</span></div>
-                        </div>
-                        <div class="activity-item">
-                            <div class="activity-dot" style="background:#fdf3f2;color:#922b21;"><i class="fas fa-camera"></i></div>
-                            <div class="activity-text"><p>Photo de profil mise à jour</p><span>Il y a 1 semaine</span></div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
         </div>
-
     </div>
 </div>
 
-
-<div class="modal-overlay" id="avatar-modal">
-    <div class="modal-box">
-        <div class="modal-header">
-            <span class="modal-title">Modifier la photo de profil</span>
-            <button class="modal-close" onclick="closeAvatarModal()"><i class="fas fa-xmark"></i></button>
-        </div>
-        <div class="modal-body">
-            <form method="post" enctype="multipart/form-data" action="{%url 'users:modifier_photo'%}" id="avatar-form">
-                {% csrf_token %}
-                <input type="file" id="avatar-input" name="photo" accept="image/*">
-                <img class="preview-img" id="modal-preview" src="" alt="Aperçu">
-                <div class="drop-zone" id="drop-zone" onclick="document.getElementById('avatar-input').click()">
-                    <div class="drop-icon"><i class="fas fa-cloud-arrow-up"></i></div>
-                    <div class="drop-label">Glissez votre image ici</div>
-                    <div class="drop-sub">PNG, JPG, WEBP · Max 5 Mo</div>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-ghost" style="flex:1;" onclick="closeAvatarModal()">Annuler</button>
-            <button class="btn btn-primary" style="flex:1;" onclick="document.getElementById('avatar-form').submit()">
-                <i class="fas fa-check" style="font-size:.75rem;"></i> Enregistrer
+<!-- Photo Modal -->
+<div id="avatar-modal" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[200] hidden flex items-center justify-center p-6">
+    <div class="cool-card max-w-md w-full animate-modal-in">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-xl font-bold font-serif-display">Modifier la photo</h3>
+            <button onclick="closeAvatarModal()" class="w-8 h-8 rounded-full bg-[var(--paper)] flex items-center justify-center hover:bg-[var(--line)] transition-colors">
+                <i class="fas fa-times text-xs"></i>
             </button>
         </div>
+        <form method="post" enctype="multipart/form-data" action="{% url 'users:modifier_photo' %}" id="avatar-form">
+            {% csrf_token %}
+            <div class="border-2 border-dashed border-[var(--line)] rounded-3xl p-10 text-center cursor-pointer hover:border-[var(--accent)] transition-colors" onclick="document.getElementById('photo-input').click()">
+                <i class="fas fa-cloud-upload-alt text-4xl text-[var(--line)] mb-4"></i>
+                <p class="text-sm font-bold text-[var(--muted)]">Cliquez pour choisir une image</p>
+                <p class="text-[10px] text-[var(--muted)] mt-1">JPG, PNG ou WEBP · Max 2MB</p>
+                <input type="file" id="photo-input" name="photo" class="hidden" accept="image/*" onchange="this.form.submit()">
+            </div>
+        </form>
     </div>
 </div>
 
 <script>
-   
-    function showTab(name) {
+    function showTab(tabId, btn) {
         document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-        document.querySelectorAll('.qnav-item').forEach(b => b.classList.remove('active'));
-        document.getElementById('tab-' + name).classList.add('active');
-        event.currentTarget.classList.add('active');
+        document.querySelectorAll('.profile-nav-item').forEach(b => b.classList.remove('active'));
+        document.getElementById('tab-' + tabId).classList.add('active');
+        btn.classList.add('active');
     }
 
-    // ── AVATAR MODAL ─────────────────────────────────────────
-    function openAvatarModal()  { document.getElementById('avatar-modal').classList.add('open'); }
-    function closeAvatarModal() { document.getElementById('avatar-modal').classList.remove('open'); }
-
-    document.getElementById('avatar-modal').addEventListener('click', function(e) {
-        if (e.target === this) closeAvatarModal();
-    });
-
-   
-    document.getElementById('avatar-input').addEventListener('change', function() {
-        if (!this.files[0]) return;
-        const url = URL.createObjectURL(this.files[0]);
-        const preview = document.getElementById('modal-preview');
-        preview.src = url;
-        preview.style.display = 'block';
-        document.getElementById('drop-zone').style.display = 'none';
-    });
-
-   
-    const dz = document.getElementById('drop-zone');
-    dz.addEventListener('dragover', e => { e.preventDefault(); dz.classList.add('dragging'); });
-    dz.addEventListener('dragleave', () => dz.classList.remove('dragging'));
-    dz.addEventListener('drop', e => {
-        e.preventDefault();
-        dz.classList.remove('dragging');
-        const file = e.dataTransfer.files[0];
-        if (file && file.type.startsWith('image/')) {
-            const dt = new DataTransfer();
-            dt.items.add(file);
-            document.getElementById('avatar-input').files = dt.files;
-            const url = URL.createObjectURL(file);
-            const preview = document.getElementById('modal-preview');
-            preview.src = url;
-            preview.style.display = 'block';
-            dz.style.display = 'none';
-        }
-    });
-
-
-    function togglePw(id, btn) {
-        const input = document.getElementById(id);
-        const icon = btn.querySelector('i');
-        if (input.type === 'password') {
-            input.type = 'text';
-            icon.classList.replace('fa-eye', 'fa-eye-slash');
-        } else {
-            input.type = 'password';
-            icon.classList.replace('fa-eye-slash', 'fa-eye');
-        }
-    }
-
+    function openAvatarModal() { document.getElementById('avatar-modal').classList.remove('hidden'); }
+    function closeAvatarModal() { document.getElementById('avatar-modal').classList.add('hidden'); }
     
-    function checkStrength(val) {
-        const fill = document.getElementById('strength-fill');
-        const label = document.getElementById('strength-label');
-        let score = 0;
-
-        if (val.length > 7) score++;
-        if (/[A-Z]/.test(val)) score++;
-        if (/[0-9]/.test(val)) score++;
-        if (/[^A-Za-z0-9]/.test(val)) score++;
-
-        const colors = ['#e74c3c', '#e67e22', '#f1c40f', '#2ecc71'];
-        const texts = ['Très faible', 'Faible', 'Moyen', 'Fort'];
-
-        if (val.length === 0) {
-            fill.style.width = '0%';
-            label.innerText = 'Entrez un mot de passe';
-            label.style.color = 'var(--muted)';
-        } else {
-            fill.style.width = (score + 1) * 20 + '%';
-            fill.style.background = colors[score] || colors[0];
-            label.innerText = texts[score] || texts[0];
-            label.style.color = colors[score] || colors[0];
+    function confirmDelete() {
+        if (confirm("Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est irréversible.")) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = "{% url 'users:supprimer_compte' %}";
+            const csrf = document.createElement('input');
+            csrf.type = 'hidden';
+            csrf.name = 'csrfmiddlewaretoken';
+            csrf.value = "{{ csrf_token }}";
+            form.appendChild(csrf);
+            document.body.appendChild(form);
+            form.submit();
         }
     }
 </script>

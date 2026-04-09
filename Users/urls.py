@@ -6,13 +6,10 @@ from django.conf.urls.static import static
 from django.shortcuts import render
 from Users import views
 
-
-
-
-
 app_name = "users"
 urlpatterns = [
-    path("", views.inscription, name="inscription"),
+    path("", views.landing, name="landing"),
+    path("inscription/", views.inscription, name="inscription"),
     path("connexion/", views.connexion, name="connexion"),
     path("login_success/", views.login_success, name="login_success"),
     path("admin_dashboard/", views.admin_dashboard, name="admin_dashboard"),
@@ -27,7 +24,6 @@ urlpatterns = [
     path("supprimer_compte/", views.supprimer_compte, name="supprimer_compte"),
     path('chat/', views.chat_page, name='chat_home'),
     path('api/chat/', views.chat_with_ai, name='chat_api'),
-    
 ]
 
 if settings.DEBUG:
