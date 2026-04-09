@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+
+from pregancy.models import SuiviHebdomadaire
 from .models import User
 
 class CustomUserCreationForm(UserCreationForm):
@@ -52,3 +54,24 @@ class CustomUserChangeForm(UserChangeForm):
             'groupe_sanguin': forms.Select(attrs={'class': 'form-control'}),
             'antecedents_medicaux': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
         }
+        
+        
+class SuiviHebdomadaireForm(forms.ModelForm):
+    class Meta:
+        model = SuiviHebdomadaire
+        fields = [
+            "semaine_grossesse",
+            "poids",
+            "tension_systolique",
+            "tension_diastolique",
+            "temperature",
+            "niveau_fatigue",
+            "niveau_stress",
+            "qualite_sommeil",
+            "douleur",
+            "nausees",
+            "vomissements",
+            "saignement",
+            "mouvement_bebe",
+            "commentaire",
+        ]
