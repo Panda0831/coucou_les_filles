@@ -38,6 +38,17 @@ def inscription(request):
             user = form.save()
             login(request, user)
             return redirect("users:connexion")
+        else:
+            # Convert form errors to a simple list
+            error_list = []
+            for field, errors in form.errors.items():
+                for error in errors:
+                    error_list.append(f"{field}: {error}")
+            return render(
+                request,
+                "auth/inscription.html",
+                {"form": form, "error_list": error_list},
+            )
     else:
         form = CustomUserCreationForm()
     return render(request, "auth/inscription.html", {"form": form})

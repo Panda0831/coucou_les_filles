@@ -31,7 +31,7 @@ class User(AbstractUser):
     )
 
     antecedents_medicaux = models.TextField(null=True, blank=True)
-    nombre_grossesses_precedentes = models.PositiveIntegerField(default=0)
+    nombre_grossesses_precedentes = models.PositiveIntegerField(default=0, blank=True)
 
     photo = models.ImageField(
         upload_to="profile_pictures/",

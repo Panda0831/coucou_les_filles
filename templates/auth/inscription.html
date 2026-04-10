@@ -1,495 +1,708 @@
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
-
-  :root {
-    --rg-rose:       #C4728A;
-    --rg-rose-light: #F8EDF0;
-    --rg-rose-mid:   #E8C5CF;
-    --rg-rose-dark:  #8B4A5C;
-    --rg-sage:       #7A9E8E;
-    --rg-sage-light: #E8F2EE;
-    --rg-cream:      #FBF7F4;
-    --rg-ink:        #2A2320;
-    --rg-muted:      #8A7E7A;
-    --rg-line:       #EBE3DF;
-    --rg-white:      #FFFFFF;
-    --rg-ff-display: 'Cormorant Garamond', Georgia, serif;
-    --rg-ff-body:    'DM Sans', system-ui, sans-serif;
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
   }
 
-  .rg-page {
-    font-family: var(--rg-ff-body);
-    min-height: 80vh;
+  body {
+    background: linear-gradient(135deg, #fff7f8 0%, #f7f2ff 100%);
+    min-height: 100vh;
+  }
+
+  .pg {
+    font-family: var(--font-sans);
+    padding: 3rem 1.2rem 4rem;
+    max-width: 760px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .pg::before {
+    content: "";
+    position: fixed;
+    top: -100px;
+    right: -100px;
+    width: 260px;
+    height: 260px;
+    background: rgba(196, 114, 138, 0.12);
+    border-radius: 50%;
+    filter: blur(20px);
+    z-index: -1;
+  }
+
+  .pg::after {
+    content: "";
+    position: fixed;
+    bottom: -120px;
+    left: -100px;
+    width: 280px;
+    height: 280px;
+    background: rgba(139, 74, 92, 0.08);
+    border-radius: 50%;
+    filter: blur(25px);
+    z-index: -1;
+  }
+
+  .header-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #f9dce5, #fff);
+    border: 1px solid #f1c8d3;
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
-    padding: 2.5rem 1rem 4rem;
-    background: var(--rg-cream);
+    margin: 0 auto 1.2rem;
+    box-shadow: 0 10px 30px rgba(196, 114, 138, 0.15);
   }
 
-  .rg-panel {
-    width: 100%;
-    max-width: 600px;
-    animation: rg-rise .4s ease both;
+  .eyebrow {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #c4728a;
+    text-align: center;
+    margin-bottom: 0.6rem;
   }
 
-  @keyframes rg-rise {
-    from { opacity: 0; transform: translateY(14px); }
-    to   { opacity: 1; transform: translateY(0); }
+  .main-title {
+    font-family: var(--font-serif);
+    font-size: 2.4rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    text-align: center;
+    line-height: 1.15;
+    margin-bottom: 0.8rem;
   }
 
-  /* ── Header ── */
-  .rg-header {
+  .main-title em {
+    font-style: italic;
+    color: #8b4a5c;
+  }
+
+  .sub {
+    font-size: 15px;
+    color: var(--color-text-secondary);
     text-align: center;
     margin-bottom: 2rem;
+    line-height: 1.7;
   }
 
-  .rg-header__mark {
-    display: inline-flex;
+  .steps {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2.5rem;
+    background: rgba(255,255,255,0.8);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255,255,255,0.7);
+    padding: 1rem;
+    border-radius: 22px;
+    box-shadow: 0 12px 35px rgba(0,0,0,0.05);
+  }
+
+  .step {
+    display: flex;
+    align-items: center;
+    flex: 1;
+  }
+
+  .step:last-child {
+    flex: 0;
+  }
+
+  .step-dot {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 2px solid #ead6dd;
+    background: #fff;
+    display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
-    background: var(--rg-rose-light);
-    border: 1.5px solid var(--rg-rose-mid);
-    border-radius: 50%;
-    margin-bottom: 1.1rem;
+    font-size: 14px;
+    font-weight: 700;
+    color: #9c7d86;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
   }
 
-  .rg-header__mark svg { width: 22px; height: 22px; }
-
-  .rg-header__eyebrow {
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: .13em;
-    text-transform: uppercase;
-    color: var(--rg-rose);
-    margin-bottom: .45rem;
+  .step.active .step-dot,
+  .step.done .step-dot {
+    background: linear-gradient(135deg, #c4728a, #8b4a5c);
+    border-color: transparent;
+    color: white;
+    transform: scale(1.08);
   }
 
-  .rg-header h1 {
-    font-family: var(--rg-ff-display);
-    font-size: 2rem;
-    font-weight: 300;
-    color: var(--rg-ink);
-    line-height: 1.15;
-    margin-bottom: .4rem;
+  .step-line {
+    flex: 1;
+    height: 4px;
+    margin: 0 10px;
+    border-radius: 999px;
+    background: #eadfe3;
   }
 
-  .rg-header h1 em { font-style: italic; color: var(--rg-rose-dark); }
-
-  .rg-header p {
-    font-size: 13.5px;
-    color: var(--rg-muted);
-    line-height: 1.6;
+  .step.done .step-line {
+    background: linear-gradient(90deg, #c4728a, #8b4a5c);
   }
 
-  /* ── Card ── */
-  .rg-card {
-    background: var(--rg-white);
-    border: 1px solid var(--rg-line);
-    border-radius: 20px;
-    padding: 2rem 2rem 1.75rem;
+  .step-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #8e7a80;
+    margin-top: 6px;
   }
 
-  /* ── Section label ── */
-  .rg-section {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 1.25rem;
+  .panel {
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,0.7);
+    border-radius: 28px;
+    padding: 2rem;
+    display: none;
+    box-shadow: 0 20px 45px rgba(0,0,0,0.08);
   }
 
-  .rg-section__tag {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: .09em;
-    text-transform: uppercase;
-    color: var(--rg-rose-dark);
-    background: var(--rg-rose-light);
-    border: 1px solid var(--rg-rose-mid);
-    padding: 3px 10px;
-    border-radius: 20px;
+  .panel.active {
+    display: block;
+    animation: fadeInUp 0.35s ease;
   }
 
-  /* ── Grid ── */
-  .rg-grid {
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(18px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .grid2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1rem 1.1rem;
+    gap: 18px;
   }
 
-  .rg-grid--full { grid-column: 1 / -1; }
+  .full {
+    grid-column: 1 / -1;
+  }
 
-  /* ── Field ── */
-  .rg-field {
+  .field {
     display: flex;
     flex-direction: column;
-    gap: .38rem;
+    gap: 8px;
   }
 
-  .rg-field label {
-    font-size: 11.5px;
-    font-weight: 500;
-    letter-spacing: .05em;
+  .field label {
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: var(--rg-muted);
+    color: #7f6870;
   }
 
-  /* All Django-rendered inputs, selects, textareas, file inputs */
-  .rg-field input[type="text"],
-  .rg-field input[type="email"],
-  .rg-field input[type="password"],
-  .rg-field input[type="number"],
-  .rg-field input[type="date"],
-  .rg-field select,
-  .rg-field textarea {
+  .inp {
     width: 100%;
-    height: 44px;
-    padding: 0 .9rem;
-    font-family: var(--rg-ff-body);
-    font-size: 14px;
-    color: var(--rg-ink);
-    background: var(--rg-cream);
-    border: 1px solid var(--rg-line);
-    border-radius: 9px;
+    min-height: 52px;
+    padding: 0 1rem;
+    font-size: 15px;
+    border-radius: 16px;
+    border: 1.5px solid #eadfe3;
+    background: rgba(255,255,255,0.9);
+    color: #3d2e34;
     outline: none;
-    transition: border-color .18s, box-shadow .18s, background .18s;
-    -webkit-appearance: none;
-    appearance: none;
+    transition: all 0.25s ease;
   }
 
-  .rg-field textarea {
-    height: auto;
-    min-height: 80px;
-    padding: .65rem .9rem;
+  .inp:hover {
+    border-color: #d8a6b6;
+  }
+
+  .inp:focus {
+    border-color: #c4728a;
+    box-shadow: 0 0 0 5px rgba(196, 114, 138, 0.12);
+    transform: translateY(-1px);
+  }
+
+  textarea.inp {
+    min-height: 120px;
+    padding: 1rem;
     resize: vertical;
   }
 
-  .rg-field input[type="text"]::placeholder,
-  .rg-field input[type="email"]::placeholder,
-  .rg-field input[type="password"]::placeholder,
-  .rg-field input[type="number"]::placeholder { color: #C2B8B4; }
-
-  .rg-field input:hover,
-  .rg-field select:hover,
-  .rg-field textarea:hover { border-color: var(--rg-rose-mid); }
-
-  .rg-field input:focus,
-  .rg-field select:focus,
-  .rg-field textarea:focus {
-    border-color: var(--rg-rose);
-    background: var(--rg-white);
-    box-shadow: 0 0 0 3px rgba(196,114,138,.11);
+  .pwd-wrap,
+  .select-wrap {
+    position: relative;
   }
 
-  /* Password strength animation */
-  .rg-field input[type="password"]:focus {
-    letter-spacing: .08em;
+  .pwd-wrap .inp {
+    padding-right: 3rem;
   }
 
-  /* File input */
-  .rg-field input[type="file"] {
-    height: auto;
-    padding: .55rem .9rem;
-    font-size: 13px;
-    color: var(--rg-muted);
-    cursor: pointer;
-    border-style: dashed;
-    background: var(--rg-rose-light);
-    border-color: var(--rg-rose-mid);
-  }
-
-  .rg-field input[type="file"]::-webkit-file-upload-button {
-    background: var(--rg-rose);
-    color: #fff;
-    border: none;
-    padding: .3rem .85rem;
-    border-radius: 6px;
-    font-family: var(--rg-ff-body);
-    font-size: 12px;
-    font-weight: 500;
-    cursor: pointer;
-    margin-right: .75rem;
-    transition: background .18s;
-  }
-
-  .rg-field input[type="file"]::-webkit-file-upload-button:hover {
-    background: var(--rg-rose-dark);
-  }
-
-  /* Select arrow */
-  .rg-select-wrap { position: relative; }
-  .rg-select-wrap::after {
-    content: '';
+  .eye {
     position: absolute;
-    right: 13px;
+    right: 14px;
     top: 50%;
     transform: translateY(-50%);
-    width: 0; height: 0;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    border-top: 5px solid var(--rg-muted);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #8f6d77;
+  }
+
+  .select-wrap::after {
+    content: "";
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 6px solid #8f6d77;
     pointer-events: none;
   }
 
-  /* Errors from Django */
-  .rg-field__errors {
+  .actions {
     display: flex;
-    flex-direction: column;
-    gap: .18rem;
-    margin-top: .1rem;
+    gap: 14px;
+    margin-top: 2rem;
   }
 
-  .rg-field__error {
-    font-size: 11.5px;
-    color: #A83232;
-    display: flex;
-    align-items: center;
-    gap: 5px;
+  .btn-back,
+  .btn-next {
+    min-height: 52px;
+    border-radius: 16px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
   }
 
-  .rg-field__error::before {
-    content: '';
-    display: inline-block;
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: #A83232;
-    flex-shrink: 0;
+  .btn-back {
+    padding: 0 1.4rem;
+    border: 1.5px solid #e5d9de;
+    background: rgba(255,255,255,0.85);
+    color: #7c6770;
   }
 
-  .rg-field.rg-has-error input,
-  .rg-field.rg-has-error select,
-  .rg-field.rg-has-error textarea {
-    border-color: #E07070;
-    box-shadow: 0 0 0 3px rgba(220,80,80,.09);
-  }
-
-  /* ── Divider ── */
-  .rg-divider {
-    display: flex;
-    align-items: center;
-    gap: .75rem;
-    margin: 1.5rem 0;
-  }
-  .rg-divider::before, .rg-divider::after {
-    content: ''; flex: 1; height: 1px; background: var(--rg-line);
-  }
-  .rg-divider span {
-    font-size: 11px; color: var(--rg-muted);
-    letter-spacing: .08em; text-transform: uppercase;
-  }
-
-  /* ── Submit ── */
-  .rg-submit {
-    margin-top: 1.5rem;
-    width: 100%;
-    height: 48px;
+  .btn-next {
+    flex: 1;
+    border: none;
+    background: linear-gradient(135deg, #c4728a, #8b4a5c);
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
-    background: var(--rg-rose);
-    color: #fff;
-    border: none;
-    border-radius: 10px;
-    font-family: var(--rg-ff-body);
-    font-size: 14.5px;
-    font-weight: 500;
-    cursor: pointer;
-    letter-spacing: .02em;
-    transition: background .2s, transform .1s;
-    position: relative;
-    overflow: hidden;
+    gap: 10px;
+    box-shadow: 0 12px 25px rgba(196, 114, 138, 0.28);
   }
 
-  .rg-submit::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(255,255,255,0);
-    transition: background .2s;
+  .btn-next:hover {
+    transform: translateY(-2px);
   }
 
-  .rg-submit:hover  { background: var(--rg-rose-dark); }
-  .rg-submit:active { transform: scale(.98); }
-
-  .rg-submit svg { width: 15px; height: 15px; transition: transform .2s; }
-  .rg-submit:hover svg { transform: translateX(3px); }
-
-  /* ── Footer ── */
-  .rg-footer {
-    margin-top: 1.5rem;
+  .footer-link {
     text-align: center;
-    font-size: 13.5px;
-    color: var(--rg-muted);
+    margin-top: 1.5rem;
+    font-size: 14px;
   }
 
-  .rg-footer a {
-    color: var(--rg-rose-dark);
-    font-weight: 500;
+  .footer-link a {
+    color: #8b4a5c;
     text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: border-color .2s;
+    font-weight: 700;
   }
 
-  .rg-footer a:hover { border-color: var(--rg-rose-dark); }
+  @media (max-width: 640px) {
+    .main-title {
+      font-size: 2rem;
+    }
 
-  /* ── Responsive ── */
-  @media (max-width: 520px) {
-    .rg-card    { padding: 1.5rem 1.1rem; }
-    .rg-grid    { grid-template-columns: 1fr; }
-    .rg-header h1 { font-size: 1.7rem; }
+    .grid2 {
+      grid-template-columns: 1fr;
+    }
+
+    .actions {
+      flex-direction: column;
+    }
+
+    .btn-back,
+    .btn-next {
+      width: 100%;
+    }
   }
 </style>
 
-<div class="rg-page">
-  <div class="rg-panel">
 
-    <!-- Header -->
-    <header class="rg-header">
-      <div class="rg-header__mark">
-        <svg viewBox="0 0 24 24" fill="none" stroke="#C4728A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-        </svg>
+
+<div class="pg">
+  <div style="margin-bottom: 1.75rem">
+    <div class="header-icon">
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="#C4728A"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path
+          d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"
+        />
+      </svg>
+    </div>
+    <p class="eyebrow">MamaSafe</p>
+    <h1 class="main-title">Créer votre espace <em>maternité</em></h1>
+  </div>
+
+  <div class="steps" id="steps-bar">
+    <div class="step active" id="step-ind-0">
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 3px;
+        "
+      >
+        <div class="step-dot">1</div>
+        <span class="step-label">Compte</span>
       </div>
-      <p class="rg-header__eyebrow">Suivi de grossesse</p>
-      <h1>Créer votre espace <em>maternité</em></h1>
-      <p>Rejoignez la plateforme et commencez votre suivi personnalisé.</p>
-    </header>
-
-    <!-- Card -->
-    <div class="rg-card">
-
-      <div class="rg-section">
-        <span class="rg-section__tag">Inscription</span>
+      <div class="step-line"></div>
+    </div>
+    <div class="step" id="step-ind-1">
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 3px;
+        "
+      >
+        <div class="step-dot">2</div>
+        <span class="step-label">Profil</span>
       </div>
+      <div class="step-line"></div>
+    </div>
+    <div class="step" id="step-ind-2">
+      <div
+        style="
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 3px;
+        "
+      >
+        <div class="step-dot">3</div>
+        <span class="step-label">Santé</span>
+      </div>
+    </div>
+  </div>
 
-      <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
+  <form method="post" action="{% url 'users:inscription' %}" id="reg-form">
+    {% csrf_token %} {% if error_list %}
+    <div
+      style="
+        background: #ffe0e0;
+        border: 1px solid #e07070;
+        border-radius: 8px;
+        padding: 12px;
+        margin-bottom: 1.5rem;
+        font-size: 14px;
+        color: #c0392b;
+      "
+    >
+      <strong>Erreurs lors de l'inscription:</strong>
+      <ul style="margin: 8px 0 0 20px">
+        {% for error in error_list %}
+        <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
 
-        <div class="rg-grid">
-          {% for field in form %}
-            <div class="field rg-field {% if field.errors %}rg-has-error{% endif %} {% if field.field.widget.input_type == 'textarea' or field.html_name == 'antecedents_medicaux' %}rg-grid--full{% endif %}">
-
-              <label for="{{ field.id_for_label }}">
-                {{ field.label }}
-                {% if field.field.required %}
-                  <span class="required-mark" aria-hidden="true">*</span>
-                {% endif %}
-              </label>
-
-              {% if field.html_name == 'password1' or field.html_name == 'password2' %}
-                <div class="password-wrap">
-                  {{ field }}
-                  <button type="button" class="password-toggle" aria-label="Afficher le mot de passe">
-                    <i class="fas fa-eye"></i>
-                  </button>
-                </div>
-                {% if field.html_name == 'password1' %}
-                  <div class="strength-meter" id="strength-meter-{{ field.id_for_label }}">
-                    <div class="strength-bar"></div>
-                  </div>
-                {% endif %}
-              {% elif field.field.widget.input_type == 'select' %}
-                <div class="rg-select-wrap">{{ field }}</div>
-              {% else %}
-                {{ field }}
-              {% endif %}
-
-              {% if field.html_name == 'antecedents_medicaux' %}
-                <div class="char-counter" id="char-counter-{{ field.id_for_label }}">
-                  0 / 500
-                </div>
-              {% endif %}
-
-              {% if field.errors %}
-                <div class="field-error rg-field__errors">
-                  <i class="fas fa-circle-exclamation"></i>
-                  <div class="flex flex-col">
-                    {% for error in field.errors %}
-                      <span class="rg-field__error">{{ error }}</span>
-                    {% endfor %}
-                  </div>
-                </div>
-              {% endif %}
-
-            </div>
-          {% endfor %}
+    <div class="panel active" id="panel-0">
+      <div class="grid2">
+        <div class="field full">
+          <label>Nom d'utilisateur <span>*</span></label>
+          <input
+            class="inp"
+            name="username"
+            id="username"
+            type="text"
+            placeholder="sophie_2026"
+            required
+          />
+          <div class="err-msg" id="err-username">
+            <div class="err-dot"></div>
+            Ce champ est requis
+          </div>
         </div>
-
-        <button type="submit" class="rg-submit">
-          Créer mon espace
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-          </svg>
+        <div class="field full">
+          <label>Adresse e-mail <span>*</span></label>
+          <input
+            class="inp"
+            name="email"
+            id="email"
+            type="email"
+            placeholder="vous@exemple.com"
+            required
+          />
+        </div>
+        <div class="field">
+          <label>Mot de passe <span>*</span></label>
+          <div class="pwd-wrap">
+            <input
+              class="inp"
+              name="password1"
+              id="password1"
+              type="password"
+              placeholder="••••••••"
+              required
+            />
+            <button class="eye" type="button" id="eye1">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                <circle cx="12" cy="12" r="3" />
+              </svg>
+            </button>
+          </div>
+          <div class="strength"><div class="strength-bar" id="sbar"></div></div>
+          <div class="err-msg" id="err-password">
+            <div class="err-dot"></div>
+            Le mot de passe doit être complexe (au moins 8 caractères avec
+            majuscules et caractères spéciaux)
+          </div>
+        </div>
+        <div class="field">
+          <label>Confirmer <span>*</span></label>
+          <div class="pwd-wrap">
+            <input
+              class="inp"
+              name="password2"
+              id="password2"
+              type="password"
+              placeholder="••••••••"
+              required
+            />
+          </div>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn-next" onclick="goNext(0)">
+          Continuer <span class="arrow">→</span>
         </button>
-      </form>
-
+      </div>
+      <p class="footer-link">
+        Déjà inscrite ? <a href="{% url 'users:connexion' %}">Se connecter</a>
+      </p>
     </div>
 
-    <!-- Footer -->
-    <p class="rg-footer">
-      Déjà inscrite ? <a href="{% url 'users:connexion' %}">Se connecter</a>
-    </p>
+    <div class="panel" id="panel-1">
+      <div class="grid2">
+        <div class="field">
+          <label>Âge <span>*</span></label>
+          <input
+            class="inp"
+            name="age"
+            id="age"
+            type="number"
+            min="15"
+            max="60"
+            required
+          />
+        </div>
+        <div class="field">
+          <label>Groupe Sanguin</label>
+          <div class="select-wrap">
+            <select class="inp" name="groupe_sanguin">
+              <option value="">— Choisir —</option>
+              <option value="A+">A+</option>
+              <option value="A-">A-</option>
+              <option value="B+">B+</option>
+              <option value="B-">B-</option>
+              <option value="AB+">AB+</option>
+              <option value="AB-">AB-</option>
+              <option value="O+">O+</option>
+              <option value="O-">O-</option>
+            </select>
+          </div>
+        </div>
+        <div class="field">
+          <label>Taille (cm) <span>*</span></label>
+          <input
+            class="inp"
+            name="taille"
+            id="taille"
+            type="number"
+            placeholder="165"
+            required
+          />
+        </div>
+        <div class="field">
+          <label>Poids Initial (kg) <span>*</span></label>
+          <input
+            class="inp"
+            name="poids_initial"
+            id="poids"
+            type="number"
+            step="0.1"
+            placeholder="60"
+            required
+          />
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn-back" onclick="goBack(1)">
+          ← Retour
+        </button>
+        <button type="button" class="btn-next" onclick="goNext(1)">
+          Continuer <span class="arrow">→</span>
+        </button>
+      </div>
+    </div>
 
-  </div>
+    <div class="panel" id="panel-2">
+      <div class="grid2">
+        <div class="field full">
+          <label>Date des dernières règles <span>*</span></label>
+          <input
+            class="inp"
+            name="date_dernieres_regles"
+            id="date_regles"
+            type="date"
+            required
+          />
+        </div>
+        <div class="field full">
+          <label>Nombre de grossesses précédentes</label>
+          <input
+            class="inp"
+            name="nombre_grossesses_precedentes"
+            type="number"
+            min="0"
+            value="0"
+          />
+        </div>
+        <div class="field full">
+          <label>Antécédents médicaux</label>
+          <textarea
+            class="inp"
+            name="antecedents_medicaux"
+            id="antecedents"
+            maxlength="500"
+            placeholder="Avez-vous des allergies ou pathologies connues ?"
+          ></textarea>
+          <div class="char-counter" id="char-cnt">0 / 500</div>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn-back" onclick="goBack(2)">
+          ← Retour
+        </button>
+        <button type="submit" class="btn-next">
+          Créer mon espace <span class="arrow">✓</span>
+        </button>
+      </div>
+    </div>
+  </form>
 </div>
 
 <script>
-  // Password Toggle
-  document.querySelectorAll('.password-toggle').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const input = btn.previousElementSibling;
-      const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-      input.setAttribute('type', type);
-      btn.querySelector('i').className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
-    });
+  let step = 0;
+  function showStep(n) {
+    document
+      .querySelectorAll(".panel")
+      .forEach((p, i) => p.classList.toggle("active", i === n));
+    for (let i = 0; i < 3; i++) {
+      const el = document.getElementById("step-ind-" + i);
+      if (!el) continue;
+      el.classList.remove("active", "done");
+      if (i < n) el.classList.add("done");
+      if (i === n) el.classList.add("active");
+      const dot = el.querySelector(".step-dot");
+      if (i < n)
+        dot.innerHTML =
+          '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+      else dot.textContent = i + 1;
+    }
+    step = n;
+  }
+
+  function goNext(from) {
+    let invalid = false;
+    let errMsg = "";
+    if (from === 0) {
+      const u = document.getElementById("username").value.trim();
+      const em = document.getElementById("email").value.trim();
+      const p1 = document.getElementById("password1").value;
+      const p2 = document.getElementById("password2").value;
+      if (!u || !em || p1.length < 8 || p1 !== p2) {
+        invalid = true;
+        if (!u) errMsg = "Nom d'utilisateur requis";
+        else if (!em) errMsg = "Email requis";
+        else if (p1.length < 8)
+          errMsg = "Le mot de passe doit faire au moins 8 caractères";
+        else if (p1 !== p2) errMsg = "Les mots de passe ne correspondent pas";
+      }
+    }
+    if (from === 1) {
+      if (
+        !document.getElementById("age").value ||
+        !document.getElementById("taille").value ||
+        !document.getElementById("poids").value
+      ) {
+        invalid = true;
+        errMsg = "Âge, taille et poids initial sont requis";
+      }
+    }
+    if (!invalid) showStep(from + 1);
+    else
+      alert("Veuillez " + (errMsg || "remplir correctement les champs requis"));
+  }
+
+  function goBack(from) {
+    showStep(from - 1);
+  }
+
+  function togglePwd(inputId, btnId) {
+    const i = document.getElementById(inputId);
+    const b = document.getElementById(btnId);
+    const show = i.type === "password";
+    i.type = show ? "text" : "password";
+  }
+  document.getElementById("eye1").onclick = () =>
+    togglePwd("password1", "eye1");
+
+  document.getElementById("password1").addEventListener("input", function () {
+    const v = this.value;
+    const bar = document.getElementById("sbar");
+    let s = 0;
+    if (v.length > 5) s++;
+    if (v.length > 8) s++;
+    bar.className = "strength-bar " + (s === 1 ? "w" : s === 2 ? "s" : "");
+    bar.style.width = s * 50 + "%";
   });
 
-  // Password Strength
-  const pwd1 = document.querySelector('input[name="password1"]');
-  if (pwd1) {
-    const meter = document.querySelector('#strength-meter-' + pwd1.id);
-    const bar = meter ? meter.querySelector('.strength-bar') : null;
-
-    pwd1.addEventListener('input', () => {
-      const val = pwd1.value;
-      let strength = 0;
-      if (val.length > 5) strength++;
-      if (val.length > 8 && /[A-Z]/.test(val) && /[0-9]/.test(val)) strength++;
-      if (val.length > 10 && /[^A-Za-z0-9]/.test(val)) strength++;
-
-      if (bar) {
-        bar.className = 'strength-bar';
-        if (strength === 1) bar.classList.add('weak');
-        if (strength === 2) bar.classList.add('medium');
-        if (strength === 3) bar.classList.add('strong');
-      }
-    });
-  }
-
-  // Char Counter
-  const bio = document.querySelector('textarea[name="antecedents_medicaux"]');
-  if (bio) {
-    const counter = document.querySelector('#char-counter-' + bio.id);
-    bio.addEventListener('input', () => {
-      const len = bio.value.length;
-      if (counter) {
-        counter.textContent = `${len} / 500`;
-        counter.classList.toggle('limit', len > 450);
-      }
-    });
-  }
-
-  // Update Django widget classes to use global styles
-  document.querySelectorAll('input, select, textarea').forEach(el => {
-    el.classList.add('cool-input');
+  document.getElementById("antecedents").addEventListener("input", function () {
+    document.getElementById("char-cnt").textContent =
+      this.value.length + " / 500";
   });
 </script>
 
