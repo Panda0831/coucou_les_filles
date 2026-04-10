@@ -593,6 +593,7 @@
             <li><a href="{% url 'users:landing' %}">Accueil</a></li>
             <li><a href="{% url 'users:about' %}">L'Équipe</a></li>
             <li><a href="{% url 'pregancy:ajouter_suivi' %}">Ajouter suivi</a></li>
+            <li><a href="{% url 'pregancy:dashboard' %}">Dashboard1</a></li>
             {% if user.is_authenticated %}
                 <li><a href="{% url 'users:user_home' %}">Dashboard</a></li>
                 <li><a href="{% url 'users:chat_home' %}">IA Ryan</a></li>

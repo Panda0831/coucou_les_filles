@@ -5,4 +5,5 @@ app_name = "pregancy"
 
 urlpatterns = [
     path("ajouter_suivi/", views.ajouter_suivi, name="ajouter_suivi"),
+    path('dashboard_view/', views.DashboardView.as_view(), name='dashboard'),
 ]
