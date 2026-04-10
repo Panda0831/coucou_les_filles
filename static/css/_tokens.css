@@ -1,0 +1,23 @@
+/* ══════════════════════════════════════════════════════
+   TOKENS — Light
+══════════════════════════════════════════════════════ */
+:root {
+    --ink:     #880E4F; /* Darker pink for text */
+    --paper:   #FCE4EC; /* Light pink background */
+    --surface: #FFFFFF;
+    --accent:  #E91E63; /* Vibrant pink accent */
+    --muted:   #AD1457; /* Muted pink */
+    --line:    #F8BBD0; /* Lighter pink for lines/borders */
+    --radius:  12px;
+    --nav-h:   72px;
+}
+
+/* ── Dark tokens ─────────────────────────────────────── */
+[data-theme="dark"] {
+    --ink:     #F8BBD0; /* Light pink for text */
+    --paper:   #2C0B1B; /* Very dark pink background */
+    --surface: #3A1028; /* Darker pink surface */
+    --accent:  #E91E63; /* Vibrant pink accent */
+    --muted:   #A04070; /* Muted dark pink */
+    --line:    #5C203A; /* Dark pink for lines/borders */
+}

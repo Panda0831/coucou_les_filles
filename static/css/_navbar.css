@@ -1,0 +1,129 @@
+/* ══════════════════════════════════════════════════════
+   NAVBAR
+══════════════════════════════════════════════════════ */
+.navbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--nav-h);
+    background: color-mix(in srgb, var(--paper) 88%, transparent);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    transition: background .35s, border-color .35s;
+}
+
+.navbar-inner {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    flex-shrink: 0;
+}
+.logo-mark {
+    width: 36px; height: 36px;
+    background: var(--ink);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .2s, background .35s;
+}
+.logo:hover .logo-mark { transform: rotate(-8deg) scale(1.08); }
+.logo-mark i { color: var(--paper); font-size: 14px; transition: color .35s; }
+.logo-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.25rem;
+    color: var(--ink);
+    letter-spacing: -.02em;
+    transition: color .35s;
+}
+
+.nav-links { display: flex; align-items: center; gap: 32px; list-style: none; }
+.nav-links a {
+    font-size: .875rem;
+    font-weight: 500;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color .15s;
+    position: relative;
+}
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -3px; left: 0;
+    width: 0; height: 2px;
+    background: var(--accent);
+    border-radius: 2px;
+    transition: width .2s;
+}
+.nav-links a:hover { color: var(--ink); }
+.nav-links a:hover::after { width: 100%; }
+
+.nav-actions { display: flex; align-items: center; gap: 12px; }
+
+/* User pill */
+.user-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 4px 14px 4px 4px;
+    text-decoration: none;
+    transition: background .35s, border-color .2s;
+}
+.user-pill:hover { border-color: var(--muted); }
+.avatar { width: 30px; height: 30px; border-radius: 50%; object-fit: cover; }
+.avatar-initials {
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    background: var(--ink);
+    color: var(--paper);
+    font-size: .7rem;
+    font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+    transition: background .35s, color .35s;
+}
+.user-name { font-size: .8rem; font-weight: 600; color: var(--ink); transition: color .35s; }
+
+/* ── THEME TOGGLE ────────────────────────────────────── */
+.theme-btn {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    border: 1.5px solid var(--line);
+    background: var(--surface);
+    color: var(--muted);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    font-size: .9rem;
+    transition: border-color .2s, color .2s, transform .2s, background .35s;
+    position: relative;
+    overflow: hidden;
+}
+.theme-btn:hover { border-color: var(--ink); color: var(--ink); }
+
+/* Animated icon swap */
+.theme-btn .icon-sun,
+.theme-btn .icon-moon {
+    position: absolute;
+    transition: opacity .3s ease, transform .3s ease;
+}
+/* Light mode: show moon, hide sun */
+[data-theme="light"] .theme-btn .icon-sun  { opacity: 0; transform: rotate(90deg) scale(.5); }
+[data-theme="light"] .theme-btn .icon-moon { opacity: 1; transform: rotate(0deg) scale(1); }
+/* Dark mode: show sun, hide moon */
+[data-theme="dark"]  .theme-btn .icon-sun  { opacity: 1; transform: rotate(0deg) scale(1); }
+[data-theme="dark"]  .theme-btn .icon-moon { opacity: 0; transform: rotate(-90deg) scale(.5); }

@@ -1,0 +1,50 @@
+/* ── BUTTONS ─────────────────────────────────────────── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 12px 24px;
+    border-radius: 16px;
+    font-size: .875rem;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: inherit;
+    letter-spacing: .02em;
+    position: relative;
+    overflow: hidden;
+}
+.btn:active { transform: scale(0.96); }
+
+.btn-ghost  { background: transparent; color: var(--muted); }
+.btn-ghost:hover { color: var(--ink); background: var(--line); }
+
+.btn-outline { background: transparent; color: var(--ink); border: 2px solid var(--line); }
+.btn-outline:hover { border-color: var(--ink); transform: translateY(-2px); }
+
+.btn-primary { 
+    background: var(--ink); 
+    color: var(--paper); 
+    box-shadow: 0 4px 12px rgba(15,14,23,0.1);
+}
+.btn-primary:hover { 
+    background: var(--accent); 
+    box-shadow: 0 8px 20px rgba(232,85,43,0.2);
+    transform: translateY(-3px);
+}
+
+.btn-danger { 
+    background: #fdf3f2; 
+    color: #c0392b; 
+    border: 2px solid #f5c6c2; 
+}
+.btn-danger:hover { 
+    background: #c0392b; 
+    color: white; 
+    border-color: #c0392b;
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(192,57,43,0.2);
+}
