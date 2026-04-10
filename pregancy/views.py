@@ -65,6 +65,35 @@ def ajouter_suivi(request):
 class DashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'pregancy/dashboard_view.html'
 
+    def post(self, request, *args, **kwargs):
+        user = request.user
+        semaine_actuelle = user.semaine_actuelle
+        deja_rempli = SuiviHebdomadaire.objects.filter(
+            mere=user,
+            semaine_grossesse=semaine_actuelle
+        ).exists()
+
+        if deja_rempli:
+            messages.warning(
+                request,
+                f"Vous avez deja rempli le suivi de la semaine {semaine_actuelle}."
+            )
+            return redirect("pregancy:dashboard")
+
+        form = SuiviHebdomadaireForm(request.POST)
+        if form.is_valid():
+            suivi = form.save(commit=False)
+            suivi.mere = user
+            suivi.semaine_grossesse = semaine_actuelle
+            suivi.save()
+            messages.success(request, "Votre suivi hebdomadaire a ete enregistre.")
+            return redirect("pregancy:dashboard")
+
+        context = self.get_context_data(**kwargs)
+        context["suivi_form"] = form
+        context["open_suivi_modal"] = True
+        return self.render_to_response(context)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
@@ -76,6 +105,10 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         dernier_suivi = suivis.last()
 
         semaine_actuelle = user.semaine_actuelle
+        deja_rempli = SuiviHebdomadaire.objects.filter(
+            mere=user,
+            semaine_grossesse=semaine_actuelle
+        ).exists()
         foetus_info = DeveloppementFoetus.objects.filter(
             semaine=semaine_actuelle
         ).first()
@@ -121,6 +154,9 @@ class DashboardView(LoginRequiredMixin, TemplateView):
         context['analyse_ia'] = analyse_ia
         context['alertes'] = user.alertes_non_lues()[:5]
         context['conseil_aleatoire'] = random.choice(self.get_conseils())
+        context["deja_rempli_hebdo"] = deja_rempli
+        context["suivi_form"] = kwargs.get("suivi_form", SuiviHebdomadaireForm())
+        context["open_suivi_modal"] = kwargs.get("open_suivi_modal", False)
 
         return context
 

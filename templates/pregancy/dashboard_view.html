@@ -6,72 +6,163 @@
 {% block extra_head %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
+    .dashboard-page {
+        max-width: 84rem;
+        background: color-mix(in srgb, var(--bg) 88%, #e8dbe1);
+        border: 1px solid var(--border);
+        border-radius: 1.75rem;
+        padding: 1.25rem;
+    }
+    .panel-soft {
+        border: 1px solid color-mix(in srgb, var(--border) 80%, #cdb8c1);
+        border-radius: 1.5rem;
+        background: color-mix(in srgb, var(--bg-card) 86%, #f0e2e8);
+        box-shadow: var(--shadow-s);
+    }
+    .ai-hero {
+        position: relative;
+        overflow: hidden;
+    }
+    .ai-hero::after {
+        content: "";
+        position: absolute;
+        right: -4rem;
+        top: -4rem;
+        width: 12rem;
+        height: 12rem;
+        border-radius: 999px;
+        background: radial-gradient(circle, var(--accent-glow), transparent 70%);
+        pointer-events: none;
+    }
+    .ai-badge {
+        color: #111827;
+    }
+    [data-theme='dark'] .ai-badge {
+        color: #c4b5fd;
+    }
+    .stat-card {
+        transition: transform .2s ease, box-shadow .2s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: var(--shadow-m);
+    }
+    .progress-track {
+        background: color-mix(in srgb, var(--accent) 18%, #d8c3cc);
+    }
+    .progress-fill {
+        background: linear-gradient(90deg, var(--accent), var(--primary, var(--accent)));
+    }
     .gradient-card { 
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+        background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 80%, #4f46e5) 0%, #6d28d9 100%);
     }
     [data-theme='dark'] .gradient-card {
-        background: linear-gradient(135deg, #4338ca 0%, #5b21b6 100%);
+        background: linear-gradient(135deg, #4338ca 0%, color-mix(in srgb, var(--accent) 40%, #5b21b6) 100%);
+    }
+    .suivi-fab {
+        width: 2.4rem;
+        height: 2.4rem;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.25rem;
+        line-height: 1;
+    }
+    .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(17, 24, 39, 0.45);
+        backdrop-filter: blur(2px);
+        z-index: 120;
+        display: none;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+    }
+    .modal-overlay.active {
+        display: flex;
+    }
+    .modal-card {
+        width: min(860px, 100%);
+        max-height: calc(100vh - 2rem);
+        overflow: auto;
+    }
+    .alert-message {
+        color: #0f172a !important;
+    }
+    [data-theme='dark'] .alert-message {
+        color: #f8fafc !important;
+    }
+    .dashboard-page .text-muted {
+        color: color-mix(in srgb, var(--ink-muted) 82%, #2b1b21);
+    }
+    @media (max-width: 768px) {
+        .dashboard-page {
+            border-radius: 1.25rem;
+            padding: 0.85rem;
+        }
     }
 </style>
 {% endblock %}
 
 {% block content %}
+<div class="container mx-auto px-4 py-8 dashboard-page">
+    <div class="space-y-8">
+        <section class="cool-card ai-hero panel-soft !p-8">
+            <div class="relative z-10">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold bg-violet-100 dark:bg-violet-900/30 ai-badge mb-4">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Assistant IA
+                </div>
+                <h3 class="text-2xl font-black text-ink mb-2">Ton copilote grossesse</h3>
+                <p class="text-muted mb-6">Résumé intelligent, conseils de la semaine et alertes utiles, en un clin d'oeil.</p>
 
-<div class="cool-card !p-6 border border-violet-200 dark:border-violet-800">
-    <h3 class="font-bold text-ink mb-4 flex items-center gap-2">
-        <i class="fa-solid fa-robot text-violet-500"></i>
-        Assitant de suivi IA
-    </h3>
-
-    <div class="space-y-4">
-        <div>
-            <p class="text-sm font-semibold text-violet-700 dark:text-violet-300 mb-1">
-                Résumé
-            </p>
-            <p class="text-sm text-muted leading-relaxed">
-                {{ analyse_ia.resume }}
-            </p>
-        </div>
-
-        <div>
-            <p class="text-sm font-semibold text-violet-700 dark:text-violet-300 mb-2">
-                Conseils pour cette semaine
-            </p>
-            <ul class="space-y-2">
-                {% for conseil in analyse_ia.conseils %}
-                <li class="flex items-start gap-2 text-sm text-muted">
-                    <i class="fa-solid fa-check text-emerald-500 mt-1"></i>
-                    <span>{{ conseil }}</span>
-                </li>
-                {% endfor %}
-            </ul>
-        </div>
-
-        {% if analyse_ia.alerte %}
-        <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-4 rounded-2xl">
-            <p class="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-1">
-                Attention
-            </p>
-            <p class="text-sm text-amber-700 dark:text-amber-300">
-                {{ analyse_ia.alerte }}
-            </p>
-        </div>
-        {% endif %}
-    </div>
-</div>
-<div class="container mx-auto px-4 py-8">
-    <div class="max-w-7xl mx-auto">
+                <div class="grid lg:grid-cols-3 gap-5">
+                    <div class="lg:col-span-2 panel-soft p-5 bg-violet-50 dark:bg-violet-900/15">
+                        <p class="text-sm font-semibold text-violet-700 dark:text-violet-300 mb-2">Résumé</p>
+                        <p class="text-sm text-muted leading-relaxed">{{ analyse_ia.resume }}</p>
+                    </div>
+                    <div class="panel-soft p-5">
+                        <p class="text-sm font-semibold text-violet-700 dark:text-violet-300 mb-2">Conseils</p>
+                        <ul class="space-y-2">
+                            {% for conseil in analyse_ia.conseils %}
+                            <li class="flex items-start gap-2 text-sm text-muted">
+                                <i class="fa-solid fa-check text-emerald-500 mt-1"></i>
+                                <span>{{ conseil }}</span>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% if analyse_ia.alerte %}
+                <div class="mt-5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-4 rounded-2xl">
+                    <p class="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-1">Attention</p>
+                    <p class="text-sm text-amber-700 dark:text-amber-300">{{ analyse_ia.alerte }}</p>
+                </div>
+                {% endif %}
+            </div>
+        </section>
         
         <header class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-ink">Bonjour, {{ user.username }} ✨</h1>
+                <h1 class="text-4xl font-black text-ink">Bonjour, {{ user.username }} ✨</h1>
                 <p class="text-muted">Heureux de vous revoir pour votre {{ stats_generales.semaine }}e semaine.</p>
             </div>
-            <div class="cool-card !p-4 flex items-center gap-4">
+            <div class="cool-card panel-soft !p-4 flex items-center gap-4">
                 <div class="text-right">
                     <p class="text-xs text-muted uppercase font-bold tracking-wider">Date prévue</p>
                     <p class="text-ink font-semibold">{{ user.date_prevue_accouchement|date:"d F Y" }}</p>
                 </div>
+                <button
+                    type="button"
+                    id="open-suivi-modal"
+                    class="btn btn-primary suivi-fab"
+                    data-deja-rempli="{{ deja_rempli_hebdo|yesno:'true,false' }}"
+                    aria-label="Ajouter un suivi hebdomadaire"
+                >
+                    +
+                </button>
                 <div class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-300">
                     <i class="fa-solid fa-calendar-day"></i>
                 </div>
@@ -79,13 +170,13 @@
         </header>
 
         <section class="mb-8">
-            <div class="cool-card">
+            <div class="cool-card panel-soft !p-6">
                 <div class="flex justify-between items-end mb-4">
                     <h3 class="font-semibold text-ink">Progression de la grossesse</h3>
-                    <span class="text-blue-600 dark:text-blue-400 font-bold text-lg">{{ stats_generales.progression_pourcentage }}%</span>
+                    <span class="text-[var(--accent)] font-bold text-xl">{{ stats_generales.progression_pourcentage }}%</span>
                 </div>
-                <div class="w-full bg-gray-100 dark:bg-gray-800 h-4 rounded-full overflow-hidden">
-                    <div class="bg-blue-500 h-full rounded-full transition-all duration-1000 shadow-[0_0_15px_rgba(59,130,246,0.5)]" style="width: {{ stats_generales.progression_pourcentage }}%"></div>
+                <div class="w-full progress-track h-4 rounded-full overflow-hidden">
+                    <div class="progress-fill h-full rounded-full transition-all duration-1000" style="width: {{ stats_generales.progression_pourcentage }}%"></div>
                 </div>
                 <div class="flex justify-between mt-2 text-xs text-muted font-medium">
                     <span>SEMAINE 1</span>
@@ -96,7 +187,7 @@
         </section>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="cool-card !p-6">
+            <div class="cool-card panel-soft stat-card !p-6">
                 <p class="text-muted text-sm font-medium mb-1">Poids Actuel</p>
                 <div class="flex items-baseline gap-2">
                     <span class="text-2xl font-bold text-ink">{{ stats_generales.poids_actuel }} kg</span>
@@ -104,7 +195,7 @@
                 </div>
             </div>
 
-            <div class="cool-card !p-6">
+            <div class="cool-card panel-soft stat-card !p-6">
                 <p class="text-muted text-sm font-medium mb-1">Niveau de Risque</p>
                 <div class="flex items-center gap-2 mt-1">
                     <span class="px-3 py-1 rounded-full text-xs font-bold uppercase 
@@ -116,12 +207,12 @@
                 </div>
             </div>
 
-            <div class="cool-card !p-6">
+            <div class="cool-card panel-soft stat-card !p-6">
                 <p class="text-muted text-sm font-medium mb-1">Jours restants</p>
                 <span class="text-2xl font-bold text-ink">{{ stats_generales.jours_restants }} jours</span>
             </div>
 
-            <div class="cool-card !p-6">
+            <div class="cool-card panel-soft stat-card !p-6">
                 <p class="text-muted text-sm font-medium mb-1">IMC de départ</p>
                 <div class="flex flex-col">
                     <span class="text-2xl font-bold text-ink">{{ stats_generales.imc_depart }}</span>
@@ -132,14 +223,14 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
             <div class="lg:col-span-2 space-y-8">
-                <div class="cool-card !p-8">
+                <div class="cool-card panel-soft !p-8">
                     <h3 class="text-lg font-bold text-ink mb-6">Évolution du Poids (kg)</h3>
                     <div class="h-[300px]">
                         <canvas id="weightChart"></canvas>
                     </div>
                 </div>
 
-                <div class="cool-card !p-8">
+                <div class="cool-card panel-soft !p-8">
                     <h3 class="text-lg font-bold text-ink mb-6">Bien-être : Stress & Sommeil</h3>
                     <div class="h-[300px]">
                         <canvas id="wellnessChart"></canvas>
@@ -176,7 +267,7 @@
                     {% endif %}
                 </div>
 
-                <div class="cool-card !p-6">
+                <div class="cool-card panel-soft !p-6">
                     <h3 class="font-bold text-ink mb-4 flex items-center gap-2">
                         <i class="fa-solid fa-bell text-rose-500"></i> Alertes Récentes
                     </h3>
@@ -184,7 +275,7 @@
                         {% for alerte in alertes %}
                         <div class="p-3 bg-rose-50 dark:bg-rose-900/20 rounded-2xl border-l-4 border-rose-500">
                             <p class="text-xs font-bold text-rose-700 dark:text-rose-400 uppercase">{{ alerte.niveau_risque }}</p>
-                            <p class="text-sm text-gray-700 dark:text-gray-300">{{ alerte.message }}</p>
+                            <p class="text-sm alert-message">{{ alerte.message }}</p>
                         </div>
                         {% empty %}
                         <p class="text-sm text-muted italic text-center py-4">Aucune alerte pour le moment.</p>
@@ -192,25 +283,116 @@
                     </div>
                 </div>
 
-                <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-[2rem] border border-blue-100 dark:border-blue-800">
-                    <h3 class="font-bold text-blue-900 dark:text-blue-300 mb-2 flex items-center gap-2">
+                <div class="panel-soft p-6 rounded-[2rem] border border-[var(--border)] bg-[var(--surface)]">
+                    <h3 class="font-bold text-[var(--ink)] mb-2 flex items-center gap-2">
                         <i class="fas fa-lightbulb"></i> Conseil du jour
                     </h3>
-                    <p class="text-blue-700 dark:text-blue-400 text-sm leading-relaxed">
+                    <p class="text-[var(--ink-muted)] text-sm leading-relaxed">
                         {{ conseil_aleatoire }}
                     </p>
+                </div>
+                <div class="flex justify-end">
+                    <a href="{% url 'pregancy:export_dossier_patient' %}" class="btn btn-primary !px-6 !py-3">
+                        <i class="fa-solid fa-file-pdf"></i>
+                        Exporter mon dossier PDF
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<a href="{% url 'pregancy:export_dossier_patient' %}" class="btn btn-primary">
-    Exporter mon dossier PDF
-</a>
+<div id="suivi-modal" class="modal-overlay {% if open_suivi_modal %}active{% endif %}">
+    <div class="cool-card modal-card !p-6">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <h3 class="text-2xl font-bold text-ink">Suivi hebdomadaire</h3>
+                <p class="text-sm text-muted">Semaine {{ stats_generales.semaine }}</p>
+            </div>
+            <button type="button" id="close-suivi-modal" class="btn btn-ghost">Fermer</button>
+        </div>
+        <form method="post" class="space-y-6">
+            {% csrf_token %}
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {% for field in suivi_form %}
+                    <div class="{% if field.name == 'commentaire' %}md:col-span-2{% endif %}">
+                        <label for="{{ field.id_for_label }}" class="block text-sm font-bold text-ink mb-2">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                        {% if field.errors %}
+                            {% for error in field.errors %}
+                                <p class="text-red-500 text-xs mt-1">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            {% if suivi_form.non_field_errors %}
+                {% for error in suivi_form.non_field_errors %}
+                    <p class="text-red-500 text-sm">{{ error }}</p>
+                {% endfor %}
+            {% endif %}
+            <div class="flex justify-end">
+                <button type="submit" class="btn btn-primary">Enregistrer mon suivi</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="suivi-notif" class="modal-overlay">
+    <div class="cool-card modal-card !p-8 text-center max-w-xl">
+        <div class="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-300 flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-circle-check text-2xl"></i>
+        </div>
+        <h3 class="text-xl font-bold text-ink mb-2">Suivi deja rempli</h3>
+        <p class="text-muted mb-6">
+            Vous avez deja complete votre formulaire pour la semaine {{ stats_generales.semaine }}.
+        </p>
+        <button type="button" id="close-suivi-notif" class="btn btn-primary">Compris</button>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_scripts %}
 <script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const openBtn = document.getElementById("open-suivi-modal");
+        const modal = document.getElementById("suivi-modal");
+        const notif = document.getElementById("suivi-notif");
+        const closeModalBtn = document.getElementById("close-suivi-modal");
+        const closeNotifBtn = document.getElementById("close-suivi-notif");
+
+        const openModal = () => modal.classList.add("active");
+        const closeModal = () => modal.classList.remove("active");
+        const openNotif = () => notif.classList.add("active");
+        const closeNotif = () => notif.classList.remove("active");
+
+        if (openBtn) {
+            openBtn.addEventListener("click", () => {
+                const dejaRempli = openBtn.dataset.dejaRempli === "true";
+                if (dejaRempli) {
+                    openNotif();
+                } else {
+                    openModal();
+                }
+            });
+        }
+
+        if (closeModalBtn) closeModalBtn.addEventListener("click", closeModal);
+        if (closeNotifBtn) closeNotifBtn.addEventListener("click", closeNotif);
+
+        [modal, notif].forEach((node) => {
+            if (!node) return;
+            node.addEventListener("click", (event) => {
+                if (event.target === node) node.classList.remove("active");
+            });
+        });
+
+        document.querySelectorAll('#suivi-modal input, #suivi-modal select, #suivi-modal textarea').forEach((el) => {
+            if (el.type === "checkbox") return;
+            el.classList.add("cool-input", "w-full");
+        });
+    });
+
     const graphData = JSON.parse('{{ graph_data|safe }}');
     const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
     const textColor = isDark ? '#94a3b8' : '#64748b';

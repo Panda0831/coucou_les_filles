@@ -60,14 +60,6 @@
                         </li>
                         <li>
                             <a
-                                href="{% url 'pregancy:ajouter_suivi' %}"
-                                {% if '/pregancy/ajouter' in request.path %}aria-current="page"{% endif %}
-                                onclick="if (!{{ user.is_authenticated|lower }}) { alert('Il faudra se connecter pour accéder à cette page.'); return false; }"
-                                >Ajouter suivi</a
-                            >
-                        </li>
-                        <li>
-                            <a
                                 href="{% url 'pregancy:dashboard' %}"
                                 {% if '/pregancy/dashboard' in request.path %}aria-current="page"{% endif %}
                                 onclick="if (!{{ user.is_authenticated|lower }}) { alert('Il faudra se connecter pour accéder à cette page.'); return false; }"
@@ -174,11 +166,6 @@
             <ul class="mobile-nav-links" role="list">
                 <li><a href="{% url 'users:landing' %}">Accueil</a></li>
                 <li><a href="{% url 'forum:question_list' %}">Forum</a></li>
-                <li>
-                    <a href="{% url 'pregancy:ajouter_suivi' %}"
-                        >Ajouter suivi</a
-                    >
-                </li>
                 <li>
                     <a href="{% url 'pregancy:dashboard' %}">Dashboard</a>
                 </li>
