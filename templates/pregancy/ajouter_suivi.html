@@ -1,8 +1,52 @@
 
-<h2>Ajouter suivi hebdomadaire</h2>
+{% extends 'Base/base.html' %}
 
-<form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Enregistrer</button>
-</form>
+{% block content %}
+<div class="flex items-center justify-center min-h-[calc(100vh-var(--nav-h)-1px)] -mt-[var(--nav-h)] py-16">
+    <div class="cool-card w-full max-w-lg">
+        <h2 class="text-2xl font-bold text-ink mb-6 text-center">Ajouter suivi hebdomadaire</h2>
+
+        <form method="post" class="space-y-4" id="suivi-form">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <label for="{{ field.id_for_label }}" class="block text-ink text-sm font-medium mb-1">
+                        {{ field.label }}
+                    </label>
+                    {{ field }}
+                    {% if field.help_text %}
+                        <p class="text-xs text-muted mt-1">{{ field.help_text }}</p>
+                    {% endif %}
+                    {% for error in field.errors %}
+                        <p class="text-red-500 text-xs text-red-500 mt-1">{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
+            {% if form.non_field_errors %}
+                <div class="flash flash-error">
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <button type="submit" class="btn btn-primary w-full mt-6">Enregistrer</button>
+        </form>
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('suivi-form');
+        if (form) {
+            const fields = form.querySelectorAll('input:not([type="submit"]):not([type="button"]):not([type="checkbox"]):not([type="radio"]), textarea, select');
+            fields.forEach(field => {
+                field.classList.add('cool-input');
+            });
+        }
+    });
+</script>
+{% endblock extra_scripts %}
