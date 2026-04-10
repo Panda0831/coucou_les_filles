@@ -1,6 +1,6 @@
 {% extends 'Base/base.html' %}
 
-{% block title %}Tableau de Bord - Smart Maternité{% endblock %}
+{% block title %}Mon Tableau de Bord - Suivi de Grossesse{% endblock %}
 
 {% block extra_head %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -8,33 +8,9 @@
     .gradient-card { 
         background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
     }
-
-    /* Style Premium pour la carte IA */
-    .ia-card {
-        background: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(12px);
-        -webkit-backdrop-filter: blur(12px);
-        border: 1px solid rgba(255, 255, 255, 0.3);
-        border-left-width: 6px;
-        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    [data-theme='dark'] .gradient-card {
+        background: linear-gradient(135deg, #4338ca 0%, #5b21b6 100%);
     }
-
-    [data-theme='dark'] .ia-card {
-        background: rgba(30, 41, 59, 0.7);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-left-width: 6px;
-    }
-
-    .ia-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    }
-
-    @keyframes slideIn {
-        from { opacity: 0; transform: translateY(-15px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-    .animate-ia { animation: slideIn 0.6s ease-out forwards; }
 </style>
 {% endblock %}
 
@@ -42,58 +18,6 @@
 <div class="container mx-auto px-4 py-8">
     <div class="max-w-7xl mx-auto">
         
-        {% if rapport_ia %}
-        <div class="ia-card animate-ia p-6 mb-8 rounded-[2rem] shadow-xl 
-            {% if rapport_ia.score_vigilance == 'Alerte' %} border-l-rose-500 shadow-rose-500/10
-            {% elif rapport_ia.score_vigilance == 'Attention' %} border-l-amber-500 shadow-amber-500/10
-            {% else %} border-l-emerald-500 shadow-emerald-500/10 {% endif %}">
-            
-            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-                <div class="flex items-center gap-4">
-                    <div class="h-12 w-12 rounded-2xl bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
-                        <i class="fa-solid fa-wand-magic-sparkles text-white text-xl"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-black text-ink tracking-tight">Analyse IA Smart-Maternité</h3>
-                        <div class="flex items-center gap-2">
-                            <span class="inline-block h-2 w-2 rounded-full 
-                                {% if rapport_ia.score_vigilance == 'Alerte' %} bg-rose-500
-                                {% elif rapport_ia.score_vigilance == 'Attention' %} bg-amber-500
-                                {% else %} bg-emerald-500 {% endif %} animate-pulse"></span>
-                            <p class="text-[10px] uppercase font-bold text-muted tracking-widest">
-                                Statut : {{ rapport_ia.score_vigilance }}
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-white/50 dark:bg-black/20 px-4 py-2 rounded-xl border border-white/20">
-                    <p class="text-[10px] text-muted font-medium">Dernière analyse</p>
-                    <p class="text-xs font-bold text-ink">{{ rapport_ia.date_analyse|date:"d M, H:i" }}</p>
-                </div>
-            </div>
-
-            <div class="mt-6">
-                <div class="relative">
-                    <i class="fa-solid fa-quote-left absolute -top-2 -left-2 opacity-10 text-4xl text-indigo-600"></i>
-                    <p class="text-gray-700 dark:text-gray-300 leading-relaxed italic text-lg pl-6">
-                        {{ rapport_ia.analyse_textuelle }}
-                    </p>
-                </div>
-            </div>
-
-            {% if rapport_ia.conseils %}
-            <div class="mt-4 flex flex-wrap gap-2 pl-6">
-                {% for conseil in rapport_ia.conseils %}
-                <span class="text-[10px] font-bold py-1 px-3 bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-full border border-indigo-100 dark:border-indigo-800">
-                    # {{ conseil }}
-                </span>
-                {% endfor %}
-            </div>
-            {% endif %}
-        </div>
-        {% endif %}
-
         <header class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div>
                 <h1 class="text-3xl font-bold text-ink">Bonjour, {{ user.username }} ✨</h1>
@@ -119,6 +43,11 @@
                 <div class="w-full bg-gray-100 dark:bg-gray-800 h-4 rounded-full overflow-hidden">
                     <div class="bg-blue-500 h-full rounded-full transition-all duration-1000 shadow-[0_0_15px_rgba(59,130,246,0.5)]" style="width: {{ stats_generales.progression_pourcentage }}%"></div>
                 </div>
+                <div class="flex justify-between mt-2 text-xs text-muted font-medium">
+                    <span>SEMAINE 1</span>
+                    <span>SEMAINE 20</span>
+                    <span>TERME (40)</span>
+                </div>
             </div>
         </section>
 
@@ -130,49 +59,105 @@
                     <span class="text-emerald-500 text-sm font-bold">+{{ stats_generales.prise_poids_totale }}kg</span>
                 </div>
             </div>
+
             <div class="cool-card !p-6">
-                <p class="text-muted text-sm font-medium mb-1">Risque Global</p>
-                <span class="px-3 py-1 rounded-full text-xs font-bold uppercase 
-                    {% if stats_generales.risque_actuel == 'faible' %} bg-emerald-100 text-emerald-600 
-                    {% else %} bg-rose-100 text-rose-600 {% endif %}">
-                    {{ stats_generales.risque_actuel }}
-                </span>
+                <p class="text-muted text-sm font-medium mb-1">Niveau de Risque</p>
+                <div class="flex items-center gap-2 mt-1">
+                    <span class="px-3 py-1 rounded-full text-xs font-bold uppercase 
+                        {% if stats_generales.risque_actuel == 'faible' %} bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 
+                        {% elif stats_generales.risque_actuel == 'moyen' %} bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 
+                        {% else %} bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 {% endif %}">
+                        {{ stats_generales.risque_actuel }}
+                    </span>
+                </div>
             </div>
+
             <div class="cool-card !p-6">
                 <p class="text-muted text-sm font-medium mb-1">Jours restants</p>
-                <span class="text-2xl font-bold text-ink">{{ stats_generales.jours_restants }} j</span>
+                <span class="text-2xl font-bold text-ink">{{ stats_generales.jours_restants }} jours</span>
             </div>
+
             <div class="cool-card !p-6">
-                <p class="text-muted text-sm font-medium mb-1">IMC</p>
-                <span class="text-2xl font-bold text-ink">{{ stats_generales.imc_depart }}</span>
+                <p class="text-muted text-sm font-medium mb-1">IMC de départ</p>
+                <div class="flex flex-col">
+                    <span class="text-2xl font-bold text-ink">{{ stats_generales.imc_depart }}</span>
+                    <span class="text-xs text-muted">{{ stats_generales.categorie_imc }}</span>
+                </div>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
             <div class="lg:col-span-2 space-y-8">
                 <div class="cool-card !p-8">
-                    <h3 class="text-lg font-bold text-ink mb-6">Courbe de Poids</h3>
-                    <div class="h-[300px]"><canvas id="weightChart"></canvas></div>
+                    <h3 class="text-lg font-bold text-ink mb-6">Évolution du Poids (kg)</h3>
+                    <div class="h-[300px]">
+                        <canvas id="weightChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="cool-card !p-8">
+                    <h3 class="text-lg font-bold text-ink mb-6">Bien-être : Stress & Sommeil</h3>
+                    <div class="h-[300px]">
+                        <canvas id="wellnessChart"></canvas>
+                    </div>
                 </div>
             </div>
 
             <div class="space-y-8">
-                <div class="gradient-card p-8 rounded-[2rem] text-white shadow-xl">
+                <div class="gradient-card p-8 rounded-[2rem] text-white shadow-xl shadow-blue-500/10">
                     <div class="flex items-center gap-4 mb-6">
-                        <i class="fa-solid fa-baby text-2xl"></i>
-                        <h3 class="font-bold text-xl">Mon Bébé</h3>
+                        <div class="bg-white/20 p-3 rounded-2xl backdrop-blur-sm">
+                            <i class="fa-solid fa-baby text-xl text-white"></i>
+                        </div>
+                        <h3 class="font-bold text-xl text-white">Mon Bébé</h3>
                     </div>
                     {% if foetus %}
-                    <p class="text-sm italic opacity-90">{{ foetus.stade_developpement|truncatewords:30 }}</p>
-                    <div class="mt-4 pt-4 border-t border-white/20">
-                        <p>Taille : <b>{{ foetus.taille_moyenne }} cm</b></p>
-                        <p>Poids : <b>{{ foetus.poids_moyen }} g</b></p>
+                    <div class="space-y-4">
+                        <div class="flex justify-between border-b border-white/10 pb-2">
+                            <span class="opacity-80">Taille moy.</span>
+                            <span class="font-bold">{{ foetus.taille_moyenne }} cm</span>
+                        </div>
+                        <div class="flex justify-between border-b border-white/10 pb-2">
+                            <span class="opacity-80">Poids moy.</span>
+                            <span class="font-bold">{{ foetus.poids_moyen }} g</span>
+                        </div>
+                        <div class="mt-6 bg-white/10 p-4 rounded-2xl border border-white/10">
+                            <p class="text-sm leading-relaxed italic opacity-95 text-justify">
+                                "{{ foetus.stade_developpement|truncatewords:40 }}"
+                            </p>
+                        </div>
                     </div>
+                    {% else %}
+                    <p class="text-sm opacity-80 italic">Données de développement non disponibles.</p>
                     {% endif %}
+                </div>
+
+                <div class="cool-card !p-6">
+                    <h3 class="font-bold text-ink mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-bell text-rose-500"></i> Alertes Récentes
+                    </h3>
+                    <div class="space-y-4">
+                        {% for alerte in alertes %}
+                        <div class="p-3 bg-rose-50 dark:bg-rose-900/20 rounded-2xl border-l-4 border-rose-500">
+                            <p class="text-xs font-bold text-rose-700 dark:text-rose-400 uppercase">{{ alerte.niveau_risque }}</p>
+                            <p class="text-sm text-gray-700 dark:text-gray-300">{{ alerte.message }}</p>
+                        </div>
+                        {% empty %}
+                        <p class="text-sm text-muted italic text-center py-4">Aucune alerte pour le moment.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-[2rem] border border-blue-100 dark:border-blue-800">
+                    <h3 class="font-bold text-blue-900 dark:text-blue-300 mb-2 flex items-center gap-2">
+                        <i class="fas fa-lightbulb"></i> Conseil du jour
+                    </h3>
+                    <p class="text-blue-700 dark:text-blue-400 text-sm leading-relaxed">
+                        {{ conseil_aleatoire }}
+                    </p>
                 </div>
             </div>
         </div>
-
     </div>
 </div>
 {% endblock %}
@@ -180,6 +165,10 @@
 {% block extra_scripts %}
 <script>
     const graphData = JSON.parse('{{ graph_data|safe }}');
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const textColor = isDark ? '#94a3b8' : '#64748b';
+    const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+
     const weightCtx = document.getElementById('weightChart').getContext('2d');
     new Chart(weightCtx, {
         type: 'line',
@@ -189,12 +178,87 @@
                 label: 'Poids (kg)',
                 data: graphData.poids,
                 borderColor: '#3b82f6',
-                tension: 0.4,
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                borderWidth: 3,
                 fill: true,
-                backgroundColor: 'rgba(59, 130, 246, 0.1)'
+                tension: 0.4,
+                pointBackgroundColor: '#3b82f6',
+                pointBorderColor: '#fff',
+                pointHoverRadius: 6
             }]
         },
-        options: { responsive: true, maintainAspectRatio: false }
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { 
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: isDark ? '#1e293b' : '#fff',
+                    titleColor: isDark ? '#fff' : '#1e293b',
+                    bodyColor: isDark ? '#cbd5e1' : '#64748b',
+                    borderColor: isDark ? '#334155' : '#e2e8f0',
+                    borderWidth: 1,
+                    padding: 12,
+                    displayColors: false
+                }
+            },
+            scales: { 
+                y: { 
+                    grid: { color: gridColor }, 
+                    ticks: { color: textColor },
+                    beginAtZero: false 
+                },
+                x: { 
+                    grid: { display: false },
+                    ticks: { color: textColor }
+                }
+            }
+        }
+    });
+
+    const wellnessCtx = document.getElementById('wellnessChart').getContext('2d');
+    new Chart(wellnessCtx, {
+        type: 'bar',
+        data: {
+            labels: graphData.labels,
+            datasets: [
+                {
+                    label: 'Stress',
+                    data: graphData.stress,
+                    backgroundColor: '#f43f5e',
+                    borderRadius: 8,
+                    barThickness: 15
+                },
+                {
+                    label: 'Sommeil',
+                    data: graphData.sommeil,
+                    backgroundColor: '#6366f1',
+                    borderRadius: 8,
+                    barThickness: 15
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: textColor, padding: 20, usePointStyle: true }
+                }
+            },
+            scales: { 
+                y: { 
+                    max: 5, 
+                    grid: { color: gridColor },
+                    ticks: { color: textColor, stepSize: 1 }
+                },
+                x: { 
+                    grid: { display: false },
+                    ticks: { color: textColor }
+                }
+            }
+        }
     });
 </script>
 {% endblock %}

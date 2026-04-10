@@ -147,17 +147,6 @@ class User(AbstractUser):
             "historique": historique
         }
     
-User = get_user_model()    
-class RapportIA(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="rapports_ia")
-    date_analyse = models.DateTimeField(auto_now_add=True)
-    analyse_textuelle = models.TextField()
-    score_vigilance = models.CharField(max_length=20)
-    conseils = models.JSONField(default=list)
-
-    class Meta:
-        ordering = ['-date_analyse']
-    
 class ChatMessage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="messages")
     message = models.TextField()
