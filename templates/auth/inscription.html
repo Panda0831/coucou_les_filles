@@ -375,21 +375,47 @@
 
         <div class="rg-grid">
           {% for field in form %}
-            <div class="rg-field {% if field.errors %}rg-has-error{% endif %} {% if field.field.widget.input_type == 'textarea' or field.html_name == 'antecedents_medicaux' %}rg-grid--full{% endif %}">
+            <div class="field rg-field {% if field.errors %}rg-has-error{% endif %} {% if field.field.widget.input_type == 'textarea' or field.html_name == 'antecedents_medicaux' %}rg-grid--full{% endif %}">
 
-              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+              <label for="{{ field.id_for_label }}">
+                {{ field.label }}
+                {% if field.field.required %}
+                  <span class="required-mark" aria-hidden="true">*</span>
+                {% endif %}
+              </label>
 
-              {% if field.field.widget.input_type == 'select' %}
+              {% if field.html_name == 'password1' or field.html_name == 'password2' %}
+                <div class="password-wrap">
+                  {{ field }}
+                  <button type="button" class="password-toggle" aria-label="Afficher le mot de passe">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                </div>
+                {% if field.html_name == 'password1' %}
+                  <div class="strength-meter" id="strength-meter-{{ field.id_for_label }}">
+                    <div class="strength-bar"></div>
+                  </div>
+                {% endif %}
+              {% elif field.field.widget.input_type == 'select' %}
                 <div class="rg-select-wrap">{{ field }}</div>
               {% else %}
                 {{ field }}
               {% endif %}
 
+              {% if field.html_name == 'antecedents_medicaux' %}
+                <div class="char-counter" id="char-counter-{{ field.id_for_label }}">
+                  0 / 500
+                </div>
+              {% endif %}
+
               {% if field.errors %}
-                <div class="rg-field__errors">
-                  {% for error in field.errors %}
-                    <span class="rg-field__error">{{ error }}</span>
-                  {% endfor %}
+                <div class="field-error rg-field__errors">
+                  <i class="fas fa-circle-exclamation"></i>
+                  <div class="flex flex-col">
+                    {% for error in field.errors %}
+                      <span class="rg-field__error">{{ error }}</span>
+                    {% endfor %}
+                  </div>
                 </div>
               {% endif %}
 
@@ -414,5 +440,57 @@
 
   </div>
 </div>
+
+<script>
+  // Password Toggle
+  document.querySelectorAll('.password-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const input = btn.previousElementSibling;
+      const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+      input.setAttribute('type', type);
+      btn.querySelector('i').className = type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+    });
+  });
+
+  // Password Strength
+  const pwd1 = document.querySelector('input[name="password1"]');
+  if (pwd1) {
+    const meter = document.querySelector('#strength-meter-' + pwd1.id);
+    const bar = meter ? meter.querySelector('.strength-bar') : null;
+
+    pwd1.addEventListener('input', () => {
+      const val = pwd1.value;
+      let strength = 0;
+      if (val.length > 5) strength++;
+      if (val.length > 8 && /[A-Z]/.test(val) && /[0-9]/.test(val)) strength++;
+      if (val.length > 10 && /[^A-Za-z0-9]/.test(val)) strength++;
+
+      if (bar) {
+        bar.className = 'strength-bar';
+        if (strength === 1) bar.classList.add('weak');
+        if (strength === 2) bar.classList.add('medium');
+        if (strength === 3) bar.classList.add('strong');
+      }
+    });
+  }
+
+  // Char Counter
+  const bio = document.querySelector('textarea[name="antecedents_medicaux"]');
+  if (bio) {
+    const counter = document.querySelector('#char-counter-' + bio.id);
+    bio.addEventListener('input', () => {
+      const len = bio.value.length;
+      if (counter) {
+        counter.textContent = `${len} / 500`;
+        counter.classList.toggle('limit', len > 450);
+      }
+    });
+  }
+
+  // Update Django widget classes to use global styles
+  document.querySelectorAll('input, select, textarea').forEach(el => {
+    el.classList.add('cool-input');
+  });
+</script>
 
 

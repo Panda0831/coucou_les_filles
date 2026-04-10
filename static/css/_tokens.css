@@ -15,6 +15,7 @@
     /* ── Brand Colors ──────────────────────────────────── */
     --primary:     hsl(var(--p-h), var(--p-s), var(--p-l));
     --primary-alt: hsl(var(--p-h), var(--p-s), 40%);
+    --primary-dark: hsl(var(--p-h), var(--p-s), 35%);
     --secondary:   hsl(var(--s-h), var(--s-s), var(--s-l));
     
     /* ── Functional Colors ─────────────────────────────── */
@@ -34,6 +35,10 @@
     --line:       hsl(var(--p-h), 40%, 90%);
     --line-bold:  hsl(var(--p-h), 40%, 85%);
 
+    --accent:     var(--primary);
+    --muted:      var(--ink-muted);
+    --focus-ring: 0 0 0 4px hsla(var(--p-h), var(--p-s), var(--p-l), 0.35);
+
     /* ── Effects ────────────────────────────────────────── */
     --radius:     16px;
     --radius-sm:  8px;
@@ -47,6 +52,8 @@
     --glass:      hsla(0, 0%, 100%, 0.7);
     --glass-blur: blur(12px);
 
+    --bg-pattern-opacity: 0.4;
+
     /* ── Gradients ──────────────────────────────────────── */
     --grad-primary: linear-gradient(135deg, hsl(var(--p-h), 80%, 65%), hsl(var(--p-h), 70%, 45%));
     --grad-soft:    linear-gradient(135deg, hsl(var(--p-h), 40%, 98%), hsl(var(--p-h), 40%, 94%));
@@ -54,6 +61,7 @@
 
 /* ── Dark Theme Overrides ────────────────────────────── */
 [data-theme="dark"] {
+    --primary-dark: hsl(var(--p-h), var(--p-s), 60%);
     --paper:      hsl(var(--p-h), 40%, 6%);
     --surface:    hsl(var(--p-h), 35%, 10%);
     --surface-2:  hsl(var(--p-h), 35%, 14%);
@@ -65,6 +73,7 @@
     --line-bold:  hsl(var(--p-h), 30%, 24%);
     
     --glass:      hsla(var(--p-h), 40%, 10%, 0.7);
+    --bg-pattern-opacity: 0.15;
     
     --shadow-sm:  0 2px 8px -2px rgba(0, 0, 0, 0.4);
     --shadow-md:  0 12px 24px -8px rgba(0, 0, 0, 0.5);

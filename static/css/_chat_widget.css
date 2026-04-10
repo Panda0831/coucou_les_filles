@@ -23,15 +23,16 @@
     justify-content: center;
     font-size: 28px;
     cursor: pointer;
-    box-shadow: 0 16px 32px -8px hsla(var(--p-h), 70%, 50%, 0.4);
+    box-shadow: 0 16px 32px -8px rgba(45, 91, 227, 0.4);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     border: 3px solid var(--surface);
     outline: none;
 }
 
 .chat-bubble:hover {
-    transform: scale(1.1) rotate(-8deg);
-    box-shadow: 0 20px 48px -12px hsla(var(--p-h), 70%, 50%, 0.6);
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 20px 48px -12px rgba(45, 91, 227, 0.6);
 }
 
 .chat-panel {
@@ -41,20 +42,24 @@
     border: 1px solid var(--line);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-lg);
-    display: none;
+    display: flex;
     flex-direction: column;
     overflow: hidden;
-    animation: widgetPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     transform-origin: bottom right;
+    transition: opacity .22s ease, transform .28s cubic-bezier(0.34, 1.4, 0.64, 1),
+                visibility 0s linear .22s;
+    opacity: 0;
+    transform: scale(0.88) translateY(12px);
+    visibility: hidden;
+    pointer-events: none;
 }
 
-.chat-panel.active { 
-    display: flex; 
-}
-
-@keyframes widgetPop {
-    from { opacity: 0; transform: scale(0.5) translateY(100px); }
-    to { opacity: 1; transform: scale(1) translateY(0); }
+.chat-panel[aria-hidden="false"] {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s;
 }
 
 .chat-panel-header {
@@ -134,7 +139,7 @@
 @media (max-width: 480px) {
     .chat-panel {
         width: calc(100vw - 32px);
-        height: 70vh;
+        max-height: 90dvh;
         right: 16px;
         bottom: 110px;
     }

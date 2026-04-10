@@ -4,7 +4,7 @@
 footer {
     background: var(--surface);
     border-top: 1px solid var(--line);
-    padding: 60px 0;
+    padding: 60px 0 40px;
     margin-top: auto;
 }
 
@@ -47,7 +47,19 @@ footer {
     font-size: 0.9rem; 
     color: var(--ink-muted); 
     text-align: center;
-    font-weight: 500;
+    font-weight: 400; /* WCAG normalization */
+}
+
+.footer-copy a {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+    color: var(--ink);
+    transition: color 0.2s ease;
+}
+
+.footer-copy a:hover {
+    color: var(--primary);
 }
 
 .footer-links { 
@@ -70,8 +82,65 @@ footer {
 .footer-links a:hover { 
     border-color: var(--primary); 
     color: var(--primary);
-    transform: translateY(-3px);
+    transform: translateY(-2px);
     box-shadow: var(--shadow-sm);
+    background: hsla(var(--p-h), var(--p-s), var(--p-l), 0.06);
+}
+
+/* Accessibility focus states */
+.footer-links a:focus-visible,
+.footer-legal a:focus-visible,
+.footer-lang:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+/* ── Legal Bar ─────────────────────────────────────── */
+.footer-bottom {
+    max-width: 1440px;
+    margin: 40px auto 0;
+    padding: 24px 32px 0;
+    border-top: 1px solid var(--line);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 24px;
+}
+
+.footer-legal {
+    display: flex;
+    gap: 24px;
+    list-style: none;
+}
+
+.footer-legal a {
+    font-size: 0.8rem;
+    color: var(--ink-muted);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.footer-legal a:hover {
+    color: var(--primary);
+}
+
+.footer-lang {
+    background: var(--surface-2);
+    border: 1.5px solid var(--line);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.footer-lang:hover {
+    border-color: var(--primary);
 }
 
 @media (max-width: 768px) {
@@ -81,4 +150,15 @@ footer {
         gap: 24px;
     }
     .footer-brand, .footer-links { justify-content: center; }
+    
+    .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .footer-legal {
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 12px 20px;
+    }
 }

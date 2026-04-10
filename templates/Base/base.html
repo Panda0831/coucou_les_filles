@@ -31,125 +31,139 @@
         {% block extra_head %}{% endblock %}
     </head>
     <body>
-        <nav
-            class="navbar"
-            role="navigation"
-            aria-label="Navigation principale"
-        >
-            <div class="navbar-inner">
-                <a
-                    href="{% url 'users:landing' %}"
-                    class="logo"
-                    aria-label="Hackathon — Accueil"
-                >
-                    <div class="logo-mark"><i class="fas fa-rocket"></i></div>
-                    <span class="logo-text">PregSafe</span>
-                </a>
-
-                <ul class="nav-links desktop-nav" role="list">
-                    <li><a href="{% url 'users:landing' %}">Accueil</a></li>
-                    <li>
-                        <a
-                            href="{% url 'forum:question_list' %}"
-                            onclick="if (!{{ user.is_authenticated|lower }}) { alert('Il faudra se connecter pour accéder à cette page.'); return false; }"
-                            >Forum</a
-                        >
-                    </li>
-                    <li>
-                        <a
-                            href="{% url 'pregancy:ajouter_suivi' %}"
-                            onclick="if (!{{ user.is_authenticated|lower }}) { alert('Il faudra se connecter pour accéder à cette page.'); return false; }"
-                            >Ajouter suivi</a
-                        >
-                    </li>
-                    <li>
-                        <a
-                            href="{% url 'pregancy:dashboard' %}"
-                            onclick="if (!{{ user.is_authenticated|lower }}) { alert('Il faudra se connecter pour accéder à cette page.'); return false; }"
-                            >Dashboard</a
-                        >
-                    </li>
-                    {% if user.is_authenticated %}
-                    <li><a href="{% url 'users:chat_home' %}">IA Ryan</a></li>
-                    {% endif %}
-                    <li><a href="{% url 'users:about' %}">L'Équipe</a></li>
-                </ul>
-
-                <div class="nav-actions desktop-nav">
-                    <button
-                        class="theme-btn"
-                        id="theme-toggle"
-                        aria-label="Changer le thème"
+        <a href="#main-content" class="skip-link">Aller au contenu principal</a>
+        <header role="banner">
+            <nav
+                class="navbar"
+                role="navigation"
+                aria-label="Navigation principale"
+            >
+                <div class="navbar-inner">
+                    <a
+                        href="{% url 'users:landing' %}"
+                        class="logo"
+                        aria-label="Hackathon — Accueil"
                     >
-                        <i class="fas fa-sun icon-sun"></i>
-                        <i class="fas fa-moon icon-moon"></i>
-                    </button>
-
-                    {% if user.is_authenticated %}
-
-                    <div class="relative group">
-                        <button class="nav-icon-btn">
-                            <i class="fas fa-bell"></i>
-                            {% if user.nombre_notifications_non_lues > 0 %}
-                            <span class="notification-badge">{{ user.nombre_notifications_non_lues }}</span>
-                            {% endif %}
-                        </button>
-                        <div class="notification-dropdown">
-                            <div class="notification-header">
-                                <span>Notifications</span>
-                                <a href="{% url 'users:mark_notifications_read' %}" class="text-xs text-[#E91E63] hover:underline">Tout marquer comme lu</a>
-                            </div>
-                            <div class="notification-list">
-                                {% for notification in user.notifications_non_lues|slice:":5" %}
-                                <a href="{% url 'users:mark_notification_read' notification.pk %}" class="notification-item">
-                                    <div class="notification-title">{{ notification.title }}</div>
-                                    <div class="notification-message">{{ notification.message }}</div>
-                                    <div class="notification-time">{{ notification.created_at|timesince }}</div>
-                                </a>
-                                {% empty %}
-                                <div class="notification-empty">Aucune nouvelle notification</div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-
-                    <a href="{% url 'users:profile' %}" class="user-pill">
-                        {% if user.photo %}
-                        <img
-                            src="{{ user.photo.url }}"
-                            class="avatar"
-                            alt="{{ user.username }}"
-                        />
-                        {% else %}
-                        <div class="avatar-initials">
-                            {{ user.username|first|upper }}
-                        </div>
-                        {% endif %}
-                        <span class="user-name">{{ user.username }}</span>
+                        <div class="logo-mark"><i class="fas fa-rocket" aria-hidden="true"></i></div>
+                        <span class="logo-text">PregSafe</span>
                     </a>
 
-                    {% else %}
-                    <a href="{% url 'users:connexion' %}" class="btn btn-ghost"
-                        >Connexion</a
-                    >
-                    <a
-                        href="{% url 'users:inscription' %}"
-                        class="btn btn-primary"
-                        >Démarrer</a
-                    >
-                    {% endif %}
-                </div>
+                    <ul class="nav-links desktop-nav" role="list">
+                        <li><a href="{% url 'users:landing' %}" {% if request.path == '/' %}aria-current="page"{% endif %}>Accueil</a></li>
+                        <li>
+                            <a
+                                href="{% url 'forum:question_list' %}"
+                                {% if '/forum/' in request.path %}aria-current="page"{% endif %}
+                                onclick="if (!{{ user.is_authenticated|lower }}) { alert('Il faudra se connecter pour accéder à cette page.'); return false; }"
+                                >Forum</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="{% url 'pregancy:ajouter_suivi' %}"
+                                {% if '/pregancy/ajouter' in request.path %}aria-current="page"{% endif %}
+                                onclick="if (!{{ user.is_authenticated|lower }}) { alert('Il faudra se connecter pour accéder à cette page.'); return false; }"
+                                >Ajouter suivi</a
+                            >
+                        </li>
+                        <li>
+                            <a
+                                href="{% url 'pregancy:dashboard' %}"
+                                {% if '/pregancy/dashboard' in request.path %}aria-current="page"{% endif %}
+                                onclick="if (!{{ user.is_authenticated|lower }}) { alert('Il faudra se connecter pour accéder à cette page.'); return false; }"
+                                >Dashboard</a
+                            >
+                        </li>
+                        {% if user.is_authenticated %}
+                        <li><a href="{% url 'users:chat_home' %}" {% if '/chat/' in request.path %}aria-current="page"{% endif %}>IA Ryan</a></li>
+                        {% endif %}
+                        <li><a href="{% url 'users:about' %}" {% if '/about/' in request.path %}aria-current="page"{% endif %}>L'Équipe</a></li>
+                    </ul>
 
-                <button
-                    class="burger"
-                    id="burger"
-                    aria-label="Menu"
-                    aria-expanded="false"
-                >
-                    <i class="fas fa-bars" id="burger-icon"></i>
-                </button>
-            </div>
-        </nav>
+                    <div class="nav-actions desktop-nav">
+                        <button
+                            class="theme-btn"
+                            id="theme-toggle"
+                            aria-label="Changer le thème"
+                        >
+                            <i class="fas fa-sun icon-sun" aria-hidden="true"></i>
+                            <i class="fas fa-moon icon-moon" aria-hidden="true"></i>
+                        </button>
+
+                        {% if user.is_authenticated %}
+
+                        <div class="relative" id="notif-wrapper">
+                            <button 
+                                class="nav-icon-btn" 
+                                id="notif-btn"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                aria-controls="notif-dropdown"
+                                aria-label="Notifications — {% if user.nombre_notifications_non_lues > 0 %}{{ user.nombre_notifications_non_lues }} non lues{% else %}aucune nouvelle{% endif %}"
+                            >
+                                <i class="fas fa-bell" aria-hidden="true"></i>
+                                {% if user.nombre_notifications_non_lues > 0 %}
+                                <span class="notification-badge">{{ user.nombre_notifications_non_lues }}</span>
+                                {% endif %}
+                            </button>
+                            <div class="notification-dropdown" id="notif-dropdown" role="menu">
+                                <div class="notification-header">
+                                    <span>Notifications</span>
+                                    <a href="{% url 'users:mark_notifications_read' %}" class="text-xs text-[#E91E63] hover:underline" role="menuitem">Tout marquer comme lu</a>
+                                </div>
+                                <div class="notification-list">
+                                    {% for notification in user.notifications_non_lues|slice:":5" %}
+                                    <a href="{% url 'users:mark_notification_read' notification.pk %}" class="notification-item" role="menuitem">
+                                        <div class="notification-title">{{ notification.title }}</div>
+                                        <div class="notification-message">{{ notification.message }}</div>
+                                        <div class="notification-time">{{ notification.created_at|timesince }}</div>
+                                    </a>
+                                    {% empty %}
+                                    <div class="notification-empty" role="menuitem">Aucune nouvelle notification</div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="{% url 'users:profile' %}" class="user-pill" {% if '/profile/' in request.path %}aria-current="page"{% endif %}>
+                            {% if user.photo %}
+                            <img
+                                src="{{ user.photo.url }}"
+                                class="avatar"
+                                alt="{{ user.username }}"
+                            />
+                            {% else %}
+                            <div class="avatar-initials">
+                                {{ user.username|first|upper }}
+                            </div>
+                            {% endif %}
+                            <span class="user-name">{{ user.username }}</span>
+                        </a>
+
+                        {% else %}
+                        <a href="{% url 'users:connexion' %}" class="btn btn-ghost"
+                            >Connexion</a
+                        >
+                        <a
+                            href="{% url 'users:inscription' %}"
+                            class="btn btn-primary"
+                            >Démarrer</a
+                        >
+                        {% endif %}
+                    </div>
+
+                    <button
+                        class="burger"
+                        id="burger"
+                        aria-label="Menu"
+                        aria-expanded="false"
+                        aria-controls="mobile-menu"
+                    >
+                        <i class="fas fa-bars" id="burger-icon" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </nav>
+        </header>
 
         <div
             class="mobile-menu"
@@ -228,17 +242,24 @@
         </div>
 
         {% if messages %}
-        <div class="flash-container" role="alert" aria-live="polite">
+        <div
+            class="flash-container"
+            role="region"
+            aria-live="polite"
+            aria-atomic="false"
+            aria-label="Notifications"
+        >
             {% for message in messages %}
             <div class="flash flash-{{ message.tags }}">
                 <i
                     class="fas {% if message.tags == 'success' %}fa-circle-check{% elif message.tags == 'error' %}fa-circle-xmark{% elif message.tags == 'warning' %}fa-triangle-exclamation{% else %}fa-circle-info{% endif %}"
+                    aria-hidden="true"
                 ></i>
                 <span>{{ message }}</span>
                 <button
                     class="flash-close"
-                    aria-label="Fermer"
-                    onclick="this.parentElement.remove()"
+                    aria-label="Fermer la notification"
+                    onclick="removeFlash(this.parentElement)"
                 >
                     <i class="fas fa-xmark"></i>
                 </button>
@@ -247,28 +268,42 @@
         </div>
         {% endif %}
 
-        <main class="main">{% block content %}{% endblock %}</main>
+        <main id="main-content" class="main">{% block content %}{% endblock %}</main>
 
-        <footer>
+        <footer role="contentinfo">
             <div class="footer-inner">
                 <div class="footer-brand">
-                    <div class="footer-mark"><i class="fas fa-rocket"></i></div>
+                    <div class="footer-mark"><i class="fas fa-rocket" aria-hidden="true"></i></div>
                     <span class="footer-brand-name">Hackathon</span>
                 </div>
                 <p class="footer-copy">
                     Hackathon III<sup>ème</sup> Édition · © 2026
                 </p>
-                <div class="footer-links">
-                    <a href="#" aria-label="GitHub"
-                        ><i class="fab fa-github"></i
-                    ></a>
-                    <a href="#" aria-label="Twitter"
-                        ><i class="fab fa-x-twitter"></i
-                    ></a>
-                    <a href="#" aria-label="LinkedIn"
-                        ><i class="fab fa-linkedin-in"></i
-                    ></a>
+                <div class="footer-links" role="list">
+                    <a href="https://github.com" aria-label="GitHub" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-github" aria-hidden="true"></i>
+                    </a>
+                    <a href="https://twitter.com" aria-label="Twitter" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-x-twitter" aria-hidden="true"></i>
+                    </a>
+                    <a href="https://linkedin.com" aria-label="LinkedIn" target="_blank" rel="noopener noreferrer">
+                        <i class="fab fa-linkedin-in" aria-hidden="true"></i>
+                    </a>
                 </div>
+            </div>
+
+            <div class="footer-bottom">
+                <ul class="footer-legal" role="list">
+                    <li><a href="#">Mentions légales</a></li>
+                    <li><a href="#">CGU</a></li>
+                    <li><a href="#">Cookies</a></li>
+                    <li><a href="#">Accessibilité</a></li>
+                </ul>
+
+                <button class="footer-lang" aria-label="Changer de langue — Français sélectionné">
+                    <i class="fas fa-globe" aria-hidden="true"></i>
+                    <span>Français</span>
+                </button>
             </div>
         </footer>
 
@@ -332,6 +367,37 @@
                 document.body.style.overflow = open ? "hidden" : "";
             });
 
+            // Notification Dropdown Toggle
+            const notifBtn = document.getElementById("notif-btn");
+            const notifDropdown = document.getElementById("notif-dropdown");
+            const notifWrapper = document.getElementById("notif-wrapper");
+
+            if (notifBtn && notifDropdown) {
+                notifBtn.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    const isOpen = notifBtn.getAttribute("aria-expanded") === "true";
+                    notifBtn.setAttribute("aria-expanded", !isOpen);
+                    notifWrapper.dataset.open = !isOpen;
+                });
+
+                document.addEventListener("click", (e) => {
+                    if (!notifWrapper.contains(e.target)) {
+                        closeNotif();
+                    }
+                });
+
+                document.addEventListener("keydown", (e) => {
+                    if (e.key === "Escape") closeNotif();
+                });
+            }
+
+            function closeNotif() {
+                if (notifBtn) {
+                    notifBtn.setAttribute("aria-expanded", "false");
+                    notifWrapper.dataset.open = "false";
+                }
+            }
+
             window.addEventListener("resize", () => {
                 if (window.innerWidth > 768) {
                     mobileMenu.classList.remove("open");
@@ -341,19 +407,26 @@
                 }
             });
 
+            function removeFlash(flash) {
+                flash.classList.add("flash-exit");
+                setTimeout(() => flash.remove(), 300);
+            }
+
             document.querySelectorAll(".flash").forEach((flash) => {
-                setTimeout(() => {
-                    flash.style.transition = "opacity .4s, transform .4s";
-                    flash.style.opacity = "0";
-                    flash.style.transform = "translateY(-6px)";
-                    setTimeout(() => flash.remove(), 400);
-                }, 5000);
+                setTimeout(() => removeFlash(flash), 5000);
             });
         </script>
 
         {% if user.is_authenticated and "/chat/" not in request.path %}
         <div class="chat-widget">
-            <div class="chat-panel" id="chat-panel">
+            <div
+                class="chat-panel"
+                id="chat-panel"
+                role="dialog"
+                aria-modal="true"
+                aria-label="Chat support"
+                aria-hidden="true"
+            >
                 <div class="chat-panel-header">
                     <div class="flex items-center gap-3">
                         <div
@@ -366,37 +439,56 @@
                     <button
                         onclick="toggleWidget()"
                         class="opacity-50 hover:opacity-100"
+                        aria-label="Fermer le chat"
                     >
                         <i class="fas fa-times"></i>
                     </button>
                 </div>
 
-                <div id="widget-messages" class="chat-panel-messages">
+                <div
+                    id="widget-messages"
+                    class="chat-panel-messages"
+                    role="log"
+                    aria-live="polite"
+                    aria-label="Messages"
+                >
                     <div class="w-msg w-ai-msg">
                         Bonjour ! Besoin d'aide rapide ? Je suis là.
                     </div>
                 </div>
 
                 <div class="chat-panel-footer">
-                    <input
-                        type="text"
+                    <textarea
                         id="widget-input"
-                        class="cool-input !py-3 !text-sm"
+                        class="cool-input !py-3 !text-sm resize-none"
                         placeholder="Votre message..."
-                        onkeypress="
-                            if (event.key === 'Enter') sendWidgetMessage();
+                        aria-label="Votre message"
+                        rows="1"
+                        onkeydown="
+                            if (event.key === 'Enter' && !event.shiftKey) {
+                                event.preventDefault();
+                                sendWidgetMessage();
+                            }
                         "
-                    />
+                    ></textarea>
                     <button
                         onclick="sendWidgetMessage()"
                         class="btn btn-primary !p-3"
+                        aria-label="Envoyer le message"
                     >
                         <i class="fas fa-paper-plane text-xs"></i>
                     </button>
                 </div>
             </div>
 
-            <button class="chat-bubble" onclick="toggleWidget()">
+            <button
+                class="chat-bubble"
+                id="chat-trigger"
+                onclick="toggleWidget()"
+                aria-expanded="false"
+                aria-controls="chat-panel"
+                aria-label="Ouvrir le chat"
+            >
                 <i class="fas fa-comment-dots" id="widget-icon"></i>
             </button>
         </div>
@@ -404,13 +496,28 @@
         <script>
             function toggleWidget() {
                 const panel = document.getElementById("chat-panel");
+                const trigger = document.getElementById("chat-trigger");
                 const icon = document.getElementById("widget-icon");
-                const isOpen = panel.classList.toggle("active");
+                const isOpening = panel.getAttribute("aria-hidden") === "true";
 
-                icon.className = isOpen
+                panel.setAttribute("aria-hidden", !isOpening);
+                trigger.setAttribute("aria-expanded", isOpening);
+
+                icon.className = isOpening
                     ? "fas fa-chevron-down"
                     : "fas fa-comment-dots";
-                if (isOpen) document.getElementById("widget-input").focus();
+
+                if (isOpening) {
+                    document.getElementById("widget-input").focus();
+                    document.addEventListener("keydown", handleEsc);
+                } else {
+                    trigger.focus();
+                    document.removeEventListener("keydown", handleEsc);
+                }
+            }
+
+            function handleEsc(e) {
+                if (e.key === "Escape") toggleWidget();
             }
 
             async function sendWidgetMessage() {
@@ -441,6 +548,31 @@
                 }
                 container.scrollTop = container.scrollHeight;
             }
+
+            // Simple Focus Trap
+            document
+                .getElementById("chat-panel")
+                .addEventListener("keydown", function (e) {
+                    if (e.key !== "Tab") return;
+
+                    const focusable = this.querySelectorAll(
+                        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+                    );
+                    const first = focusable[0];
+                    const last = focusable[focusable.length - 1];
+
+                    if (e.shiftKey) {
+                        if (document.activeElement === first) {
+                            last.focus();
+                            e.preventDefault();
+                        }
+                    } else {
+                        if (document.activeElement === last) {
+                            first.focus();
+                            e.preventDefault();
+                        }
+                    }
+                });
         </script>
         {% endif %} {% block extra_scripts %}{% endblock %}
     </body>
