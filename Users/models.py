@@ -78,10 +78,13 @@ class User(AbstractUser):
         return "Obésité"
 
     def save(self, *args, **kwargs):
-        if self.date_dernieres_regles and not self.date_prevue_accouchement:
-            self.date_prevue_accouchement = self.accouchement()
-
+        if self.date_dernieres_regles:
+            self.date_prevue_accouchement = self.accouchement() # On recalcule toujours
         super().save(*args, **kwargs)
+        
+    @property
+    def est_au_terme(self):
+        return self.semaine_actuelle >= 40 or (self.date_prevue_accouchement and datetime.date.today() >= self.date_prevue_accouchement)
 
     def a_deja_rempli_suivi_cette_semaine(self):
         return self.suivis_grossesse.filter(
