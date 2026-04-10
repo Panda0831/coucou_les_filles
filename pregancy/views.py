@@ -4,24 +4,16 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.views.generic import TemplateView
 from django.http import HttpResponse
+from django.utils.text import get_valid_filename
 
-from reportlab.lib.pagesizes import A4
-from reportlab.platypus import (
-    SimpleDocTemplate,
-    Paragraph,
-    Spacer,
-    Table,
-    TableStyle
-)
-from reportlab.lib import colors
-from reportlab.lib.styles import getSampleStyleSheet
-
+from io import BytesIO
 import datetime
 import json
 import random
 
 from Users.forms import SuiviHebdomadaireForm
 from .models import SuiviHebdomadaire, DeveloppementFoetus, AlerteMedicale
+from .pdf_dossier import build_dossier_pdf
 from .services import generer_conseil_ia
 
 
@@ -173,111 +165,20 @@ class DashboardView(LoginRequiredMixin, TemplateView):
 @login_required
 def exporter_dossier_patient(request):
     user = request.user
-
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = 'attachment; filename="dossier_patiente.pdf"'
-
-    doc = SimpleDocTemplate(response, pagesize=A4)
-    elements = []
-    styles = getSampleStyleSheet()
-
-    titre = Paragraph("Dossier de Suivi Grossesse", styles['Title'])
-    elements.append(titre)
-    elements.append(Spacer(1, 20))
-
-    infos = [
-        ["Nom", user.get_full_name() or user.username],
-        ["Semaine actuelle", str(user.semaine_actuelle)],
-        ["Date prévue d'accouchement", str(user.date_prevue_accouchement)],
-        ["IMC de départ", str(user.imc)],
-        ["Catégorie IMC", str(user.categorie_imc)],
-        ["Poids actuel", str(user.poids_actuel())],
-        ["Prise de poids totale", str(user.prise_poids_totale())],
-        ["Risque actuel", str(user.risque_global())],
-    ]
-
-    table_infos = Table(infos, colWidths=[180, 250])
-    table_infos.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.lightgrey),
-        ('GRID', (0, 0), (-1, -1), 1, colors.black),
-        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
-        ('PADDING', (0, 0), (-1, -1), 8),
-    ]))
-
-    elements.append(table_infos)
-    elements.append(Spacer(1, 25))
-
     suivis = SuiviHebdomadaire.objects.filter(
         mere=user
-    ).order_by('semaine_grossesse')
+    ).order_by("semaine_grossesse")
 
-    groupes_mensuels = []
+    buffer = BytesIO()
+    build_dossier_pdf(buffer, user, suivis)
 
-    for debut in range(1, 41, 4):
-        fin = debut + 3
+    stamp = datetime.datetime.now().strftime("%Y%m%d-%H%M")
+    base = get_valid_filename(user.username or "patiente")
+    filename = f"dossier_mamasafe_{base}_{stamp}.pdf"
 
-        suivis_mois = suivis.filter(
-            semaine_grossesse__gte=debut,
-            semaine_grossesse__lte=fin
-        )
-
-        if suivis_mois.exists():
-            groupes_mensuels.append({
-                "mois": ((debut - 1) // 4) + 1,
-                "debut": debut,
-                "fin": fin,
-                "suivis": suivis_mois
-            })
-
-    elements.append(
-        Paragraph(
-            "Suivi mensuel (par tranche de 4 semaines)",
-            styles['Heading2']
-        )
+    response = HttpResponse(
+        buffer.getvalue(),
+        content_type="application/pdf",
     )
-    elements.append(Spacer(1, 10))
-
-    for groupe in groupes_mensuels:
-        titre_mois = Paragraph(
-            f"Mois {groupe['mois']} - Semaines {groupe['debut']} à {groupe['fin']}",
-            styles['Heading3']
-        )
-
-        elements.append(titre_mois)
-        elements.append(Spacer(1, 8))
-
-        data = [[
-            "Semaine",
-            "Poids",
-            "Prise poids",
-            "Stress",
-            "Sommeil"
-        ]]
-
-        for suivi in groupe['suivis']:
-            data.append([
-                str(suivi.semaine_grossesse),
-                str(suivi.poids),
-                str(suivi.prise_poids),
-                str(suivi.niveau_stress),
-                str(suivi.qualite_sommeil),
-            ])
-
-        table_suivis = Table(
-            data,
-            colWidths=[70, 80, 100, 80, 80]
-        )
-
-        table_suivis.setStyle(TableStyle([
-            ('BACKGROUND', (0, 0), (-1, 0), colors.pink),
-            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
-            ('GRID', (0, 0), (-1, -1), 1, colors.black),
-            ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
-            ('PADDING', (0, 0), (-1, -1), 6),
-        ]))
-
-        elements.append(table_suivis)
-        elements.append(Spacer(1, 20))
-
-    doc.build(elements)
+    response["Content-Disposition"] = f'attachment; filename="{filename}"'
     return response
