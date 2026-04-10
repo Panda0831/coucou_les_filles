@@ -14,7 +14,7 @@ from django.shortcuts import redirect, render
 from groq import Groq
 
 from .forms import CustomUserChangeForm, CustomUserCreationForm
-from .models import User, ChatMessage
+from .models import ChatMessage, User
 
 
 def landing(request):
@@ -22,8 +22,14 @@ def landing(request):
         return redirect("users:user_home")
     return render(request, "Base/landing.html")
 
+
 def about(request):
     return render(request, "Base/about.html")
+
+
+def Apropos(request):
+    return render(request, "Base/Apropos.html")
+
 
 def inscription(request):
     if request.method == "POST":
@@ -154,10 +160,14 @@ def supprimer_compte(request):
         return redirect("users:inscription")
     return render(request, "dashboard/user/profile.html")
 
+
 @login_required
 def chat_page(request):
-    messages_history = ChatMessage.objects.filter(user=request.user).order_by('created_at')
+    messages_history = ChatMessage.objects.filter(user=request.user).order_by(
+        "created_at"
+    )
     return render(request, "API/chat.html", {"messages_history": messages_history})
+
 
 @login_required
 def chat_with_ai(request):
@@ -165,25 +175,21 @@ def chat_with_ai(request):
         try:
             data = json.loads(request.body)
             user_message = data.get("message", "")
-            
+
             client = Groq(api_key=os.environ.get("GROQ_API_KEY", "A_REMPLACER"))
-            
+
             chat_completion = client.chat.completions.create(
-                messages=[
-                    {"role": "user", "content": user_message}
-                ],
+                messages=[{"role": "user", "content": user_message}],
                 model="llama-3.3-70b-versatile",
             )
-            
+
             reply = chat_completion.choices[0].message.content
-            
+
             # Sauvegarde en base de données
             ChatMessage.objects.create(
-                user=request.user,
-                message=user_message,
-                response=reply
+                user=request.user, message=user_message, response=reply
             )
-            
+
             return JsonResponse({"reply": reply})
         except Exception as e:
             print(f"❌ ERREUR IA DÉTECTÉE : {str(e)}")

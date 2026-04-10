@@ -60,7 +60,7 @@
 
             <!-- Form Area -->
             <div class="lg:col-span-3 p-8 md:p-12 bg-surface">
-                <form method="POST" class="space-y-8">
+                <form method="POST" class="space-y-8" enctype="multipart/form-data">
                     {% csrf_token %}
                     
                     <!-- Title Field -->
@@ -87,6 +87,19 @@
                         {{ form.content }}
                         {% if form.content.errors %}
                             {% for error in form.content.errors %}
+                                <p class="text-error text-xs font-bold mt-2">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <!-- Image Field -->
+                    <div class="space-y-3">
+                        <label for="{{ form.image.id_for_label }}" class="text-sm font-black uppercase tracking-widest text-ink">
+                            Ajouter une photo ou un fichier (optionnel)
+                        </label>
+                        {{ form.image }}
+                        {% if form.image.errors %}
+                            {% for error in form.image.errors %}
                                 <p class="text-error text-xs font-bold mt-2">{{ error }}</p>
                             {% endfor %}
                         {% endif %}

@@ -87,9 +87,9 @@
                                     <i class="far fa-comment-dots"></i>
                                     {{ question.answers.count }} réponse{{ question.answers.count|pluralize }}
                                 </span>
-                                <span class="hidden sm:flex items-center gap-2 text-sm font-medium text-ink-muted">
-                                    <i class="far fa-eye"></i>
-                                    Lu par la communauté
+                                <span class="flex items-center gap-2 text-sm font-bold text-ink-muted bg-surface-2 px-4 py-2 rounded-xl">
+                                    <i class="far fa-thumbs-up"></i>
+                                    {{ question.total_likes }}
                                 </span>
                             </div>
                             

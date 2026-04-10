@@ -31,8 +31,26 @@
                 {{ question.title }}
             </h1>
 
-            <div class="prose prose-pink max-w-none text-ink/80 text-lg md:text-xl leading-relaxed whitespace-pre-wrap font-medium">
+            <div class="prose prose-pink max-w-none text-ink/80 text-lg md:text-xl leading-relaxed whitespace-pre-wrap font-medium mb-8">
                 {{ question.content }}
+            </div>
+
+            {% if question.image %}
+                <div class="mb-8 rounded-3xl overflow-hidden shadow-lg border-4 border-paper">
+                    <img src="{{ question.image.url }}" class="w-full h-auto object-cover" alt="Image pour {{ question.title }}">
+                </div>
+            {% endif %}
+
+            <!-- Question Actions (Votes) -->
+            <div class="flex items-center gap-4 mt-8 pt-8 border-t border-line">
+                <a href="{% url 'forum:like_question' question.pk %}" class="flex items-center gap-2 px-4 py-2 rounded-xl {% if user in question.likes.all %}bg-primary text-white shadow-lg{% else %}bg-surface-2 text-ink-muted hover:bg-line{% endif %} transition-all font-black text-xs uppercase tracking-widest">
+                    <i class="{% if user in question.likes.all %}fas{% else %}far{% endif %} fa-thumbs-up"></i>
+                    {{ question.total_likes }}
+                </a>
+                <a href="{% url 'forum:dislike_question' question.pk %}" class="flex items-center gap-2 px-4 py-2 rounded-xl {% if user in question.dislikes.all %}bg-ink text-white shadow-lg{% else %}bg-surface-2 text-ink-muted hover:bg-line{% endif %} transition-all font-black text-xs uppercase tracking-widest">
+                    <i class="{% if user in question.dislikes.all %}fas{% else %}far{% endif %} fa-thumbs-down"></i>
+                    {{ question.total_dislikes }}
+                </a>
             </div>
         </div>
         
@@ -75,8 +93,26 @@
                             </div>
                         </div>
                     </div>
-                    <div class="text-ink-muted leading-relaxed whitespace-pre-wrap font-medium">
+                    <div class="text-ink-muted leading-relaxed whitespace-pre-wrap font-medium mb-6">
                         {{ answer.content }}
+                    </div>
+
+                    {% if answer.image %}
+                        <div class="mb-6 rounded-2xl overflow-hidden border-2 border-line">
+                            <img src="{{ answer.image.url }}" class="max-w-full h-auto object-cover" alt="Fichier joint">
+                        </div>
+                    {% endif %}
+
+                    <!-- Answer Actions (Votes) -->
+                    <div class="flex items-center gap-3 pt-4 border-t border-line/50">
+                        <a href="{% url 'forum:like_answer' answer.pk %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg {% if user in answer.likes.all %}bg-primary text-white shadow-md{% else %}bg-surface-2 text-ink-muted hover:bg-line{% endif %} transition-all font-bold text-[10px] uppercase tracking-wider">
+                            <i class="{% if user in answer.likes.all %}fas{% else %}far{% endif %} fa-thumbs-up"></i>
+                            {{ answer.total_likes }}
+                        </a>
+                        <a href="{% url 'forum:dislike_answer' answer.pk %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg {% if user in answer.dislikes.all %}bg-ink text-white shadow-md{% else %}bg-surface-2 text-ink-muted hover:bg-line{% endif %} transition-all font-bold text-[10px] uppercase tracking-wider">
+                            <i class="{% if user in answer.dislikes.all %}fas{% else %}far{% endif %} fa-thumbs-down"></i>
+                            {{ answer.total_dislikes }}
+                        </a>
                     </div>
                 </div>
             </div>
@@ -102,12 +138,24 @@
                 Votre contribution
             </h3>
 
-            <form method="POST" class="space-y-6">
+            <form method="POST" class="space-y-6" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="relative">
                     {{ form.content }}
                     {% if form.content.errors %}
                         {% for error in form.content.errors %}
+                            <p class="text-error text-xs font-black uppercase mt-2 italic">{{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+
+                <div class="space-y-2">
+                    <label for="{{ form.image.id_for_label }}" class="text-[10px] font-black uppercase tracking-widest text-ink-muted">
+                        Ajouter une photo ou un fichier
+                    </label>
+                    {{ form.image }}
+                    {% if form.image.errors %}
+                        {% for error in form.image.errors %}
                             <p class="text-error text-xs font-black uppercase mt-2 italic">{{ error }}</p>
                         {% endfor %}
                     {% endif %}

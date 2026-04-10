@@ -1,20 +1,24 @@
-{% extends "Base/base.html" %}
-
-{% block title %}À Propos · Hackathon{% endblock %}
-
-{% block content %}
+{% extends "Base/base.html" %} {% block title %} À Propos · Hackathon
+{%endblock%} {% block content %}
 <div class="max-w-6xl mx-auto space-y-20 py-12">
-    
     <!-- Hero Section -->
     <div class="text-center space-y-8">
-        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--ink)] text-[var(--paper)] text-[10px] font-black uppercase tracking-[0.2em] shadow-lg">
+        <div
+            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--ink)] text-[var(--paper)] text-[10px] font-black uppercase tracking-[0.2em] shadow-lg"
+        >
             <i class="fas fa-sparkles text-[var(--accent)]"></i> Hackathon 2026
         </div>
-        <h1 class="text-5xl md:text-7xl font-black text-[var(--ink)] font-serif-display tracking-tight leading-none">
-            L'innovation par <br> <span class="text-[var(--accent)]">la collaboration.</span>
+        <h1
+            class="text-5xl md:text-7xl font-black text-[var(--ink)] font-serif-display tracking-tight leading-none"
+        >
+            L'innovation par <br />
+            <span class="text-[var(--accent)]">la collaboration.</span>
         </h1>
-        <p class="text-[var(--muted)] text-lg md:text-xl max-w-2xl mx-auto leading-relaxed">
-            Une équipe passionnée réunie pour repousser les limites de l'intelligence artificielle et du design moderne.
+        <p
+            class="text-[var(--muted)] text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
+        >
+            Une équipe passionnée réunie pour repousser les limites de
+            l'intelligence artificielle et du design moderne.
         </p>
     </div>
 
@@ -22,78 +26,145 @@
     <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
         <!-- Ryan -->
         <div class="cool-card group !p-6">
-            <div class="w-full aspect-square rounded-2xl bg-[var(--paper)] mb-6 overflow-hidden relative">
-                <div class="absolute inset-0 flex items-center justify-center text-4xl text-[var(--line)] group-hover:scale-110 transition-transform duration-500">
+            <div
+                class="w-full aspect-square rounded-2xl bg-[var(--paper)] mb-6 overflow-hidden relative"
+            >
+                <div
+                    class="absolute inset-0 flex items-center justify-center text-4xl text-[var(--line)] group-hover:scale-110 transition-transform duration-500"
+                >
                     <i class="fas fa-code"></i>
                 </div>
             </div>
-            <h3 class="text-xl font-bold text-[var(--ink)] font-serif-display">Ryan 1</h3>
-            <p class="text-[var(--accent)] text-xs font-black uppercase tracking-widest mt-1">Backend Wizard</p>
+            <h3 class="text-xl font-bold text-[var(--ink)] font-serif-display">
+                Ryan 1
+            </h3>
+            <p
+                class="text-[var(--accent)] text-xs font-black uppercase tracking-widest mt-1"
+            >
+                Backend Wizard
+            </p>
             <p class="text-[var(--muted)] text-sm mt-4 leading-relaxed">
-                Maître des API et de l'IA. Il donne vie à l'intelligence du système.
+                Maître des API et de l'IA. Il donne vie à l'intelligence du
+                système.
             </p>
         </div>
 
         <!-- Ando -->
         <div class="cool-card group !p-6">
-            <div class="w-full aspect-square rounded-2xl bg-[var(--paper)] mb-6 overflow-hidden relative">
-                <div class="absolute inset-0 flex items-center justify-center text-4xl text-[var(--line)] group-hover:scale-110 transition-transform duration-500">
+            <div
+                class="w-full aspect-square rounded-2xl bg-[var(--paper)] mb-6 overflow-hidden relative"
+            >
+                <div
+                    class="absolute inset-0 flex items-center justify-center text-4xl text-[var(--line)] group-hover:scale-110 transition-transform duration-500"
+                >
                     <i class="fas fa-bezier-curve"></i>
                 </div>
             </div>
-            <h3 class="text-xl font-bold text-[var(--ink)] font-serif-display">Ando 2</h3>
-            <p class="text-[var(--accent)] text-xs font-black uppercase tracking-widest mt-1">UI/UX Designer</p>
+            <h3 class="text-xl font-bold text-[var(--ink)] font-serif-display">
+                Ando 2
+            </h3>
+            <p
+                class="text-[var(--accent)] text-xs font-black uppercase tracking-widest mt-1"
+            >
+                UI/UX Designer
+            </p>
             <p class="text-[var(--muted)] text-sm mt-4 leading-relaxed">
-                Garante de l'esthétique et de l'ergonomie. Chaque pixel a son importance.
+                Garante de l'esthétique et de l'ergonomie. Chaque pixel a son
+                importance.
             </p>
         </div>
 
         <!-- Tang -->
         <div class="cool-card group !p-6">
-            <div class="w-full aspect-square rounded-2xl bg-[var(--paper)] mb-6 overflow-hidden relative">
-                <div class="absolute inset-0 flex items-center justify-center text-4xl text-[var(--line)] group-hover:scale-110 transition-transform duration-500">
+            <div
+                class="w-full aspect-square rounded-2xl bg-[var(--paper)] mb-6 overflow-hidden relative"
+            >
+                <div
+                    class="absolute inset-0 flex items-center justify-center text-4xl text-[var(--line)] group-hover:scale-110 transition-transform duration-500"
+                >
                     <i class="fas fa-rocket"></i>
                 </div>
             </div>
-            <h3 class="text-xl font-bold text-[var(--ink)] font-serif-display">Tang 3</h3>
-            <p class="text-[var(--accent)] text-xs font-black uppercase tracking-widest mt-1">Project Lead</p>
+            <h3 class="text-xl font-bold text-[var(--ink)] font-serif-display">
+                Tang 3
+            </h3>
+            <p
+                class="text-[var(--accent)] text-xs font-black uppercase tracking-widest mt-1"
+            >
+                Project Lead
+            </p>
             <p class="text-[var(--muted)] text-sm mt-4 leading-relaxed">
-                Le capitaine qui garde le cap. Coordination et vision stratégique.
+                Le capitaine qui garde le cap. Coordination et vision
+                stratégique.
             </p>
         </div>
 
         <!-- Fanamby -->
         <div class="cool-card group !p-6">
-            <div class="w-full aspect-square rounded-2xl bg-[var(--paper)] mb-6 overflow-hidden relative">
-                <div class="absolute inset-0 flex items-center justify-center text-4xl text-[var(--line)] group-hover:scale-110 transition-transform duration-500">
+            <div
+                class="w-full aspect-square rounded-2xl bg-[var(--paper)] mb-6 overflow-hidden relative"
+            >
+                <div
+                    class="absolute inset-0 flex items-center justify-center text-4xl text-[var(--line)] group-hover:scale-110 transition-transform duration-500"
+                >
                     <i class="fas fa-cubes"></i>
                 </div>
             </div>
-            <h3 class="text-xl font-bold text-[var(--ink)] font-serif-display">Fanamby 4</h3>
-            <p class="text-[var(--accent)] text-xs font-black uppercase tracking-widest mt-1">Full Stack Dev</p>
+            <h3 class="text-xl font-bold text-[var(--ink)] font-serif-display">
+                Fanamby 4
+            </h3>
+            <p
+                class="text-[var(--accent)] text-xs font-black uppercase tracking-widest mt-1"
+            >
+                Full Stack Dev
+            </p>
             <p class="text-[var(--muted)] text-sm mt-4 leading-relaxed">
-                Le couteau suisse de l'équipe. Intégration fluide du front au back.
+                Le couteau suisse de l'équipe. Intégration fluide du front au
+                back.
             </p>
         </div>
     </div>
 
     <!-- Vision Section -->
-    <div class="cool-card !p-12 md:!p-20 bg-[var(--ink)] text-[var(--paper)] relative overflow-hidden">
-        <div class="absolute top-0 right-0 w-64 h-64 bg-[var(--accent)] opacity-10 rounded-full blur-[100px] -mr-32 -mt-32"></div>
-        
+    <div
+        class="cool-card !p-12 md:!p-20 bg-[var(--ink)] text-[var(--paper)] relative overflow-hidden"
+    >
+        <div
+            class="absolute top-0 right-0 w-64 h-64 bg-[var(--accent)] opacity-10 rounded-full blur-[100px] -mr-32 -mt-32"
+        ></div>
+
         <div class="max-w-3xl relative z-10">
-            <h2 class="text-3xl md:text-5xl font-bold font-serif-display mb-8">Notre Vision</h2>
-            <p class="text-lg md:text-xl opacity-80 leading-relaxed font-medium">
-                Nous croyons que la technologie doit être à la fois puissante et invisible. Notre mission est de créer des outils qui simplifient la complexité, permettant à chacun de se concentrer sur ce qui compte vraiment : l'innovation et la créativité.
+            <h2 class="text-3xl md:text-5xl font-bold font-serif-display mb-8">
+                Notre Vision
+            </h2>
+            <p
+                class="text-lg md:text-xl opacity-80 leading-relaxed font-medium"
+            >
+                Nous croyons que chaque maman et chaque bébé méritent une
+                attention constante et bienveillante. Notre mission est
+                d’utiliser la technologie pour transformer les symptômes en
+                informations utiles, afin d’accompagner, rassurer et protéger la
+                santé de la mère et de son enfant à chaque étape de la
+                grossesse.
             </p>
             <div class="mt-12 flex gap-6">
                 <div class="flex-1 border-l-2 border-[var(--accent)] pl-6">
-                    <div class="text-3xl font-bold font-serif-display">100%</div>
-                    <div class="text-xs font-bold uppercase tracking-widest opacity-50 mt-1">Passionné</div>
+                    <div class="text-3xl font-bold font-serif-display">
+                        100%
+                    </div>
+                    <div
+                        class="text-xs font-bold uppercase tracking-widest opacity-50 mt-1"
+                    >
+                        Passionné
+                    </div>
                 </div>
                 <div class="flex-1 border-l-2 border-[var(--accent)] pl-6">
                     <div class="text-3xl font-bold font-serif-display">∞</div>
-                    <div class="text-xs font-bold uppercase tracking-widest opacity-50 mt-1">Détermination</div>
+                    <div
+                        class="text-xs font-bold uppercase tracking-widest opacity-50 mt-1"
+                    >
+                        Détermination
+                    </div>
                 </div>
             </div>
         </div>
@@ -101,6 +172,8 @@
 </div>
 
 <style>
-    .font-serif-display { font-family: 'DM Serif Display', serif; }
+    .font-serif-display {
+        font-family: "DM Serif Display", serif;
+    }
 </style>
 {% endblock %}
