@@ -42,26 +42,37 @@
                     class="logo"
                     aria-label="Hackathon — Accueil"
                 >
-                    <div class="logo-mark"><i class="fas fa-person-pregnant"></i></div>
+                    <div class="logo-mark"><i class="fas fa-rocket"></i></div>
                     <span class="logo-text">PregSafe</span>
                 </a>
 
                 <ul class="nav-links desktop-nav" role="list">
                     <li><a href="{% url 'users:landing' %}">Accueil</a></li>
-                    <li><a href="{% url 'users:about' %}">L'Équipe</a></li>
-                    <li><a href="{% url 'forum:question_list' %}" onclick="if (!{{ user.is_authenticated|lower }}) { alert('Il faudra se connecter pour accéder à cette page.'); return false; }">Forum</a></li>
                     <li>
-                        <a href="{% url 'pregancy:ajouter_suivi' %}"
+                        <a
+                            href="{% url 'forum:question_list' %}"
+                            onclick="if (!{{ user.is_authenticated|lower }}) { alert('Il faudra se connecter pour accéder à cette page.'); return false; }"
+                            >Forum</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="{% url 'pregancy:ajouter_suivi' %}"
                             onclick="if (!{{ user.is_authenticated|lower }}) { alert('Il faudra se connecter pour accéder à cette page.'); return false; }"
                             >Ajouter suivi</a
                         >
                     </li>
                     <li>
-                        <a href="{% url 'pregancy:dashboard' %}" onclick="if (!{{ user.is_authenticated|lower }}) { alert('Il faudra se connecter pour accéder à cette page.'); return false; }">Dashboard</a>
+                        <a
+                            href="{% url 'pregancy:dashboard' %}"
+                            onclick="if (!{{ user.is_authenticated|lower }}) { alert('Il faudra se connecter pour accéder à cette page.'); return false; }"
+                            >Dashboard</a
+                        >
                     </li>
                     {% if user.is_authenticated %}
                     <li><a href="{% url 'users:chat_home' %}">IA Ryan</a></li>
                     {% endif %}
+                    <li><a href="{% url 'users:about' %}">L'Équipe</a></li>
                 </ul>
 
                 <div class="nav-actions desktop-nav">
@@ -122,19 +133,20 @@
         >
             <ul class="mobile-nav-links" role="list">
                 <li><a href="{% url 'users:landing' %}">Accueil</a></li>
-                <li><a href="{% url 'users:about' %}">L'Équipe</a></li>
-                <li><a href="{% url 'forum:question_list' %}" onclick="if (!{{ user.is_authenticated|lower }}) { alert('Il faudra se connecter pour accéder à cette page.'); return false; }">Forum</a></li>
+                <li><a href="{% url 'forum:question_list' %}">Forum</a></li>
                 <li>
                     <a href="{% url 'pregancy:ajouter_suivi' %}"
-                        onclick="if (!{{ user.is_authenticated|lower }}) { alert('Il faudra se connecter pour accéder à cette page.'); return false; }"
                         >Ajouter suivi</a
                     >
                 </li>
+                <li>
+                    <a href="{% url 'pregancy:dashboard' %}">Dashboard</a>
+                </li>
                 {% if user.is_authenticated %}
-
                 <li><a href="{% url 'users:chat_home' %}">IA Ryan</a></li>
                 <li><a href="{% url 'users:profile' %}">Mon Profil</a></li>
                 {% endif %}
+                <li><a href="{% url 'users:about' %}">L'Équipe</a></li>
             </ul>
 
             <div class="mobile-actions">
@@ -404,8 +416,6 @@
                 container.scrollTop = container.scrollHeight;
             }
         </script>
-        {% endif %}
-
-        {% block extra_scripts %}{% endblock %}
+        {% endif %} {% block extra_scripts %}{% endblock %}
     </body>
 </html>
