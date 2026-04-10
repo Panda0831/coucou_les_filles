@@ -1,33 +1,68 @@
-/* ── GLOBAL CARD STYLE ───────────────────────────────── */
-.cool-card {
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 32px;
-    padding: 32px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.02);
-}
-.cool-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.05);
-    border-color: var(--accent);
-}
-
-/* ── INPUTS ──────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════
+   FORMS — High Definition
+══════════════════════════════════════════════════════ */
 .cool-input {
     width: 100%;
     padding: 14px 20px;
-    border-radius: 16px;
-    background: var(--paper);
-    border: 2px solid transparent;
-    color: var(--ink);
-    font-size: 0.95rem;
-    transition: all 0.3s;
-    outline: none;
-    box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
-}
-.cool-input:focus {
-    border-color: var(--accent);
     background: var(--surface);
-    box-shadow: 0 0 0 4px color-mix(in srgb, var(--accent) 15%, transparent);
+    border: 2px solid var(--line);
+    border-radius: var(--radius-sm);
+    color: var(--ink);
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: all .2s cubic-bezier(0.4, 0, 0.2, 1);
+    outline: none;
+}
+
+.cool-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px hsla(var(--p-h), 70%, 50%, 0.1);
+    transform: translateY(-1px);
+}
+
+.cool-input::placeholder {
+    color: var(--ink-muted);
+    opacity: 0.6;
+}
+
+/* ── Labels ────────────────────────────────────────── */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--ink);
+    transition: color .2s ease;
+}
+
+label:focus-within {
+    color: var(--primary);
+}
+
+/* ── Checkbox / Radio (Custom) ─────────────────────── */
+input[type="checkbox"], input[type="radio"] {
+    accent-color: var(--primary);
+}
+
+/* ── Select ────────────────────────────────────────── */
+select.cool-input {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23AD1457'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 18px;
+    padding-right: 48px;
+}
+
+/* ── Error States ──────────────────────────────────── */
+.form-error {
+    color: var(--error);
+    font-size: 0.8rem;
+    margin-top: 6px;
+    font-weight: 500;
+}
+
+.cool-input.error {
+    border-color: var(--error);
+    background: hsla(350, 75%, 55%, 0.02);
 }

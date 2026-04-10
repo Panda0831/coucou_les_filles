@@ -1,38 +1,84 @@
-
 {% extends 'Base/base.html' %}
 
 {% block content %}
-<div class="flex items-center justify-center min-h-[calc(100vh-var(--nav-h)-1px)] -mt-[var(--nav-h)] py-16">
-    <div class="cool-card w-full max-w-lg">
-        <h2 class="text-2xl font-bold text-ink mb-6 text-center">Ajouter suivi hebdomadaire</h2>
-
-        <form method="post" class="space-y-4" id="suivi-form">
-            {% csrf_token %}
-            {% for field in form %}
+<div class="container mx-auto px-4 py-12">
+    <div class="max-w-5xl mx-auto">
+        <div class="cool-card w-full">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 pb-6 border-b border-gray-100 dark:border-gray-800">
                 <div>
-                    <label for="{{ field.id_for_label }}" class="block text-ink text-sm font-medium mb-1">
-                        {{ field.label }}
-                    </label>
-                    {{ field }}
-                    {% if field.help_text %}
-                        <p class="text-xs text-muted mt-1">{{ field.help_text }}</p>
+                    <h2 class="text-3xl font-bold text-ink">Suivi hebdomadaire</h2>
+                    <p class="text-muted mt-1">Enregistrez vos constantes et votre état de santé pour cette semaine.</p>
+                </div>
+                <div class="mt-4 md:mt-0 bg-blue-50 dark:bg-blue-900/30 px-4 py-2 rounded-lg border border-blue-100 dark:border-blue-800">
+                    <span class="text-blue-700 dark:text-blue-300 font-semibold">Semaine {{ semaine_actuelle }}</span>
+                </div>
+            </div>
+
+            {% if deja_rempli %}
+                <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl p-10 text-center">
+                    <div class="w-20 h-20 bg-amber-100 dark:bg-amber-900/50 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <i class="fas fa-calendar-check text-amber-500 text-3xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-amber-800 dark:text-amber-300 mb-3">Suivi déjà complété</h3>
+                    <p class="text-amber-700 dark:text-amber-400 max-w-md mx-auto mb-8">
+                        Vous avez déjà pris soin de remplir vos informations pour la semaine {{ semaine_actuelle }}. 
+                        Vos données sont précieuses, retrouvez-les dans votre tableau de bord.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                        <a href="{% url 'users:user_home' %}" class="btn btn-primary px-8">Tableau de bord</a>
+                        <a href="{% url 'pregancy:dashboard' %}" class="btn btn-outline px-8">Voir mes analyses</a>
+                    </div>
+                </div>
+            {% else %}
+                <form method="post" id="suivi-form" class="space-y-8">
+                    {% csrf_token %}
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6">
+                        {% for field in form %}
+                            <div class="{% if field.name == 'notes' or field.name == 'symptomes' %}md:col-span-2{% endif %}">
+                                <label for="{{ field.id_for_label }}" class="block text-ink text-sm font-bold mb-2 flex items-center gap-2">
+                                    {{ field.label }}
+                                    {% if field.field.required %}<span class="text-red-500">*</span>{% endif %}
+                                </label>
+                                
+                                <div class="relative">
+                                    {{ field }}
+                                </div>
+
+                                {% if field.help_text %}
+                                    <p class="text-xs text-muted mt-2 flex items-center gap-1">
+                                        <i class="fas fa-circle-info opacity-50"></i>
+                                        {{ field.help_text }}
+                                    </p>
+                                {% endif %}
+                                
+                                {% for error in field.errors %}
+                                    <p class="text-red-500 text-xs mt-2 bg-red-50 dark:bg-red-900/20 p-2 rounded border border-red-100 dark:border-red-900/30">
+                                        <i class="fas fa-exclamation-triangle mr-1"></i> {{ error }}
+                                    </p>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    {% if form.non_field_errors %}
+                        <div class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 p-4 rounded-xl">
+                            {% for error in form.non_field_errors %}
+                                <p class="text-red-700 dark:text-red-400 text-sm flex items-center gap-2">
+                                    <i class="fas fa-circle-xmark"></i> {{ error }}
+                                </p>
+                            {% endfor %}
+                        </div>
                     {% endif %}
-                    {% for error in field.errors %}
-                        <p class="text-red-500 text-xs text-red-500 mt-1">{{ error }}</p>
-                    {% endfor %}
-                </div>
-            {% endfor %}
 
-            {% if form.non_field_errors %}
-                <div class="flash flash-error">
-                    {% for error in form.non_field_errors %}
-                        <p>{{ error }}</p>
-                    {% endfor %}
-                </div>
+                    <div class="pt-6 border-t border-gray-100 dark:border-gray-800 flex justify-end">
+                        <button type="submit" class="btn btn-primary px-12 py-4 text-lg shadow-lg shadow-blue-500/20 transform hover:scale-[1.02] transition-all">
+                            Enregistrer mon suivi
+                        </button>
+                    </div>
+                </form>
             {% endif %}
-
-            <button type="submit" class="btn btn-primary w-full mt-6">Enregistrer</button>
-        </form>
+        </div>
     </div>
 </div>
 {% endblock content %}
@@ -44,7 +90,7 @@
         if (form) {
             const fields = form.querySelectorAll('input:not([type="submit"]):not([type="button"]):not([type="checkbox"]):not([type="radio"]), textarea, select');
             fields.forEach(field => {
-                field.classList.add('cool-input');
+                field.classList.add('cool-input', 'w-full');
             });
         }
     });

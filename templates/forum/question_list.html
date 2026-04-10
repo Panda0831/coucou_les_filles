@@ -1,0 +1,141 @@
+{% extends 'Base/base.html' %}
+
+{% block title %}Forum Communautaire · Hackathon{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12 max-w-6xl">
+    <!-- Header Section -->
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
+        <div class="animate-fade-in">
+            <h1 class="text-4xl md:text-5xl font-black text-ink tracking-tight mb-3">
+                Forum <span class="text-primary italic">Communautaire</span>
+            </h1>
+            <p class="text-ink-muted text-lg font-medium max-w-xl">
+                Un espace bienveillant pour poser vos questions, partager vos expériences et trouver du soutien.
+            </p>
+        </div>
+        
+        {% if user.is_authenticated %}
+            <a href="{% url 'forum:ask_question' %}" class="btn btn-primary btn-lg shadow-lg group">
+                <i class="fas fa-plus-circle transition-transform group-hover:rotate-90"></i>
+                Poser une question
+            </a>
+        {% endif %}
+    </div>
+
+    <!-- Forum Stats / Filters (Decorative) -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+        <div class="glass-card p-4 text-center border-dashed border-2">
+            <span class="block text-2xl font-bold text-primary">{{ questions.count }}</span>
+            <span class="text-xs font-bold uppercase tracking-widest text-ink-muted">Discussions</span>
+        </div>
+        <div class="glass-card p-4 text-center border-dashed border-2">
+            <span class="block text-2xl font-bold text-secondary">En direct</span>
+            <span class="text-xs font-bold uppercase tracking-widest text-ink-muted">Communauté</span>
+        </div>
+        <!-- Add more if needed -->
+    </div>
+
+    <!-- Questions List -->
+    <div class="space-y-6">
+        {% for question in questions %}
+            <div class="cool-card group hover:border-primary/30 transition-all duration-500 hover:-translate-y-1">
+                <div class="flex flex-col md:flex-row gap-6">
+                    <!-- Author Sidebar (Desktop) -->
+                    <div class="hidden md:flex flex-col items-center gap-3 w-24 flex-shrink-0">
+                        {% if question.user.photo %}
+                            <div class="relative">
+                                <img src="{{ question.user.photo.url }}" class="w-16 h-16 rounded-2xl object-cover ring-4 ring-paper shadow-md" alt="{{ question.user.username }}">
+                                <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-green-500 border-4 border-surface rounded-full"></div>
+                            </div>
+                        {% else %}
+                            <div class="w-16 h-16 rounded-2xl bg-grad-primary flex items-center justify-center text-white font-bold text-2xl shadow-md">
+                                {{ question.user.username|first|upper }}
+                            </div>
+                        {% endif %}
+                        <span class="text-[10px] font-black uppercase tracking-tighter text-ink-muted">@{{ question.user.username }}</span>
+                    </div>
+
+                    <!-- Content Area -->
+                    <div class="flex-grow">
+                        <div class="flex items-center gap-3 mb-3 md:hidden">
+                            {% if question.user.photo %}
+                                <img src="{{ question.user.photo.url }}" class="w-8 h-8 rounded-lg object-cover" alt="{{ question.user.username }}">
+                            {% endif %}
+                            <span class="text-xs font-bold text-primary">@{{ question.user.username }}</span>
+                            <span class="text-[10px] text-ink-muted">• {{ question.created_at|date:"d M Y" }}</span>
+                        </div>
+
+                        <div class="flex justify-between items-start gap-4 mb-3">
+                            <h2 class="text-2xl font-bold text-ink group-hover:text-primary transition-colors leading-snug">
+                                <a href="{% url 'forum:question_detail' question.pk %}">
+                                    {{ question.title }}
+                                </a>
+                            </h2>
+                            <span class="hidden md:block text-[10px] font-bold text-ink-muted bg-surface-2 px-3 py-1 rounded-full whitespace-nowrap">
+                                {{ question.created_at|date:"d M Y" }}
+                            </span>
+                        </div>
+
+                        <p class="text-ink-muted leading-relaxed mb-6 line-clamp-2 md:line-clamp-3">
+                            {{ question.content }}
+                        </p>
+
+                        <div class="flex items-center justify-between pt-4 border-t border-line">
+                            <div class="flex items-center gap-4">
+                                <span class="flex items-center gap-2 text-sm font-bold text-primary bg-primary/5 px-4 py-2 rounded-xl">
+                                    <i class="far fa-comment-dots"></i>
+                                    {{ question.answers.count }} réponse{{ question.answers.count|pluralize }}
+                                </span>
+                                <span class="hidden sm:flex items-center gap-2 text-sm font-medium text-ink-muted">
+                                    <i class="far fa-eye"></i>
+                                    Lu par la communauté
+                                </span>
+                            </div>
+                            
+                            <a href="{% url 'forum:question_detail' question.pk %}" class="text-sm font-black uppercase tracking-widest text-ink hover:text-primary flex items-center gap-2 transition-all group/link">
+                                Voir plus
+                                <i class="fas fa-chevron-right text-[10px] group-hover/link:translate-x-1 transition-transform"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="cool-card py-20 text-center border-dashed border-2">
+                <div class="w-24 h-24 bg-paper rounded-full flex items-center justify-center mx-auto mb-6">
+                    <i class="fas fa-comments text-4xl text-primary/30"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-ink mb-2">Le forum est encore calme...</h3>
+                <p class="text-ink-muted mb-8 max-w-sm mx-auto">
+                    Soyez la première personne à lancer une discussion et à entraider la communauté.
+                </p>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'forum:ask_question' %}" class="btn btn-primary">Lancer une discussion</a>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<style>
+    @keyframes fade-in {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in { animation: fade-in 0.6s ease-out forwards; }
+    
+    .line-clamp-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    
+    @media (min-width: 768px) {
+        .md\:line-clamp-3 {
+            -webkit-line-clamp: 3;
+        }
+    }
+</style>
+{% endblock %}

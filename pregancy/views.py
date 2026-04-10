@@ -10,18 +10,36 @@ from django.contrib import messages
 
 @login_required
 def ajouter_suivi(request):
+    # On récupère la semaine actuelle de la mère
+    semaine_actuelle = request.user.semaine_actuelle
+    
+    # On vérifie si un suivi existe déjà pour cette semaine
+    deja_rempli = SuiviHebdomadaire.objects.filter(
+        mere=request.user, 
+        semaine_grossesse=semaine_actuelle
+    ).exists()
+
     if request.method == "POST":
+        if deja_rempli:
+            messages.warning(request, f"Vous avez déjà rempli le suivi pour la semaine {semaine_actuelle}.")
+            return redirect("users:user_home")
+            
         form = SuiviHebdomadaireForm(request.POST)
         if form.is_valid():
             suivi = form.save(commit=False)
             suivi.mere = request.user
-            suivi.semaine_grossesse = request.user.semaine_actuelle
+            suivi.semaine_grossesse = semaine_actuelle
             suivi.save()
             messages.success(request, "Suivi ajouté avec succès !")
             return redirect("users:user_home")
     else:
         form = SuiviHebdomadaireForm()
-    return render(request, "pregancy/ajouter_suivi.html", {"form": form})
+        
+    return render(request, "pregancy/ajouter_suivi.html", {
+        "form": form,
+        "deja_rempli": deja_rempli,
+        "semaine_actuelle": semaine_actuelle
+    })
 
 
 import datetime

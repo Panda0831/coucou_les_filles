@@ -1,48 +1,49 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mon Suivi de Grossesse</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
-        .gradient-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-    </style>
-</head>
-<body class="p-4 md:p-8">
+{% extends 'Base/base.html' %}
 
+{% block title %}Mon Tableau de Bord - Suivi de Grossesse{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    .gradient-card { 
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+    }
+    [data-theme='dark'] .gradient-card {
+        background: linear-gradient(135deg, #4338ca 0%, #5b21b6 100%);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-8">
     <div class="max-w-7xl mx-auto">
         
         <header class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div>
-                <h1 class="text-3xl font-bold text-slate-800">Bonjour, {{ user.username }} ✨</h1>
-                <p class="text-slate-500">Heureux de vous revoir pour votre {{ stats_generales.semaine }}e semaine.</p>
+                <h1 class="text-3xl font-bold text-ink">Bonjour, {{ user.username }} ✨</h1>
+                <p class="text-muted">Heureux de vous revoir pour votre {{ stats_generales.semaine }}e semaine.</p>
             </div>
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-4">
+            <div class="cool-card !p-4 flex items-center gap-4">
                 <div class="text-right">
-                    <p class="text-xs text-slate-400 uppercase font-bold tracking-wider">Date prévue</p>
-                    <p class="text-slate-700 font-semibold">{{ user.date_prevue_accouchement|date:"d F Y" }}</p>
+                    <p class="text-xs text-muted uppercase font-bold tracking-wider">Date prévue</p>
+                    <p class="text-ink font-semibold">{{ user.date_prevue_accouchement|date:"d F Y" }}</p>
                 </div>
-                <div class="h-10 w-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600">
+                <div class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-300">
                     <i class="fa-solid fa-calendar-day"></i>
                 </div>
             </div>
         </header>
 
         <section class="mb-8">
-            <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
+            <div class="cool-card">
                 <div class="flex justify-between items-end mb-4">
-                    <h3 class="font-semibold text-slate-700">Progression de la grossesse</h3>
-                    <span class="text-indigo-600 font-bold text-lg">{{ stats_generales.progression_pourcentage }}%</span>
+                    <h3 class="font-semibold text-ink">Progression de la grossesse</h3>
+                    <span class="text-blue-600 dark:text-blue-400 font-bold text-lg">{{ stats_generales.progression_pourcentage }}%</span>
                 </div>
-                <div class="w-full bg-slate-100 h-4 rounded-full overflow-hidden">
-                    <div class="bg-indigo-500 h-full rounded-full transition-all duration-1000" style="width: {{ stats_generales.progression_pourcentage }}%"></div>
+                <div class="w-full bg-gray-100 dark:bg-gray-800 h-4 rounded-full overflow-hidden">
+                    <div class="bg-blue-500 h-full rounded-full transition-all duration-1000 shadow-[0_0_15px_rgba(59,130,246,0.5)]" style="width: {{ stats_generales.progression_pourcentage }}%"></div>
                 </div>
-                <div class="flex justify-between mt-2 text-xs text-slate-400 font-medium">
+                <div class="flex justify-between mt-2 text-xs text-muted font-medium">
                     <span>SEMAINE 1</span>
                     <span>SEMAINE 20</span>
                     <span>TERME (40)</span>
@@ -51,60 +52,64 @@
         </section>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                <p class="text-slate-400 text-sm font-medium mb-1">Poids Actuel</p>
+            <div class="cool-card !p-6">
+                <p class="text-muted text-sm font-medium mb-1">Poids Actuel</p>
                 <div class="flex items-baseline gap-2">
-                    <span class="text-2xl font-bold text-slate-800">{{ stats_generales.poids_actuel }} kg</span>
+                    <span class="text-2xl font-bold text-ink">{{ stats_generales.poids_actuel }} kg</span>
                     <span class="text-emerald-500 text-sm font-bold">+{{ stats_generales.prise_poids_totale }}kg</span>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                <p class="text-slate-400 text-sm font-medium mb-1">Niveau de Risque</p>
-                <div class="flex items-center gap-2">
+            <div class="cool-card !p-6">
+                <p class="text-muted text-sm font-medium mb-1">Niveau de Risque</p>
+                <div class="flex items-center gap-2 mt-1">
                     <span class="px-3 py-1 rounded-full text-xs font-bold uppercase 
-                        {% if stats_generales.risque_actuel == 'faible' %} bg-emerald-100 text-emerald-600 
-                        {% elif stats_generales.risque_actuel == 'moyen' %} bg-amber-100 text-amber-600 
-                        {% else %} bg-rose-100 text-rose-600 {% endif %}">
+                        {% if stats_generales.risque_actuel == 'faible' %} bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 
+                        {% elif stats_generales.risque_actuel == 'moyen' %} bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 
+                        {% else %} bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 {% endif %}">
                         {{ stats_generales.risque_actuel }}
                     </span>
                 </div>
             </div>
 
-            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                <p class="text-slate-400 text-sm font-medium mb-1">Jours restants</p>
-                <span class="text-2xl font-bold text-slate-800">{{ stats_generales.jours_restants }} jours</span>
+            <div class="cool-card !p-6">
+                <p class="text-muted text-sm font-medium mb-1">Jours restants</p>
+                <span class="text-2xl font-bold text-ink">{{ stats_generales.jours_restants }} jours</span>
             </div>
 
-            <div class="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm">
-                <p class="text-slate-400 text-sm font-medium mb-1">IMC de départ</p>
+            <div class="cool-card !p-6">
+                <p class="text-muted text-sm font-medium mb-1">IMC de départ</p>
                 <div class="flex flex-col">
-                    <span class="text-2xl font-bold text-slate-800">{{ stats_generales.imc_depart }}</span>
-                    <span class="text-xs text-slate-400">{{ stats_generales.categorie_imc }}</span>
+                    <span class="text-2xl font-bold text-ink">{{ stats_generales.imc_depart }}</span>
+                    <span class="text-xs text-muted">{{ stats_generales.categorie_imc }}</span>
                 </div>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
             <div class="lg:col-span-2 space-y-8">
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-                    <h3 class="text-lg font-bold text-slate-800 mb-6">Évolution du Poids (kg)</h3>
-                    <canvas id="weightChart" height="120"></canvas>
+                <div class="cool-card !p-8">
+                    <h3 class="text-lg font-bold text-ink mb-6">Évolution du Poids (kg)</h3>
+                    <div class="h-[300px]">
+                        <canvas id="weightChart"></canvas>
+                    </div>
                 </div>
 
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
-                    <h3 class="text-lg font-bold text-slate-800 mb-6">Bien-être : Stress & Sommeil</h3>
-                    <canvas id="wellnessChart" height="120"></canvas>
+                <div class="cool-card !p-8">
+                    <h3 class="text-lg font-bold text-ink mb-6">Bien-être : Stress & Sommeil</h3>
+                    <div class="h-[300px]">
+                        <canvas id="wellnessChart"></canvas>
+                    </div>
                 </div>
             </div>
 
             <div class="space-y-8">
-                <div class="gradient-card p-6 rounded-3xl text-white shadow-lg">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="bg-white/20 p-3 rounded-2xl">
-                            <i class="fa-solid fa-baby text-xl"></i>
+                <div class="gradient-card p-8 rounded-[2rem] text-white shadow-xl shadow-blue-500/10">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="bg-white/20 p-3 rounded-2xl backdrop-blur-sm">
+                            <i class="fa-solid fa-baby text-xl text-white"></i>
                         </div>
-                        <h3 class="font-bold text-lg">Mon Bébé</h3>
+                        <h3 class="font-bold text-xl text-white">Mon Bébé</h3>
                     </div>
                     {% if foetus %}
                     <div class="space-y-4">
@@ -116,98 +121,144 @@
                             <span class="opacity-80">Poids moy.</span>
                             <span class="font-bold">{{ foetus.poids_moyen }} g</span>
                         </div>
-                        <p class="text-sm leading-relaxed mt-4 italic opacity-90 text-justify">
-                            "{{ foetus.stade_developpement|truncatewords:30 }}"
-                        </p>
+                        <div class="mt-6 bg-white/10 p-4 rounded-2xl border border-white/10">
+                            <p class="text-sm leading-relaxed italic opacity-95 text-justify">
+                                "{{ foetus.stade_developpement|truncatewords:40 }}"
+                            </p>
+                        </div>
                     </div>
                     {% else %}
-                    <p class="text-sm">Données de développement non disponibles.</p>
+                    <p class="text-sm opacity-80 italic">Données de développement non disponibles.</p>
                     {% endif %}
                 </div>
 
-                <div class="bg-white p-6 rounded-3xl shadow-sm border border-slate-100">
-                    <h3 class="font-bold text-slate-800 mb-4 flex items-center gap-2">
+                <div class="cool-card !p-6">
+                    <h3 class="font-bold text-ink mb-4 flex items-center gap-2">
                         <i class="fa-solid fa-bell text-rose-500"></i> Alertes Récentes
                     </h3>
                     <div class="space-y-4">
                         {% for alerte in alertes %}
-                        <div class="p-3 bg-rose-50 rounded-2xl border-l-4 border-rose-500">
-                            <p class="text-xs font-bold text-rose-700 uppercase">{{ alerte.niveau_risque }}</p>
-                            <p class="text-sm text-slate-700">{{ alerte.message }}</p>
+                        <div class="p-3 bg-rose-50 dark:bg-rose-900/20 rounded-2xl border-l-4 border-rose-500">
+                            <p class="text-xs font-bold text-rose-700 dark:text-rose-400 uppercase">{{ alerte.niveau_risque }}</p>
+                            <p class="text-sm text-gray-700 dark:text-gray-300">{{ alerte.message }}</p>
                         </div>
                         {% empty %}
-                        <p class="text-sm text-slate-400 italic text-center py-4">Aucune alerte pour le moment.</p>
+                        <p class="text-sm text-muted italic text-center py-4">Aucune alerte pour le moment.</p>
                         {% endfor %}
                     </div>
                 </div>
 
-                <div class="bg-indigo-50 p-6 rounded-3xl border border-indigo-100">
-                    <h3 class="font-bold text-indigo-900 mb-2">Conseil du jour</h3>
-                    <p class="text-indigo-700 text-sm leading-relaxed">
+                <div class="bg-blue-50 dark:bg-blue-900/20 p-6 rounded-[2rem] border border-blue-100 dark:border-blue-800">
+                    <h3 class="font-bold text-blue-900 dark:text-blue-300 mb-2 flex items-center gap-2">
+                        <i class="fas fa-lightbulb"></i> Conseil du jour
+                    </h3>
+                    <p class="text-blue-700 dark:text-blue-400 text-sm leading-relaxed">
                         {{ conseil_aleatoire }}
                     </p>
                 </div>
             </div>
         </div>
     </div>
+</div>
+{% endblock %}
 
-    <script>
-        const graphData = JSON.parse('{{ graph_data|safe }}');
+{% block extra_scripts %}
+<script>
+    const graphData = JSON.parse('{{ graph_data|safe }}');
+    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+    const textColor = isDark ? '#94a3b8' : '#64748b';
+    const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
 
-        const weightCtx = document.getElementById('weightChart').getContext('2d');
-        new Chart(weightCtx, {
-            type: 'line',
-            data: {
-                labels: graphData.labels,
-                datasets: [{
-                    label: 'Poids (kg)',
-                    data: graphData.poids,
-                    borderColor: '#6366f1',
-                    backgroundColor: 'rgba(99, 102, 241, 0.1)',
-                    borderWidth: 3,
-                    fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: '#6366f1'
-                }]
+    const weightCtx = document.getElementById('weightChart').getContext('2d');
+    new Chart(weightCtx, {
+        type: 'line',
+        data: {
+            labels: graphData.labels,
+            datasets: [{
+                label: 'Poids (kg)',
+                data: graphData.poids,
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                borderWidth: 3,
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#3b82f6',
+                pointBorderColor: '#fff',
+                pointHoverRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { 
+                legend: { display: false },
+                tooltip: {
+                    backgroundColor: isDark ? '#1e293b' : '#fff',
+                    titleColor: isDark ? '#fff' : '#1e293b',
+                    bodyColor: isDark ? '#cbd5e1' : '#64748b',
+                    borderColor: isDark ? '#334155' : '#e2e8f0',
+                    borderWidth: 1,
+                    padding: 12,
+                    displayColors: false
+                }
             },
-            options: {
-                responsive: true,
-                plugins: { legend: { display: false } },
-                scales: { 
-                    y: { grid: { display: false }, beginAtZero: false },
-                    x: { grid: { display: false } }
+            scales: { 
+                y: { 
+                    grid: { color: gridColor }, 
+                    ticks: { color: textColor },
+                    beginAtZero: false 
+                },
+                x: { 
+                    grid: { display: false },
+                    ticks: { color: textColor }
                 }
             }
-        });
+        }
+    });
 
-        const wellnessCtx = document.getElementById('wellnessChart').getContext('2d');
-        new Chart(wellnessCtx, {
-            type: 'bar',
-            data: {
-                labels: graphData.labels,
-                datasets: [
-                    {
-                        label: 'Stress',
-                        data: graphData.stress,
-                        backgroundColor: '#fb7185',
-                        borderRadius: 8
-                    },
-                    {
-                        label: 'Sommeil',
-                        data: graphData.sommeil,
-                        backgroundColor: '#818cf8',
-                        borderRadius: 8
-                    }
-                ]
+    const wellnessCtx = document.getElementById('wellnessChart').getContext('2d');
+    new Chart(wellnessCtx, {
+        type: 'bar',
+        data: {
+            labels: graphData.labels,
+            datasets: [
+                {
+                    label: 'Stress',
+                    data: graphData.stress,
+                    backgroundColor: '#f43f5e',
+                    borderRadius: 8,
+                    barThickness: 15
+                },
+                {
+                    label: 'Sommeil',
+                    data: graphData.sommeil,
+                    backgroundColor: '#6366f1',
+                    borderRadius: 8,
+                    barThickness: 15
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { color: textColor, padding: 20, usePointStyle: true }
+                }
             },
-            options: {
-                responsive: true,
-                scales: { 
-                    y: { max: 5, grid: { display: false } },
-                    x: { grid: { display: false } }
+            scales: { 
+                y: { 
+                    max: 5, 
+                    grid: { color: gridColor },
+                    ticks: { color: textColor, stepSize: 1 }
+                },
+                x: { 
+                    grid: { display: false },
+                    ticks: { color: textColor }
                 }
             }
-        });
-    </script>
-</body>
-</html>
+        }
+    });
+</script>
+{% endblock %}

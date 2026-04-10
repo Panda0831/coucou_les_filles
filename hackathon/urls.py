@@ -24,6 +24,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("Users.urls")),
     path("pregancy/", include("pregancy.urls", namespace="pregancy")),
+    path("forum/", include("forum.urls", namespace="forum")),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

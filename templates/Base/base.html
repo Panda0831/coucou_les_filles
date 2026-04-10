@@ -1,296 +1,411 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr" data-theme="light">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Hackathon{% endblock %}</title>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>{% block title %}Hackathon{% endblock %}</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        <script src="https://cdn.tailwindcss.com"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&display=swap"
+            rel="stylesheet"
+        />
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        />
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'css/style.css' %}" />
 
-    <script>
-        (function() {
-            const saved = localStorage.getItem('myapp-theme')
-                || '{{ request.session.theme|default:"light" }}';
-            document.documentElement.setAttribute('data-theme', saved);
-        })();
-    </script>
+        <script>
+            (function () {
+                const saved =
+                    localStorage.getItem("myapp-theme") ||
+                    '{{ request.session.theme|default:"light" }}';
+                document.documentElement.setAttribute("data-theme", saved);
+            })();
+        </script>
 
-    {% block extra_head %}{% endblock %}
-</head>
-<body>
+        {% block extra_head %}{% endblock %}
+    </head>
+    <body>
+        <nav
+            class="navbar"
+            role="navigation"
+            aria-label="Navigation principale"
+        >
+            <div class="navbar-inner">
+                <a
+                    href="{% url 'users:landing' %}"
+                    class="logo"
+                    aria-label="Hackathon — Accueil"
+                >
+                    <div class="logo-mark"><i class="fas fa-rocket"></i></div>
+                    <span class="logo-text">Hackathon</span>
+                </a>
 
+                <ul class="nav-links desktop-nav" role="list">
+                    <li><a href="{% url 'users:landing' %}">Accueil</a></li>
+                    <li><a href="{% url 'users:about' %}">L'Équipe</a></li>
+                    <li><a href="{% url 'forum:question_list' %}">Forum</a></li>
+                    <li>
+                        <a href="{% url 'pregancy:ajouter_suivi' %}"
+                            >Ajouter suivi</a
+                        >
+                    </li>
+                    <li>
+                        <a href="{% url 'pregancy:dashboard' %}">Dashboard1</a>
+                    </li>
+                    {% if user.is_authenticated %}
+                    <li><a href="{% url 'users:user_home' %}">Dashboard</a></li>
+                    <li><a href="{% url 'users:chat_home' %}">IA Ryan</a></li>
+                    {% endif %}
+                </ul>
 
-<nav class="navbar" role="navigation" aria-label="Navigation principale">
-    <div class="navbar-inner">
+                <div class="nav-actions desktop-nav">
+                    <button
+                        class="theme-btn"
+                        id="theme-toggle"
+                        aria-label="Changer le thème"
+                    >
+                        <i class="fas fa-sun icon-sun"></i>
+                        <i class="fas fa-moon icon-moon"></i>
+                    </button>
 
-        <a href="{% url 'users:landing' %}" class="logo" aria-label="Hackathon — Accueil">
-            <div class="logo-mark"><i class="fas fa-rocket"></i></div>
-            <span class="logo-text">Hackathon</span>
-        </a>
+                    {% if user.is_authenticated %}
 
-        <ul class="nav-links desktop-nav" role="list">
-            <li><a href="{% url 'users:landing' %}">Accueil</a></li>
-            <li><a href="{% url 'users:about' %}">L'Équipe</a></li>
-            <li><a href="{% url 'pregancy:ajouter_suivi' %}">Ajouter suivi</a></li>
-            <li><a href="{% url 'pregancy:dashboard' %}">Dashboard1</a></li>
-            {% if user.is_authenticated %}
+                    <a href="{% url 'users:profile' %}" class="user-pill">
+                        {% if user.photo %}
+                        <img
+                            src="{{ user.photo.url }}"
+                            class="avatar"
+                            alt="{{ user.username }}"
+                        />
+                        {% else %}
+                        <div class="avatar-initials">
+                            {{ user.username|first|upper }}
+                        </div>
+                        {% endif %}
+                        <span class="user-name">{{ user.username }}</span>
+                    </a>
+
+                    {% else %}
+                    <a href="{% url 'users:connexion' %}" class="btn btn-ghost"
+                        >Connexion</a
+                    >
+                    <a
+                        href="{% url 'users:inscription' %}"
+                        class="btn btn-primary"
+                        >Démarrer</a
+                    >
+                    {% endif %}
+                </div>
+
+                <button
+                    class="burger"
+                    id="burger"
+                    aria-label="Menu"
+                    aria-expanded="false"
+                >
+                    <i class="fas fa-bars" id="burger-icon"></i>
+                </button>
+            </div>
+        </nav>
+
+        <div
+            class="mobile-menu"
+            id="mobile-menu"
+            role="dialog"
+            aria-label="Menu mobile"
+        >
+            <ul class="mobile-nav-links" role="list">
+                <li><a href="{% url 'users:landing' %}">Accueil</a></li>
+                <li><a href="{% url 'users:about' %}">L'Équipe</a></li>
+                <li><a href="{% url 'forum:question_list' %}">Forum</a></li>
+                <li>
+                    <a href="{% url 'pregancy:ajouter_suivi' %}"
+                        >Ajouter suivi</a
+                    >
+                </li>
+                {% if user.is_authenticated %}
+
                 <li><a href="{% url 'users:user_home' %}">Dashboard</a></li>
                 <li><a href="{% url 'users:chat_home' %}">IA Ryan</a></li>
-            {% endif %}
-        </ul>
+                <li><a href="{% url 'users:profile' %}">Mon Profil</a></li>
+                {% endif %}
+            </ul>
 
-        <div class="nav-actions desktop-nav">
+            <div class="mobile-actions">
+                <div class="mobile-theme-row">
+                    <span id="theme-label-mobile">Mode sombre</span>
+                    <button
+                        class="toggle-pill"
+                        id="theme-toggle-mobile"
+                        aria-label="Changer le thème"
+                    ></button>
+                </div>
 
-            <button class="theme-btn" id="theme-toggle" aria-label="Changer le thème">
-                <i class="fas fa-sun icon-sun"></i>
-                <i class="fas fa-moon icon-moon"></i>
-            </button>
-
-            {% if user.is_authenticated %}
-
-                <a href="{% url 'users:profile' %}" class="user-pill">
+                {% if user.is_authenticated %}
+                <a
+                    href="{% url 'users:profile' %}"
+                    class="user-pill"
+                    style="justify-content: center"
+                >
                     {% if user.photo %}
-                        <img src="{{ user.photo.url }}" class="avatar" alt="{{ user.username }}">
+                    <img
+                        src="{{ user.photo.url }}"
+                        class="avatar"
+                        alt="{{ user.username }}"
+                    />
                     {% else %}
-                        <div class="avatar-initials">{{ user.username|first|upper }}</div>
+                    <div class="avatar-initials">
+                        {{ user.username|first|upper }}
+                    </div>
                     {% endif %}
                     <span class="user-name">{{ user.username }}</span>
                 </a>
 
-            {% else %}
-                <a href="{% url 'users:connexion' %}" class="btn btn-ghost">Connexion</a>
-                <a href="{% url 'users:inscription' %}" class="btn btn-primary">Démarrer</a>
-            {% endif %}
-        </div>
-
-        <button class="burger" id="burger" aria-label="Menu" aria-expanded="false">
-            <i class="fas fa-bars" id="burger-icon"></i>
-        </button>
-    </div>
-</nav>
-
-
-<div class="mobile-menu" id="mobile-menu" role="dialog" aria-label="Menu mobile">
-    <ul class="mobile-nav-links" role="list">
-        <li><a href="{% url 'users:landing' %}">Accueil</a></li>
-        <li><a href="{% url 'users:about' %}">L'Équipe</a></li>
-        <li><a href="{% url 'pregancy:ajouter_suivi' %}">Ajouter suivi</a></li>
-        {% if user.is_authenticated %}
-            
-            <li><a href="{% url 'users:user_home' %}">Dashboard</a></li>
-            <li><a href="{% url 'users:chat_home' %}">IA Ryan</a></li>
-            <li><a href="{% url 'users:profile' %}">Mon Profil</a></li>
-        {% endif %}
-    </ul>
-
-    <div class="mobile-actions">
-
-        <div class="mobile-theme-row">
-            <span id="theme-label-mobile">Mode sombre</span>
-            <button class="toggle-pill" id="theme-toggle-mobile" aria-label="Changer le thème"></button>
-        </div>
-
-        {% if user.is_authenticated %}
-            <a href="{% url 'users:profile' %}" class="user-pill" style="justify-content:center;">
-                {% if user.photo %}
-                    <img src="{{ user.photo.url }}" class="avatar" alt="{{ user.username }}">
                 {% else %}
-                    <div class="avatar-initials">{{ user.username|first|upper }}</div>
+                <a
+                    href="{% url 'users:connexion' %}"
+                    class="btn btn-outline"
+                    style="justify-content: center"
+                    >Connexion</a
+                >
+                <a
+                    href="{% url 'users:inscription' %}"
+                    class="btn btn-primary"
+                    style="justify-content: center"
+                >
+                    Commencer
+                    <i
+                        class="fas fa-arrow-right"
+                        style="font-size: 0.75rem"
+                    ></i>
+                </a>
                 {% endif %}
-                <span class="user-name">{{ user.username }}</span>
-            </a>
-
-        {% else %}
-            <a href="{% url 'users:connexion' %}" class="btn btn-outline" style="justify-content:center;">Connexion</a>
-            <a href="{% url 'users:inscription' %}" class="btn btn-primary" style="justify-content:center;">
-                Commencer <i class="fas fa-arrow-right" style="font-size:.75rem;"></i>
-            </a>
-        {% endif %}
-    </div>
-</div>
-
-
-{% if messages %}
-<div class="flash-container" role="alert" aria-live="polite">
-    {% for message in messages %}
-        <div class="flash flash-{{ message.tags }}">
-            <i class="fas {% if message.tags == 'success' %}fa-circle-check{% elif message.tags == 'error' %}fa-circle-xmark{% elif message.tags == 'warning' %}fa-triangle-exclamation{% else %}fa-circle-info{% endif %}"></i>
-            <span>{{ message }}</span>
-            <button class="flash-close" aria-label="Fermer" onclick="this.parentElement.remove()">
-                <i class="fas fa-xmark"></i>
-            </button>
-        </div>
-    {% endfor %}
-</div>
-{% endif %}
-
-<main class="main">
-    {% block content %}{% endblock %}
-</main>
-
-
-<footer>
-    <div class="footer-inner">
-        <div class="footer-brand">
-            <div class="footer-mark"><i class="fas fa-rocket"></i></div>
-            <span class="footer-brand-name">Hackathon</span>
-        </div>
-        <p class="footer-copy">Hackathon III<sup>ème</sup> Édition · © 2026</p>
-        <div class="footer-links">
-            <a href="#" aria-label="GitHub"><i class="fab fa-github"></i></a>
-            <a href="#" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
-            <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-        </div>
-    </div>
-</footer>
-
-<script>
-
-    const html       = document.documentElement;
-    const THEME_KEY  = 'myapp-theme';
-    const themeLabel = document.getElementById('theme-label-mobile');
-
-    function getTheme()  { return html.getAttribute('data-theme') || 'light'; }
-
-    function applyTheme(theme) {
-        html.setAttribute('data-theme', theme);
-        localStorage.setItem(THEME_KEY, theme);
-
-  
-        if (themeLabel) themeLabel.textContent = theme === 'dark' ? 'Mode clair' : 'Mode sombre';
-
-      
-        fetch("{% url 'users:changer_theme' %}", {
-            method: 'POST',
-            headers: {
-                'X-CSRFToken': getCsrf(),
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: 'theme=' + theme
-        }).catch(() => {});
-    }
-
-    function toggleTheme() {
-        applyTheme(getTheme() === 'dark' ? 'light' : 'dark');
-    }
-
-  
-    if (themeLabel) themeLabel.textContent = getTheme() === 'dark' ? 'Mode clair' : 'Mode sombre';
-
-  
-    document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
-    document.getElementById('theme-toggle-mobile').addEventListener('click', toggleTheme);
-
-
-    function getCsrf() {
-        const m = document.cookie.match('(^|;)\\s*csrftoken\\s*=\\s*([^;]+)');
-        return m ? m.pop() : '';
-    }
-
-
-    const burger     = document.getElementById('burger');
-    const burgerIcon = document.getElementById('burger-icon');
-    const mobileMenu = document.getElementById('mobile-menu');
-
-    burger.addEventListener('click', () => {
-        const open = mobileMenu.classList.toggle('open');
-        burgerIcon.className = open ? 'fas fa-xmark' : 'fas fa-bars';
-        burger.setAttribute('aria-expanded', open);
-        document.body.style.overflow = open ? 'hidden' : '';
-    });
-
-    window.addEventListener('resize', () => {
-        if (window.innerWidth > 768) {
-            mobileMenu.classList.remove('open');
-            burgerIcon.className = 'fas fa-bars';
-            burger.setAttribute('aria-expanded', 'false');
-            document.body.style.overflow = '';
-        }
-    });
-
-
-    document.querySelectorAll('.flash').forEach(flash => {
-        setTimeout(() => {
-            flash.style.transition = 'opacity .4s, transform .4s';
-            flash.style.opacity = '0';
-            flash.style.transform = 'translateY(-6px)';
-            setTimeout(() => flash.remove(), 400);
-        }, 5000);
-    });
-</script>
-
-{% if request.resolver_match.url_name != 'chat_home' and user.is_authenticated %}
-    <div class="chat-widget">
-        <div class="chat-panel" id="chat-panel">
-            <div class="chat-panel-header">
-                <div class="flex items-center gap-3">
-                    <div class="w-8 h-8 rounded-xl bg-[var(--accent)] flex items-center justify-center">
-                        <i class="fas fa-robot text-xs"></i>
-                    </div>
-                    <span class="font-bold text-sm">Assistant Ryan</span>
-                </div>
-                <button onclick="toggleWidget()" class="opacity-50 hover:opacity-100"><i class="fas fa-times"></i></button>
             </div>
-            
-            <div id="widget-messages" class="chat-panel-messages">
-                <div class="w-msg w-ai-msg">Bonjour ! Besoin d'aide rapide ? Je suis là.</div>
-            </div>
+        </div>
 
-            <div class="chat-panel-footer">
-                <input type="text" id="widget-input" class="cool-input !py-3 !text-sm" placeholder="Votre message..." onkeypress="if(event.key==='Enter') sendWidgetMessage()">
-                <button onclick="sendWidgetMessage()" class="btn btn-primary !p-3">
-                    <i class="fas fa-paper-plane text-xs"></i>
+        {% if messages %}
+        <div class="flash-container" role="alert" aria-live="polite">
+            {% for message in messages %}
+            <div class="flash flash-{{ message.tags }}">
+                <i
+                    class="fas {% if message.tags == 'success' %}fa-circle-check{% elif message.tags == 'error' %}fa-circle-xmark{% elif message.tags == 'warning' %}fa-triangle-exclamation{% else %}fa-circle-info{% endif %}"
+                ></i>
+                <span>{{ message }}</span>
+                <button
+                    class="flash-close"
+                    aria-label="Fermer"
+                    onclick="this.parentElement.remove()"
+                >
+                    <i class="fas fa-xmark"></i>
                 </button>
             </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <main class="main">{% block content %}{% endblock %}</main>
+
+        <footer>
+            <div class="footer-inner">
+                <div class="footer-brand">
+                    <div class="footer-mark"><i class="fas fa-rocket"></i></div>
+                    <span class="footer-brand-name">Hackathon</span>
+                </div>
+                <p class="footer-copy">
+                    Hackathon III<sup>ème</sup> Édition · © 2026
+                </p>
+                <div class="footer-links">
+                    <a href="#" aria-label="GitHub"
+                        ><i class="fab fa-github"></i
+                    ></a>
+                    <a href="#" aria-label="Twitter"
+                        ><i class="fab fa-x-twitter"></i
+                    ></a>
+                    <a href="#" aria-label="LinkedIn"
+                        ><i class="fab fa-linkedin-in"></i
+                    ></a>
+                </div>
+            </div>
+        </footer>
+
+        <script>
+            const html = document.documentElement;
+            const THEME_KEY = "myapp-theme";
+            const themeLabel = document.getElementById("theme-label-mobile");
+
+            function getTheme() {
+                return html.getAttribute("data-theme") || "light";
+            }
+
+            function applyTheme(theme) {
+                html.setAttribute("data-theme", theme);
+                localStorage.setItem(THEME_KEY, theme);
+
+                if (themeLabel)
+                    themeLabel.textContent =
+                        theme === "dark" ? "Mode clair" : "Mode sombre";
+
+                fetch("{% url 'users:changer_theme' %}", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRFToken": getCsrf(),
+                        "Content-Type": "application/x-www-form-urlencoded",
+                    },
+                    body: "theme=" + theme,
+                }).catch(() => {});
+            }
+
+            function toggleTheme() {
+                applyTheme(getTheme() === "dark" ? "light" : "dark");
+            }
+
+            if (themeLabel)
+                themeLabel.textContent =
+                    getTheme() === "dark" ? "Mode clair" : "Mode sombre";
+
+            document
+                .getElementById("theme-toggle")
+                .addEventListener("click", toggleTheme);
+            document
+                .getElementById("theme-toggle-mobile")
+                .addEventListener("click", toggleTheme);
+
+            function getCsrf() {
+                const m = document.cookie.match(
+                    "(^|;)\\s*csrftoken\\s*=\\s*([^;]+)",
+                );
+                return m ? m.pop() : "";
+            }
+
+            const burger = document.getElementById("burger");
+            const burgerIcon = document.getElementById("burger-icon");
+            const mobileMenu = document.getElementById("mobile-menu");
+
+            burger.addEventListener("click", () => {
+                const open = mobileMenu.classList.toggle("open");
+                burgerIcon.className = open ? "fas fa-xmark" : "fas fa-bars";
+                burger.setAttribute("aria-expanded", open);
+                document.body.style.overflow = open ? "hidden" : "";
+            });
+
+            window.addEventListener("resize", () => {
+                if (window.innerWidth > 768) {
+                    mobileMenu.classList.remove("open");
+                    burgerIcon.className = "fas fa-bars";
+                    burger.setAttribute("aria-expanded", "false");
+                    document.body.style.overflow = "";
+                }
+            });
+
+            document.querySelectorAll(".flash").forEach((flash) => {
+                setTimeout(() => {
+                    flash.style.transition = "opacity .4s, transform .4s";
+                    flash.style.opacity = "0";
+                    flash.style.transform = "translateY(-6px)";
+                    setTimeout(() => flash.remove(), 400);
+                }, 5000);
+            });
+        </script>
+
+        {% if user.is_authenticated and "/chat/" not in request.path %}
+        <div class="chat-widget">
+            <div class="chat-panel" id="chat-panel">
+                <div class="chat-panel-header">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-8 h-8 rounded-xl bg-[var(--accent)] flex items-center justify-center"
+                        >
+                            <i class="fas fa-robot text-xs"></i>
+                        </div>
+                        <span class="font-bold text-sm">Assistant Ryan</span>
+                    </div>
+                    <button
+                        onclick="toggleWidget()"
+                        class="opacity-50 hover:opacity-100"
+                    >
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+
+                <div id="widget-messages" class="chat-panel-messages">
+                    <div class="w-msg w-ai-msg">
+                        Bonjour ! Besoin d'aide rapide ? Je suis là.
+                    </div>
+                </div>
+
+                <div class="chat-panel-footer">
+                    <input
+                        type="text"
+                        id="widget-input"
+                        class="cool-input !py-3 !text-sm"
+                        placeholder="Votre message..."
+                        onkeypress="
+                            if (event.key === 'Enter') sendWidgetMessage();
+                        "
+                    />
+                    <button
+                        onclick="sendWidgetMessage()"
+                        class="btn btn-primary !p-3"
+                    >
+                        <i class="fas fa-paper-plane text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button class="chat-bubble" onclick="toggleWidget()">
+                <i class="fas fa-comment-dots" id="widget-icon"></i>
+            </button>
         </div>
 
-        <button class="chat-bubble" onclick="toggleWidget()">
-            <i class="fas fa-comment-dots" id="widget-icon"></i>
-        </button>
-    </div>
+        <script>
+            function toggleWidget() {
+                const panel = document.getElementById("chat-panel");
+                const icon = document.getElementById("widget-icon");
+                const isOpen = panel.classList.toggle("active");
 
-    <script>
-        function toggleWidget() {
-            const panel = document.getElementById('chat-panel');
-            const icon = document.getElementById('widget-icon');
-            const isOpen = panel.classList.toggle('active');
-            
-            icon.className = isOpen ? 'fas fa-chevron-down' : 'fas fa-comment-dots';
-            if(isOpen) document.getElementById('widget-input').focus();
-        }
+                icon.className = isOpen
+                    ? "fas fa-chevron-down"
+                    : "fas fa-comment-dots";
+                if (isOpen) document.getElementById("widget-input").focus();
+            }
 
-        async function sendWidgetMessage() {
-            const input = document.getElementById('widget-input');
-            const container = document.getElementById('widget-messages');
-            const msg = input.value.trim();
-            if(!msg) return;
+            async function sendWidgetMessage() {
+                const input = document.getElementById("widget-input");
+                const container = document.getElementById("widget-messages");
+                const msg = input.value.trim();
+                if (!msg) return;
 
-            container.innerHTML += `<div class="w-msg w-user-msg">${msg}</div>`;
-            input.value = '';
-            container.scrollTop = container.scrollHeight;
+                container.innerHTML += `<div class="w-msg w-user-msg">${msg}</div>`;
+                input.value = "";
+                container.scrollTop = container.scrollHeight;
 
-            try {
-                const response = await fetch("/api/chat/", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json", "X-CSRFToken": getCsrf() },
-                    body: JSON.stringify({ message: msg })
-                });
-                const data = await response.json();
-                if(data.reply) {
-                    container.innerHTML += `<div class="w-msg w-ai-msg">${data.reply}</div>`;
+                try {
+                    const response = await fetch("/api/chat/", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": getCsrf(),
+                        },
+                        body: JSON.stringify({ message: msg }),
+                    });
+                    const data = await response.json();
+                    if (data.reply) {
+                        container.innerHTML += `<div class="w-msg w-ai-msg">${data.reply}</div>`;
+                    }
+                } catch (e) {
+                    console.error(e);
                 }
-            } catch (e) { console.error(e); }
-            container.scrollTop = container.scrollHeight;
-        }
-    </script>
-{% endif %}
+                container.scrollTop = container.scrollHeight;
+            }
+        </script>
+        {% endif %}
 
-{% block extra_scripts %}{% endblock %}
-</body>
+        {% block extra_scripts %}{% endblock %}
+    </body>
 </html>

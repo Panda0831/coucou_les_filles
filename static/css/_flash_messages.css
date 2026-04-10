@@ -1,33 +1,42 @@
 /* ══════════════════════════════════════════════════════
-   FLASH MESSAGES
+   FLASH MESSAGES — High Definition
 ══════════════════════════════════════════════════════ */
-.flash-container { max-width: 1200px; margin: 0 auto; padding: 16px 24px 0; }
+.flash-container { 
+    max-width: 1440px; 
+    margin: 0 auto; 
+    padding: 24px 32px 0; 
+}
+
 .flash {
     display: flex;
     align-items: center;
-    gap: 10px;
-    padding: 13px 16px;
+    gap: 12px;
+    padding: 16px 20px;
     border-radius: var(--radius);
-    font-size: .875rem;
-    font-weight: 500;
+    font-size: 0.95rem;
+    font-weight: 600;
     border: 1px solid transparent;
-    margin-bottom: 8px;
-    animation: slideDown .25s ease;
-}
-@keyframes slideDown {
-    from { opacity: 0; transform: translateY(-8px); }
-    to   { opacity: 1; transform: translateY(0); }
+    margin-bottom: 12px;
+    box-shadow: var(--shadow-sm);
+    animation: slideInDown 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-[data-theme="light"] .flash-success { background:#edfbf3; border-color:#b2edcc; color:#1a6640; }
-[data-theme="light"] .flash-error   { background:#fdf3f2; border-color:#f5c6c2; color:#922b21; }
-[data-theme="light"] .flash-warning { background:#fffbeb; border-color:#fde68a; color:#92400e; }
-[data-theme="light"] .flash-info    { background:#eff6ff; border-color:#bfdbfe; color:#1e40af; }
+@keyframes slideInDown {
+    from { opacity: 0; transform: translateY(-20px) scale(0.95); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+}
 
-[data-theme="dark"] .flash-success  { background:#0a2016; border-color:#1a6640; color:#6ee89b; }
-[data-theme="dark"] .flash-error    { background:#200a0a; border-color:#7b2020; color:#f5a3a0; }
-[data-theme="dark"] .flash-warning  { background:#20180a; border-color:#7a3a0a; color:#fcd585; }
-[data-theme="dark"] .flash-info     { background:#0a1020; border-color:#1a30a0; color:#93c5fd; }
+/* ── Light Mode States ────────────────────────────── */
+[data-theme="light"] .flash-success { background: hsl(150, 60%, 96%); border-color: hsl(150, 40%, 85%); color: hsl(150, 60%, 25%); }
+[data-theme="light"] .flash-error   { background: hsl(350, 75%, 96%); border-color: hsl(350, 40%, 85%); color: hsl(350, 60%, 30%); }
+[data-theme="light"] .flash-warning { background: hsl(45, 90%, 96%); border-color: hsl(45, 60%, 85%); color: hsl(45, 70%, 30%); }
+[data-theme="light"] .flash-info    { background: hsl(200, 80%, 96%); border-color: hsl(200, 60%, 85%); color: hsl(200, 70%, 30%); }
+
+/* ── Dark Mode States ─────────────────────────────── */
+[data-theme="dark"] .flash-success  { background: hsla(150, 60%, 45%, 0.1); border-color: hsla(150, 40%, 45%, 0.2); color: hsl(150, 60%, 65%); }
+[data-theme="dark"] .flash-error    { background: hsla(350, 75%, 55%, 0.1); border-color: hsla(350, 40%, 55%, 0.2); color: hsl(350, 60%, 65%); }
+[data-theme="dark"] .flash-warning  { background: hsla(45, 90%, 50%, 0.1); border-color: hsla(45, 60%, 50%, 0.2); color: hsl(45, 70%, 65%); }
+[data-theme="dark"] .flash-info     { background: hsla(200, 80%, 55%, 0.1); border-color: hsla(200, 60%, 55%, 0.2); color: hsl(200, 70%, 65%); }
 
 .flash-close {
     margin-left: auto;
@@ -35,8 +44,13 @@
     border: none;
     cursor: pointer;
     color: inherit;
-    opacity: .6;
-    font-size: .75rem;
-    padding: 0;
+    opacity: 0.5;
+    font-size: 0.85rem;
+    padding: 4px;
+    transition: all 0.2s ease;
 }
-.flash-close:hover { opacity: 1; }
+
+.flash-close:hover { 
+    opacity: 1; 
+    transform: rotate(90deg);
+}

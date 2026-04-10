@@ -1,0 +1,117 @@
+{% extends 'Base/base.html' %}
+
+{% block title %}Poser une question · Forum{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12 max-w-4xl">
+    <!-- Back Navigation -->
+    <a href="{% url 'forum:question_list' %}" class="inline-flex items-center gap-2 text-sm font-black uppercase tracking-widest text-primary hover:text-ink transition-colors mb-8 group">
+        <i class="fas fa-arrow-left transition-transform group-hover:-translate-x-1"></i>
+        Retour au forum
+    </a>
+
+    <div class="cool-card !p-0 overflow-hidden shadow-2xl border-t-4 border-t-primary animate-fade-in">
+        <div class="grid grid-cols-1 lg:grid-cols-5">
+            <!-- Left Sidebar (Helpful context) -->
+            <div class="lg:col-span-2 bg-grad-primary p-10 text-white flex flex-col justify-between relative overflow-hidden">
+                <!-- Abstract Background Shapes -->
+                <div class="absolute -top-10 -right-10 w-40 h-40 bg-white opacity-5 rounded-full"></div>
+                <div class="absolute -bottom-10 -left-10 w-24 h-24 bg-white opacity-10 rounded-full"></div>
+                
+                <div class="relative z-10">
+                    <h1 class="text-3xl font-black mb-6 leading-tight">
+                        Lancez la <br><span class="opacity-70">discussion.</span>
+                    </h1>
+                    <p class="text-white/80 font-medium mb-10">
+                        Votre question pourrait aider des centaines d'autres femmes dans la même situation. 
+                    </p>
+                    
+                    <ul class="space-y-6">
+                        <li class="flex gap-4">
+                            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-check text-xs"></i>
+                            </div>
+                            <span class="text-sm font-bold">Soyez précise et claire</span>
+                        </li>
+                        <li class="flex gap-4">
+                            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-check text-xs"></i>
+                            </div>
+                            <span class="text-sm font-bold">Utilisez un titre parlant</span>
+                        </li>
+                        <li class="flex gap-4">
+                            <div class="w-8 h-8 rounded-lg bg-white/20 flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-check text-xs"></i>
+                            </div>
+                            <span class="text-sm font-bold">Restez bienveillante</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="relative z-10 mt-12 pt-8 border-t border-white/10">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center">
+                            <i class="fas fa-shield-heart"></i>
+                        </div>
+                        <span class="text-xs font-black uppercase tracking-widest">Espace Sécurisé</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form Area -->
+            <div class="lg:col-span-3 p-8 md:p-12 bg-surface">
+                <form method="POST" class="space-y-8">
+                    {% csrf_token %}
+                    
+                    <!-- Title Field -->
+                    <div class="space-y-3">
+                        <label for="{{ form.title.id_for_label }}" class="text-sm font-black uppercase tracking-widest text-ink">
+                            Titre de votre question
+                        </label>
+                        {{ form.title }}
+                        {% if form.title.errors %}
+                            {% for error in form.title.errors %}
+                                <p class="text-error text-xs font-bold mt-2">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                        <p class="text-[10px] text-ink-muted font-bold uppercase tracking-tighter">
+                            Exemple: "Comment gérer les nausées du premier trimestre ?"
+                        </p>
+                    </div>
+
+                    <!-- Content Field -->
+                    <div class="space-y-3">
+                        <label for="{{ form.content.id_for_label }}" class="text-sm font-black uppercase tracking-widest text-ink">
+                            Détails & Contexte
+                        </label>
+                        {{ form.content }}
+                        {% if form.content.errors %}
+                            {% for error in form.content.errors %}
+                                <p class="text-error text-xs font-bold mt-2">{{ error }}</p>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+
+                    <div class="flex items-center justify-end gap-6 pt-6">
+                        <a href="{% url 'forum:question_list' %}" class="text-sm font-black uppercase tracking-widest text-ink-muted hover:text-ink transition-colors">
+                            Annuler
+                        </a>
+                        <button type="submit" class="btn btn-primary btn-lg shadow-xl hover:scale-105 active:scale-95 transition-all">
+                            <i class="fas fa-paper-plane"></i>
+                            Publier
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @keyframes fade-in {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fade-in { animation: fade-in 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+</style>
+{% endblock %}

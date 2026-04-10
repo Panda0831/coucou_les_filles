@@ -1,50 +1,92 @@
-/* ── BUTTONS ─────────────────────────────────────────── */
+/* ══════════════════════════════════════════════════════
+   BUTTONS — High Definition
+══════════════════════════════════════════════════════ */
 .btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 10px;
-    padding: 12px 24px;
-    border-radius: 16px;
-    font-size: .875rem;
-    font-weight: 700;
+    padding: 12px 28px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
     cursor: pointer;
+    transition: all .25s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid transparent;
+    font-family: 'DM Sans', sans-serif;
+    user-select: none;
+    white-space: nowrap;
+}
+
+.btn:active {
+    transform: scale(0.97);
+}
+
+/* ── Primary ───────────────────────────────────────── */
+.btn-primary {
+    background: var(--grad-primary);
+    color: white;
     border: none;
-    text-decoration: none;
-    transition: all .3s cubic-bezier(0.4, 0, 0.2, 1);
-    font-family: inherit;
-    letter-spacing: .02em;
-    position: relative;
-    overflow: hidden;
-}
-.btn:active { transform: scale(0.96); }
-
-.btn-ghost  { background: transparent; color: var(--muted); }
-.btn-ghost:hover { color: var(--ink); background: var(--line); }
-
-.btn-outline { background: transparent; color: var(--ink); border: 2px solid var(--line); }
-.btn-outline:hover { border-color: var(--ink); transform: translateY(-2px); }
-
-.btn-primary { 
-    background: var(--ink); 
-    color: var(--paper); 
-    box-shadow: 0 4px 12px rgba(15,14,23,0.1);
-}
-.btn-primary:hover { 
-    background: var(--accent); 
-    box-shadow: 0 8px 20px rgba(232,85,43,0.2);
-    transform: translateY(-3px);
+    box-shadow: 0 4px 12px -2px hsla(var(--p-h), 70%, 50%, 0.3);
 }
 
-.btn-danger { 
-    background: #fdf3f2; 
-    color: #c0392b; 
-    border: 2px solid #f5c6c2; 
+.btn-primary:hover {
+    box-shadow: 0 8px 24px -4px hsla(var(--p-h), 70%, 50%, 0.4);
+    transform: translateY(-2px);
 }
-.btn-danger:hover { 
-    background: #c0392b; 
-    color: white; 
-    border-color: #c0392b;
-    transform: translateY(-3px);
-    box-shadow: 0 8px 20px rgba(192,57,43,0.2);
+
+/* ── Secondary ─────────────────────────────────────── */
+.btn-secondary {
+    background: var(--secondary);
+    color: white;
+    box-shadow: 0 4px 12px -2px hsla(var(--s-h), 60%, 50%, 0.2);
+}
+
+.btn-secondary:hover {
+    filter: brightness(1.05);
+    transform: translateY(-2px);
+}
+
+/* ── Outline ───────────────────────────────────────── */
+.btn-outline {
+    background: transparent;
+    border: 1px solid var(--line-bold);
+    color: var(--ink);
+}
+
+.btn-outline:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+    background: var(--surface-2);
+}
+
+/* ── Ghost ─────────────────────────────────────────── */
+.btn-ghost {
+    background: transparent;
+    color: var(--ink-muted);
+}
+
+.btn-ghost:hover {
+    background: var(--surface-2);
+    color: var(--primary);
+}
+
+/* ── States ────────────────────────────────────────── */
+.btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* ── Sizes ─────────────────────────────────────────── */
+.btn-lg {
+    padding: 16px 36px;
+    font-size: 1.1rem;
+    border-radius: var(--radius);
+}
+
+.btn-sm {
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    border-radius: var(--radius-sm);
 }

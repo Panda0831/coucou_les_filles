@@ -1,33 +1,96 @@
 /* ══════════════════════════════════════════════════════
-   BASE
+   BASE — High Definition
 ══════════════════════════════════════════════════════ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: smooth; }
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+}
 
 body {
-    font-family: 'DM Sans', sans-serif;
+    font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
     background: var(--paper);
-    background-image: var(--theme-background-pattern, url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23F8BBD0' fill-opacity='0.4' fill-rule='evenodd'%3E%3Cpath d='M11 0L0 11 11 22 22 11zM40 0L30 10 40 20 50 10z'/%3E%3C/g%3E%3C/svg%3E"));
     color: var(--ink);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    -webkit-font-smoothing: antialiased;
-    transition: background .35s ease, color .35s ease;
-}
-[data-theme="dark"] {
-    --theme-background-pattern: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23A04070' fill-opacity='0.2' fill-rule='evenodd'%3E%3Cpath d='M11 0L0 11 11 22 22 11zM40 0L30 10 40 20 50 10z'/%3E%3E%3C/g%3E%3C/svg%3E");
+    line-height: 1.6;
+    overflow-x: hidden;
+    transition: background .4s cubic-bezier(0.4, 0, 0.2, 1), color .4s ease;
 }
 
-/* ══════════════════════════════════════════════════════
-   MAIN
-══════════════════════════════════════════════════════ */
+/* ── Custom Background Pattern ───────────────────────── */
+body::before {
+    content: "";
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    z-index: -1;
+    opacity: 0.4;
+    background-image: radial-gradient(var(--line) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+[data-theme="dark"] body::before {
+    opacity: 0.15;
+}
+
+/* ── Typography ──────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--ink);
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+    transition: all .2s ease;
+}
+
+/* ── Layout ──────────────────────────────────────────── */
 .main {
     flex: 1;
-    max-width: 1200px;
     width: 100%;
+    max-width: 1440px;
     margin: 0 auto;
-    padding: 48px 24px;
+    padding: 40px 24px;
 }
 
+/* ── Global Components ───────────────────────────────── */
+.cool-card {In template /home/panda831/Bureau/tenaizybe/coucou_les_filles/templates/Base/base.html, error at line 408
+
+
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 32px;
+    box-shadow: var(--shadow-sm);
+    transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.cool-card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.glass-card {
+    background: var(--glass);
+    backdrop-filter: var(--glass-blur);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+}
+
+/* ── Utils ───────────────────────────────────────────── */
 .sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+
+::selection {
+    background: var(--primary);
+    color: white;
+}

@@ -1,0 +1,132 @@
+{% extends 'Base/base.html' %}
+
+{% block title %}{{ question.title }} · Forum{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-12 max-w-5xl">
+    <!-- Back Navigation -->
+    <a href="{% url 'forum:question_list' %}" class="inline-flex items-center gap-2 text-sm font-black uppercase tracking-widest text-primary hover:text-ink transition-colors mb-8 group">
+        <i class="fas fa-arrow-left transition-transform group-hover:-translate-x-1"></i>
+        Retour au forum
+    </a>
+
+    <!-- Main Question Card -->
+    <div class="cool-card !p-0 overflow-hidden mb-12 shadow-xl border-t-4 border-t-primary">
+        <div class="p-8 md:p-12">
+            <div class="flex flex-wrap items-center gap-4 mb-8">
+                {% if question.user.photo %}
+                    <img src="{{ question.user.photo.url }}" class="w-12 h-12 rounded-2xl object-cover ring-2 ring-paper" alt="{{ question.user.username }}">
+                {% else %}
+                    <div class="w-12 h-12 rounded-2xl bg-grad-primary flex items-center justify-center text-white font-bold">
+                        {{ question.user.username|first|upper }}
+                    </div>
+                {% endif %}
+                <div>
+                    <span class="block font-black text-ink">@{{ question.user.username }}</span>
+                    <span class="text-xs font-bold text-ink-muted uppercase tracking-wider">Posté le {{ question.created_at|date:"d F Y à H:i" }}</span>
+                </div>
+            </div>
+
+            <h1 class="text-3xl md:text-5xl font-black text-ink mb-8 leading-tight tracking-tight">
+                {{ question.title }}
+            </h1>
+
+            <div class="prose prose-pink max-w-none text-ink/80 text-lg md:text-xl leading-relaxed whitespace-pre-wrap font-medium">
+                {{ question.content }}
+            </div>
+        </div>
+        
+        <!-- Question Footer Stats -->
+        <div class="bg-surface-2 px-8 py-4 border-t border-line flex items-center gap-6">
+            <span class="text-xs font-black uppercase tracking-widest text-ink-muted flex items-center gap-2">
+                <i class="fas fa-comment-dots text-primary"></i>
+                {{ answers.count }} Réponse{{ answers.count|pluralize }}
+            </span>
+        </div>
+    </div>
+
+    <!-- Answers Header -->
+    <div class="flex items-center gap-4 mb-8">
+        <div class="h-px flex-grow bg-line"></div>
+        <h3 class="text-xl font-black text-ink uppercase tracking-widest">Réponses</h3>
+        <div class="h-px flex-grow bg-line"></div>
+    </div>
+
+    <!-- Answers List -->
+    <div class="space-y-8 mb-16">
+        {% for answer in answers %}
+            <div class="relative pl-8 md:pl-12">
+                <!-- Thread Line Connector -->
+                <div class="absolute left-0 top-0 bottom-0 w-1 bg-grad-primary opacity-20 rounded-full"></div>
+                
+                <div class="cool-card group hover:border-primary/20 transition-all">
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="flex items-center gap-3">
+                            {% if answer.user.photo %}
+                                <img src="{{ answer.user.photo.url }}" class="w-10 h-10 rounded-xl object-cover" alt="{{ answer.user.username }}">
+                            {% else %}
+                                <div class="w-10 h-10 rounded-xl bg-surface-2 flex items-center justify-center text-ink font-bold">
+                                    {{ answer.user.username|first|upper }}
+                                </div>
+                            {% endif %}
+                            <div>
+                                <span class="block font-bold text-ink text-sm">@{{ answer.user.username }}</span>
+                                <span class="text-[10px] font-bold text-ink-muted uppercase tracking-tighter">{{ answer.created_at|date:"d M Y à H:i" }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-ink-muted leading-relaxed whitespace-pre-wrap font-medium">
+                        {{ answer.content }}
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="text-center py-16 bg-surface-2 rounded-3xl border-2 border-dashed border-line">
+                <p class="text-ink-muted font-bold italic">Soyez la première personne à apporter une réponse !</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Add Answer Form -->
+    {% if user.is_authenticated %}
+        <div class="cool-card shadow-2xl border-2 border-primary/10 relative overflow-hidden">
+            <!-- Decorative Accent -->
+            <div class="absolute top-0 right-0 p-4 opacity-5">
+                <i class="fas fa-reply text-6xl"></i>
+            </div>
+
+            <h3 class="text-2xl font-black text-ink mb-8 flex items-center gap-3">
+                <span class="w-10 h-10 rounded-xl bg-primary text-white flex items-center justify-center text-sm shadow-lg">
+                    <i class="fas fa-pen"></i>
+                </span>
+                Votre contribution
+            </h3>
+
+            <form method="POST" class="space-y-6">
+                {% csrf_token %}
+                <div class="relative">
+                    {{ form.content }}
+                    {% if form.content.errors %}
+                        {% for error in form.content.errors %}
+                            <p class="text-error text-xs font-black uppercase mt-2 italic">{{ error }}</p>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+                
+                <div class="flex justify-end">
+                    <button type="submit" class="btn btn-primary btn-lg shadow-xl hover:scale-105 active:scale-95 transition-all">
+                        <i class="fas fa-paper-plane"></i>
+                        Publier ma réponse
+                    </button>
+                </div>
+            </form>
+        </div>
+    {% else %}
+        <div class="glass-card p-10 text-center border-2 border-dashed border-primary/20">
+            <h4 class="text-xl font-bold text-ink mb-4">Envie de participer ?</h4>
+            <p class="text-ink-muted mb-8 font-medium">Connectez-vous pour partager vos conseils avec @{{ question.user.username }}.</p>
+            <a href="{% url 'users:connexion' %}?next={{ request.path }}" class="btn btn-primary">Se connecter</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
