@@ -1,9 +1,13 @@
 {% extends 'Base/base.html' %}
+{% load static %}
 
 {% block title %}{{ question.title }} · Forum{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/forum.css' %}" />
+{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-12 max-w-5xl">
+<div class="container mx-auto px-4 py-12 max-w-5xl forum-page forum-detail-page">
     <!-- Back Navigation -->
     <a href="{% url 'forum:question_list' %}" class="inline-flex items-center gap-2 text-sm font-black uppercase tracking-widest text-primary hover:text-ink transition-colors mb-8 group">
         <i class="fas fa-arrow-left transition-transform group-hover:-translate-x-1"></i>
@@ -178,84 +182,4 @@
     {% endif %}
 </div>
 
-<style>
-    /* ── Cards ────────────────────────────────────────────── */
-    .cool-card {
-        border-radius: 14px;
-        border: 1px solid #e5e7eb;
-        padding: 1.75rem;
-        background: #fff;
-    }
-    .cool-card.shadow-xl { box-shadow: 0 4px 24px -4px rgba(0,0,0,0.09); }
-    .cool-card.shadow-2xl { box-shadow: 0 8px 36px -6px rgba(0,0,0,0.12); }
-
-    /* ── Thread connector ─────────────────────────────────── */
-    .relative > .absolute.w-1 {
-        width: 2px;
-        border-radius: 2px;
-    }
-
-    /* ── Answer form inputs ───────────────────────────────── */
-    textarea,
-    input[type="text"],
-    input[type="email"] {
-        display: block;
-        width: 100%;
-        padding: 0.65rem 0.9rem;
-        font-size: 0.9375rem;
-        font-weight: 400;
-        line-height: 1.65;
-        color: #111827;
-        background: #fff;
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
-        transition: border-color 0.18s, box-shadow 0.18s;
-        outline: none;
-    }
-    textarea:focus,
-    input[type="text"]:focus,
-    input[type="email"]:focus {
-        border-color: var(--color-primary, #db2777);
-        box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-primary, #db2777) 12%, transparent);
-    }
-    textarea { min-height: 130px; resize: vertical; }
-
-    input[type="file"] {
-        display: block;
-        width: 100%;
-        padding: 0.5rem 0.875rem;
-        font-size: 0.875rem;
-        color: #6b7280;
-        background: #f9fafb;
-        border: 1px dashed #d1d5db;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: border-color 0.18s;
-    }
-    input[type="file"]:hover { border-color: var(--color-primary, #db2777); }
-
-    /* ── Header divider ───────────────────────────────────── */
-    .h-px { height: 1px; }
-
-    /* ── Vote buttons ─────────────────────────────────────── */
-    a.rounded-xl, a.rounded-lg {
-        transition: opacity 0.15s, transform 0.15s;
-    }
-    a.rounded-xl:active, a.rounded-lg:active {
-        transform: scale(0.96);
-    }
-
-    /* ── Empty state ──────────────────────────────────────── */
-    .border-dashed { border-style: dashed; }
-
-    /* ── Question title ───────────────────────────────────── */
-    h1.text-3xl {
-        letter-spacing: -0.02em;
-    }
-
-    /* ── Answer form card header icon ─────────────────────── */
-    h3 span.bg-primary {
-        box-shadow: 0 2px 8px -2px color-mix(in srgb, var(--color-primary, #db2777) 40%, transparent);
-    }
-</style>
 {% endblock %}

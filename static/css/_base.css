@@ -11,14 +11,14 @@
 :root,
 [data-theme="light"] {
   /* couleurs de base */
-  --bg:          #fdf8f8;
-  --bg-2:        #fff5f7;
-  --bg-card:     #ffffff;
+  --bg:          #f3ebee;
+  --bg-2:        #f8edf1;
+  --bg-card:     #fffafb;
   --bg-glass:    rgba(255,255,255,.72);
 
-  --text:        #1a0a0e;
-  --text-2:      #5a3a42;
-  --text-3:      #9c7080;
+  --text:        #12080b;
+  --text-2:      #3f2730;
+  --text-3:      #6d4b58;
 
   --border:      rgba(233,105,140,.18);
   --border-2:    rgba(233,105,140,.32);
@@ -88,6 +88,8 @@ body {
   font-family: 'DM Sans', sans-serif;
   background-color: var(--bg);
   color: var(--text);
+  font-size: 16.5px;
+  line-height: 1.6;
   min-height: 100vh;
   transition: background-color .35s ease, color .35s ease;
   overflow-x: hidden;

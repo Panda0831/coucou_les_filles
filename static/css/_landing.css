@@ -1,0 +1,32 @@
+.landing-page .font-serif-display {
+    font-family: "DM Serif Display", serif;
+}
+
+.landing-page .cool-card {
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--bg-card);
+    box-shadow: var(--shadow-s);
+    transition: transform var(--transition), box-shadow var(--transition), border-color var(--transition);
+}
+
+.landing-page .cool-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-m);
+    border-color: var(--border-2);
+}
+
+.landing-page .btn {
+    min-height: 48px;
+    font-weight: 700;
+}
+
+.landing-page section {
+    scroll-margin-top: 86px;
+}
+
+@media (max-width: 768px) {
+    .landing-page {
+        gap: 5.5rem;
+    }
+}

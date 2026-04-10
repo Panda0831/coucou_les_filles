@@ -1,9 +1,13 @@
 {% extends 'Base/base.html' %}
+{% load static %}
 
 {% block title %}Forum Communautaire · PregSafe{% endblock %}
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/forum.css' %}" />
+{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-12 max-w-6xl">
+<div class="container mx-auto px-4 py-12 max-w-6xl forum-page forum-list-page">
     <!-- Header Section -->
     <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12">
         <div class="animate-fade-in">
@@ -118,78 +122,4 @@
     </div>
 </div>
 
-<style>
-    /* ── Fade-in ──────────────────────────────────────────── */
-    @keyframes fade-in {
-        from { opacity: 0; transform: translateY(10px); }
-        to   { opacity: 1; transform: translateY(0); }
-    }
-    .animate-fade-in { animation: fade-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards; }
-
-    /* ── Line clamp ───────────────────────────────────────── */
-    .line-clamp-2 {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-    @media (min-width: 768px) {
-        .md\:line-clamp-3 { -webkit-line-clamp: 3; }
-    }
-
-    /* ── Question cards ───────────────────────────────────── */
-    .cool-card {
-        background: #fff;
-        border: 1px solid #e5e7eb;
-        border-radius: 14px;
-        padding: 1.5rem 1.75rem;
-        transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
-    }
-    .cool-card:hover {
-        box-shadow: 0 6px 28px -6px rgba(0,0,0,0.10);
-    }
-
-    /* ── Stats cards ──────────────────────────────────────── */
-    .glass-card {
-        background: #f9fafb;
-        border-radius: 12px;
-    }
-
-    /* ── Author avatar badge ──────────────────────────────── */
-    .w-16.h-16.rounded-2xl {
-        box-shadow: 0 2px 8px -2px rgba(0,0,0,0.12);
-    }
-
-    /* ── Meta badge (date pill) ───────────────────────────── */
-    .rounded-full.whitespace-nowrap {
-        font-size: 0.6875rem;
-        letter-spacing: 0.04em;
-    }
-
-    /* ── Response / like chips ────────────────────────────── */
-    span.rounded-xl {
-        font-size: 0.8125rem;
-        line-height: 1;
-    }
-
-    /* ── Question title hover link ────────────────────────── */
-    h2 a {
-        text-decoration: none;
-        letter-spacing: -0.015em;
-    }
-
-    /* ── "Voir plus" link ─────────────────────────────────── */
-    a.group\/link {
-        font-size: 0.75rem;
-    }
-
-    /* ── Empty state ──────────────────────────────────────── */
-    .border-dashed { border-style: dashed; }
-    .cool-card.py-20 { padding-top: 5rem; padding-bottom: 5rem; }
-
-    /* ── Page title ───────────────────────────────────────── */
-    h1 {
-        letter-spacing: -0.025em;
-    }
-</style>
 {% endblock %}

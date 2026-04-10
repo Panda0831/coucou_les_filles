@@ -1,0 +1,115 @@
+@keyframes about-fade-in {
+    from {
+        opacity: 0;
+        transform: translateY(18px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.about-page {
+    animation: about-fade-in 0.65s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.about-page .cool-card {
+    background: color-mix(in srgb, var(--bg-card) 90%, #f2e4ea);
+    border: 1px solid color-mix(in srgb, var(--border) 80%, #cfb8c1);
+    border-radius: 1.1rem;
+    box-shadow: var(--shadow-s);
+}
+
+.about-page .cool-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-m);
+}
+
+.about-page h1 {
+    letter-spacing: -0.03em;
+}
+
+.about-page h2 {
+    letter-spacing: 0.04em;
+}
+
+.about-page .bg-grad-primary {
+    box-shadow: 0 18px 40px -20px color-mix(in srgb, var(--accent) 65%, transparent);
+}
+
+.about-page .text-ink-muted {
+    color: color-mix(in srgb, var(--ink-muted) 74%, #12090d);
+}
+
+.about-page .aspect-square img {
+    filter: saturate(1.05) contrast(1.02);
+}
+
+.about-page .bg-grad-primary {
+    color: #ffffff;
+}
+
+.about-page .bg-grad-primary .opacity-90,
+.about-page .bg-grad-primary .opacity-60 {
+    opacity: 1;
+}
+
+.about-page .text-primary {
+    color: color-mix(in srgb, var(--primary) 78%, #6e1b3a);
+}
+
+.about-page .bg-white\/10 {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.about-page .border-line {
+    border-color: color-mix(in srgb, var(--line) 80%, #c6adb6);
+}
+
+@keyframes vision-title-rise {
+    from {
+        opacity: 0.78;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes vision-text-breathe {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-2px);
+    }
+}
+
+/* Light mode: force "Notre Vision" content in black */
+[data-theme="light"] .about-page .bg-grad-primary.text-white,
+[data-theme="light"] .about-page .bg-grad-primary.text-white h2,
+[data-theme="light"] .about-page .bg-grad-primary.text-white p,
+[data-theme="light"] .about-page .bg-grad-primary.text-white .text-xs,
+[data-theme="light"] .about-page .bg-grad-primary.text-white .text-5xl {
+    color: #111111 !important;
+}
+
+[data-theme="light"] .about-page .bg-grad-primary.text-white h2 {
+    animation: vision-title-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+[data-theme="light"] .about-page .bg-grad-primary.text-white p {
+    animation: vision-text-breathe 4.5s ease-in-out infinite;
+}
+
+[data-theme="light"] .about-page .bg-grad-primary .bg-white\/10 {
+    background: rgba(255, 255, 255, 0.28);
+    border-color: rgba(17, 17, 17, 0.14);
+}
+
+[data-theme="dark"] .about-page .cool-card {
+    background: color-mix(in srgb, var(--surface) 86%, #27141d);
+    border-color: color-mix(in srgb, var(--line) 90%, #4a2d38);
+}
