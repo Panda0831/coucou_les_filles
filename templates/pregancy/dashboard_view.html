@@ -1,4 +1,3 @@
-
 {% extends 'Base/base.html' %}
 
 {% block title %}Mon Tableau de Bord - Suivi de Grossesse{% endblock %}
@@ -60,16 +59,19 @@
         background: linear-gradient(135deg, #4338ca 0%, color-mix(in srgb, var(--accent) 40%, #5b21b6) 100%);
     }
     .suivi-fab {
-        width: 2.4rem;
-        height: 2.4rem;
+        width: 2.8rem;
+        height: 2.8rem;
         border-radius: 999px;
         display: inline-flex;
         align-items: center;
         justify-content: center;
         font-weight: 700;
-        font-size: 1.25rem;
+        font-size: 1.5rem;
         line-height: 1;
+        text-decoration: none !important;
+        transition: transform 0.2s;
     }
+    .suivi-fab:active { transform: scale(0.9); }
     .modal-overlay {
         position: fixed;
         inset: 0;
@@ -81,28 +83,16 @@
         justify-content: center;
         padding: 1rem;
     }
-    .modal-overlay.active {
-        display: flex;
-    }
+    .modal-overlay.active { display: flex; }
     .modal-card {
-        width: min(860px, 100%);
+        width: min(500px, 100%);
         max-height: calc(100vh - 2rem);
         overflow: auto;
     }
-    .alert-message {
-        color: #0f172a !important;
-    }
-    [data-theme='dark'] .alert-message {
-        color: #f8fafc !important;
-    }
+    .alert-message { color: #0f172a !important; }
+    [data-theme='dark'] .alert-message { color: #f8fafc !important; }
     .dashboard-page .text-muted {
         color: color-mix(in srgb, var(--ink-muted) 82%, #2b1b21);
-    }
-    @media (max-width: 768px) {
-        .dashboard-page {
-            border-radius: 1.25rem;
-            padding: 0.85rem;
-        }
     }
 </style>
 {% endblock %}
@@ -116,8 +106,7 @@
                     <i class="fa-solid fa-wand-magic-sparkles"></i> Assistant IA
                 </div>
                 <h3 class="text-2xl font-black text-ink mb-2">Ton copilote grossesse</h3>
-                <p class="text-muted mb-6">Résumé intelligent, conseils de la semaine et alertes utiles, en un clin d'oeil.</p>
-
+                <p class="text-muted mb-6">Résumé intelligent, conseils de la semaine et alertes utiles.</p>
                 <div class="grid lg:grid-cols-3 gap-5">
                     <div class="lg:col-span-2 panel-soft p-5 bg-violet-50 dark:bg-violet-900/15">
                         <p class="text-sm font-semibold text-violet-700 dark:text-violet-300 mb-2">Résumé</p>
@@ -135,219 +124,115 @@
                         </ul>
                     </div>
                 </div>
-                {% if analyse_ia.alerte %}
-                <div class="mt-5 bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-4 rounded-2xl">
-                    <p class="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-1">Attention</p>
-                    <p class="text-sm text-amber-700 dark:text-amber-300">{{ analyse_ia.alerte }}</p>
-                </div>
-                {% endif %}
             </div>
         </section>
         
         <header class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
             <div>
                 <h1 class="text-4xl font-black text-ink">Bonjour, {{ user.username }} ✨</h1>
-                <p class="text-muted">Heureux de vous revoir pour votre {{ stats_generales.semaine }}e semaine.</p>
+                <p class="text-muted">Semaine {{ stats_generales.semaine }} de votre aventure.</p>
             </div>
             <div class="cool-card panel-soft !p-4 flex items-center gap-4">
                 <div class="text-right">
                     <p class="text-xs text-muted uppercase font-bold tracking-wider">Date prévue</p>
                     <p class="text-ink font-semibold">{{ user.date_prevue_accouchement|date:"d F Y" }}</p>
                 </div>
-                <button
-                    type="button"
+                <a 
+                    href="{% url 'pregancy:ajouter_suivi' %}"
                     id="open-suivi-modal"
                     class="btn btn-primary suivi-fab"
                     data-deja-rempli="{{ deja_rempli_hebdo|yesno:'true,false' }}"
-                    aria-label="Ajouter un suivi hebdomadaire"
-                >
-                    +
-                </button>
-                <div class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-300">
-                    <i class="fa-solid fa-calendar-day"></i>
-                </div>
+                    aria-label="Ajouter un suivi"
+                >+</a>
             </div>
         </header>
 
         <section class="mb-8">
             <div class="cool-card panel-soft !p-6">
                 <div class="flex justify-between items-end mb-4">
-                    <h3 class="font-semibold text-ink">Progression de la grossesse</h3>
+                    <h3 class="font-semibold text-ink">Progression</h3>
                     <span class="text-[var(--accent)] font-bold text-xl">{{ stats_generales.progression_pourcentage }}%</span>
                 </div>
                 <div class="w-full progress-track h-4 rounded-full overflow-hidden">
-                    <div class="progress-fill h-full rounded-full transition-all duration-1000" style="width: {{ stats_generales.progression_pourcentage }}%"></div>
-                </div>
-                <div class="flex justify-between mt-2 text-xs text-muted font-medium">
-                    <span>SEMAINE 1</span>
-                    <span>SEMAINE 20</span>
-                    <span>TERME (40)</span>
+                    <div class="progress-fill h-full rounded-full" style="width: {{ stats_generales.progression_pourcentage }}%"></div>
                 </div>
             </div>
         </section>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             <div class="cool-card panel-soft stat-card !p-6">
-                <p class="text-muted text-sm font-medium mb-1">Poids Actuel</p>
-                <div class="flex items-baseline gap-2">
-                    <span class="text-2xl font-bold text-ink">{{ stats_generales.poids_actuel }} kg</span>
-                    <span class="text-emerald-500 text-sm font-bold">+{{ stats_generales.prise_poids_totale }}kg</span>
-                </div>
+                <p class="text-muted text-sm font-medium mb-1">Poids</p>
+                <span class="text-2xl font-bold text-ink">{{ stats_generales.poids_actuel }} kg</span>
             </div>
-
             <div class="cool-card panel-soft stat-card !p-6">
-                <p class="text-muted text-sm font-medium mb-1">Niveau de Risque</p>
-                <div class="flex items-center gap-2 mt-1">
-                    <span class="px-3 py-1 rounded-full text-xs font-bold uppercase 
-                        {% if stats_generales.risque_actuel == 'faible' %} bg-emerald-100 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-400 
-                        {% elif stats_generales.risque_actuel == 'moyen' %} bg-amber-100 dark:bg-amber-900/30 text-amber-600 dark:text-amber-400 
-                        {% else %} bg-rose-100 dark:bg-rose-900/30 text-rose-600 dark:text-rose-400 {% endif %}">
-                        {{ stats_generales.risque_actuel }}
-                    </span>
-                </div>
+                <p class="text-muted text-sm font-medium mb-1">Risque</p>
+                <span class="px-3 py-1 rounded-full text-xs font-bold uppercase 
+                    {% if stats_generales.risque_actuel == 'faible' %} bg-emerald-100 text-emerald-600 
+                    {% else %} bg-rose-100 text-rose-600 {% endif %}">
+                    {{ stats_generales.risque_actuel }}
+                </span>
             </div>
-
             <div class="cool-card panel-soft stat-card !p-6">
                 <p class="text-muted text-sm font-medium mb-1">Jours restants</p>
-                <span class="text-2xl font-bold text-ink">{{ stats_generales.jours_restants }} jours</span>
+                <span class="text-2xl font-bold text-ink">{{ stats_generales.jours_restants }}</span>
             </div>
-
             <div class="cool-card panel-soft stat-card !p-6">
-                <p class="text-muted text-sm font-medium mb-1">IMC de départ</p>
-                <div class="flex flex-col">
-                    <span class="text-2xl font-bold text-ink">{{ stats_generales.imc_depart }}</span>
-                    <span class="text-xs text-muted">{{ stats_generales.categorie_imc }}</span>
-                </div>
+                <p class="text-muted text-sm font-medium mb-1">IMC Départ</p>
+                <span class="text-2xl font-bold text-ink">{{ stats_generales.imc_depart }}</span>
             </div>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
             <div class="lg:col-span-2 space-y-8">
                 <div class="cool-card panel-soft !p-8">
-                    <h3 class="text-lg font-bold text-ink mb-6">Évolution du Poids (kg)</h3>
-                    <div class="h-[300px]">
-                        <canvas id="weightChart"></canvas>
-                    </div>
+                    <h3 class="text-lg font-bold text-ink mb-6">Évolution du Poids</h3>
+                    <div class="h-[300px]"><canvas id="weightChart"></canvas></div>
                 </div>
-
                 <div class="cool-card panel-soft !p-8">
-                    <h3 class="text-lg font-bold text-ink mb-6">Bien-être : Stress & Sommeil</h3>
-                    <div class="h-[300px]">
-                        <canvas id="wellnessChart"></canvas>
-                    </div>
+                    <h3 class="text-lg font-bold text-ink mb-6">Bien-être</h3>
+                    <div class="h-[300px]"><canvas id="wellnessChart"></canvas></div>
                 </div>
             </div>
 
             <div class="space-y-8">
-                <div class="gradient-card p-8 rounded-[2rem] text-white shadow-xl shadow-blue-500/10">
-                    <div class="flex items-center gap-4 mb-6">
-                        <div class="bg-white/20 p-3 rounded-2xl backdrop-blur-sm">
-                            <i class="fa-solid fa-baby text-xl text-white"></i>
-                        </div>
-                        <h3 class="font-bold text-xl text-white">Mon Bébé</h3>
-                    </div>
+                <div class="gradient-card p-8 rounded-[2rem] text-white">
+                    <h3 class="font-bold text-xl mb-6"><i class="fa-solid fa-baby"></i> Mon Bébé</h3>
                     {% if foetus %}
                     <div class="space-y-4">
-                        <div class="flex justify-between border-b border-white/10 pb-2">
-                            <span class="opacity-80">Taille moy.</span>
-                            <span class="font-bold">{{ foetus.taille_moyenne }} cm</span>
-                        </div>
-                        <div class="flex justify-between border-b border-white/10 pb-2">
-                            <span class="opacity-80">Poids moy.</span>
-                            <span class="font-bold">{{ foetus.poids_moyen }} g</span>
-                        </div>
-                        <div class="mt-6 bg-white/10 p-4 rounded-2xl border border-white/10">
-                            <p class="text-sm leading-relaxed italic opacity-95 text-justify">
-                                "{{ foetus.stade_developpement|truncatewords:40 }}"
-                            </p>
-                        </div>
+                        <p>Taille: <strong>{{ foetus.taille_moyenne }} cm</strong></p>
+                        <p>Poids: <strong>{{ foetus.poids_moyen }} g</strong></p>
+                        <p class="text-sm italic opacity-90">{{ foetus.stade_developpement|truncatewords:30 }}</p>
                     </div>
-                    {% else %}
-                    <p class="text-sm opacity-80 italic">Données de développement non disponibles.</p>
                     {% endif %}
                 </div>
 
                 <div class="cool-card panel-soft !p-6">
-                    <h3 class="font-bold text-ink mb-4 flex items-center gap-2">
-                        <i class="fa-solid fa-bell text-rose-500"></i> Alertes Récentes
-                    </h3>
-                    <div class="space-y-4">
-                        {% for alerte in alertes %}
-                        <div class="p-3 bg-rose-50 dark:bg-rose-900/20 rounded-2xl border-l-4 border-rose-500">
-                            <p class="text-xs font-bold text-rose-700 dark:text-rose-400 uppercase">{{ alerte.niveau_risque }}</p>
-                            <p class="text-sm alert-message">{{ alerte.message }}</p>
-                        </div>
-                        {% empty %}
-                        <p class="text-sm text-muted italic text-center py-4">Aucune alerte pour le moment.</p>
-                        {% endfor %}
+                    <h3 class="font-bold text-ink mb-4"><i class="fa-solid fa-bell text-rose-500"></i> Alertes</h3>
+                    {% for alerte in alertes %}
+                    <div class="p-3 bg-rose-50 dark:bg-rose-900/20 rounded-2xl border-l-4 border-rose-500 mb-2">
+                        <p class="text-sm alert-message">{{ alerte.message }}</p>
                     </div>
+                    {% empty %}
+                    <p class="text-sm text-muted italic">Tout va bien !</p>
+                    {% endfor %}
                 </div>
+                
+                <a href="{% url 'pregancy:export_dossier_patient' %}" class="btn btn-primary w-full !py-4">
+                    <i class="fa-solid fa-file-pdf"></i> Exporter PDF
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
 
-                <div class="panel-soft p-6 rounded-[2rem] border border-[var(--border)] bg-[var(--surface)]">
-                    <h3 class="font-bold text-[var(--ink)] mb-2 flex items-center gap-2">
-                        <i class="fas fa-lightbulb"></i> Conseil du jour
-                    </h3>
-                    <p class="text-[var(--ink-muted)] text-sm leading-relaxed">
-                        {{ conseil_aleatoire }}
-                    </p>
-                </div>
-                <div class="flex justify-end">
-                    <a href="{% url 'pregancy:export_dossier_patient' %}" class="btn btn-primary !px-6 !py-3">
-                        <i class="fa-solid fa-file-pdf"></i>
-                        Exporter mon dossier PDF
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<div id="suivi-modal" class="modal-overlay {% if open_suivi_modal %}active{% endif %}">
-    <div class="cool-card modal-card !p-6">
-        <div class="flex items-center justify-between mb-6">
-            <div>
-                <h3 class="text-2xl font-bold text-ink">Suivi hebdomadaire</h3>
-                <p class="text-sm text-muted">Semaine {{ stats_generales.semaine }}</p>
-            </div>
-            <button type="button" id="close-suivi-modal" class="btn btn-ghost">Fermer</button>
-        </div>
-        <form method="post" class="space-y-6">
-            {% csrf_token %}
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {% for field in suivi_form %}
-                    <div class="{% if field.name == 'commentaire' %}md:col-span-2{% endif %}">
-                        <label for="{{ field.id_for_label }}" class="block text-sm font-bold text-ink mb-2">
-                            {{ field.label }}
-                        </label>
-                        {{ field }}
-                        {% if field.errors %}
-                            {% for error in field.errors %}
-                                <p class="text-red-500 text-xs mt-1">{{ error }}</p>
-                            {% endfor %}
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            </div>
-            {% if suivi_form.non_field_errors %}
-                {% for error in suivi_form.non_field_errors %}
-                    <p class="text-red-500 text-sm">{{ error }}</p>
-                {% endfor %}
-            {% endif %}
-            <div class="flex justify-end">
-                <button type="submit" class="btn btn-primary">Enregistrer mon suivi</button>
-            </div>
-        </form>
-    </div>
-</div>
 <div id="suivi-notif" class="modal-overlay">
-    <div class="cool-card modal-card !p-8 text-center max-w-xl">
-        <div class="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-300 flex items-center justify-center mx-auto mb-4">
-            <i class="fas fa-circle-check text-2xl"></i>
+    <div class="cool-card modal-card !p-8 text-center">
+        <div class="w-16 h-16 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-calendar-check text-2xl"></i>
         </div>
-        <h3 class="text-xl font-bold text-ink mb-2">Suivi deja rempli</h3>
-        <p class="text-muted mb-6">
-            Vous avez deja complete votre formulaire pour la semaine {{ stats_generales.semaine }}.
-        </p>
-        <button type="button" id="close-suivi-notif" class="btn btn-primary">Compris</button>
+        <h3 class="text-xl font-bold text-ink mb-2">Suivi déjà effectué</h3>
+        <p class="text-muted mb-6">Tu as déjà rempli ton bilan pour la semaine {{ stats_generales.semaine }}.</p>
+        <button type="button" id="close-suivi-notif" class="btn btn-primary w-full">Compris</button>
     </div>
 </div>
 {% endblock %}
@@ -356,138 +241,51 @@
 <script>
     document.addEventListener("DOMContentLoaded", () => {
         const openBtn = document.getElementById("open-suivi-modal");
-        const modal = document.getElementById("suivi-modal");
         const notif = document.getElementById("suivi-notif");
-        const closeModalBtn = document.getElementById("close-suivi-modal");
         const closeNotifBtn = document.getElementById("close-suivi-notif");
 
-        const openModal = () => modal.classList.add("active");
-        const closeModal = () => modal.classList.remove("active");
-        const openNotif = () => notif.classList.add("active");
-        const closeNotif = () => notif.classList.remove("active");
-
         if (openBtn) {
-            openBtn.addEventListener("click", () => {
-                const dejaRempli = openBtn.dataset.dejaRempli === "true";
-                if (dejaRempli) {
-                    openNotif();
-                } else {
-                    openModal();
+            openBtn.addEventListener("click", (e) => {
+                if (openBtn.dataset.dejaRempli === "true") {
+                    e.preventDefault();
+                    notif.classList.add("active");
                 }
             });
         }
 
-        if (closeModalBtn) closeModalBtn.addEventListener("click", closeModal);
-        if (closeNotifBtn) closeNotifBtn.addEventListener("click", closeNotif);
+        if (closeNotifBtn) closeNotifBtn.onclick = () => notif.classList.remove("active");
+        
+        notif.onclick = (e) => { if(e.target === notif) notif.classList.remove("active"); };
 
-        [modal, notif].forEach((node) => {
-            if (!node) return;
-            node.addEventListener("click", (event) => {
-                if (event.target === node) node.classList.remove("active");
-            });
+        const graphData = JSON.parse('{{ graph_data|safe }}');
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        
+        new Chart(document.getElementById('weightChart'), {
+            type: 'line',
+            data: {
+                labels: graphData.labels,
+                datasets: [{
+                    data: graphData.poids,
+                    borderColor: '#3b82f6',
+                    tension: 0.4,
+                    fill: true,
+                    backgroundColor: 'rgba(59, 130, 246, 0.05)'
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
         });
 
-        document.querySelectorAll('#suivi-modal input, #suivi-modal select, #suivi-modal textarea').forEach((el) => {
-            if (el.type === "checkbox") return;
-            el.classList.add("cool-input", "w-full");
+        new Chart(document.getElementById('wellnessChart'), {
+            type: 'bar',
+            data: {
+                labels: graphData.labels,
+                datasets: [
+                    { label: 'Stress', data: graphData.stress, backgroundColor: '#f43f5e' },
+                    { label: 'Sommeil', data: graphData.sommeil, backgroundColor: '#6366f1' }
+                ]
+            },
+            options: { responsive: true, maintainAspectRatio: false, scales: { y: { max: 5 } } }
         });
-    });
-
-    const graphData = JSON.parse('{{ graph_data|safe }}');
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    const textColor = isDark ? '#94a3b8' : '#64748b';
-    const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
-
-    const weightCtx = document.getElementById('weightChart').getContext('2d');
-    new Chart(weightCtx, {
-        type: 'line',
-        data: {
-            labels: graphData.labels,
-            datasets: [{
-                label: 'Poids (kg)',
-                data: graphData.poids,
-                borderColor: '#3b82f6',
-                backgroundColor: 'rgba(59, 130, 246, 0.1)',
-                borderWidth: 3,
-                fill: true,
-                tension: 0.4,
-                pointBackgroundColor: '#3b82f6',
-                pointBorderColor: '#fff',
-                pointHoverRadius: 6
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: { 
-                legend: { display: false },
-                tooltip: {
-                    backgroundColor: isDark ? '#1e293b' : '#fff',
-                    titleColor: isDark ? '#fff' : '#1e293b',
-                    bodyColor: isDark ? '#cbd5e1' : '#64748b',
-                    borderColor: isDark ? '#334155' : '#e2e8f0',
-                    borderWidth: 1,
-                    padding: 12,
-                    displayColors: false
-                }
-            },
-            scales: { 
-                y: { 
-                    grid: { color: gridColor }, 
-                    ticks: { color: textColor },
-                    beginAtZero: false 
-                },
-                x: { 
-                    grid: { display: false },
-                    ticks: { color: textColor }
-                }
-            }
-        }
-    });
-
-    const wellnessCtx = document.getElementById('wellnessChart').getContext('2d');
-    new Chart(wellnessCtx, {
-        type: 'bar',
-        data: {
-            labels: graphData.labels,
-            datasets: [
-                {
-                    label: 'Stress',
-                    data: graphData.stress,
-                    backgroundColor: '#f43f5e',
-                    borderRadius: 8,
-                    barThickness: 15
-                },
-                {
-                    label: 'Sommeil',
-                    data: graphData.sommeil,
-                    backgroundColor: '#6366f1',
-                    borderRadius: 8,
-                    barThickness: 15
-                }
-            ]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: { color: textColor, padding: 20, usePointStyle: true }
-                }
-            },
-            scales: { 
-                y: { 
-                    max: 5, 
-                    grid: { color: gridColor },
-                    ticks: { color: textColor, stepSize: 1 }
-                },
-                x: { 
-                    grid: { display: false },
-                    ticks: { color: textColor }
-                }
-            }
-        }
     });
 </script>
 {% endblock %}
