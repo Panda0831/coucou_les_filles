@@ -4,7 +4,7 @@ import datetime
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.core.exceptions import ValidationError
-
+from django.contrib.auth import get_user_model
 
 class User(AbstractUser):
     GROUPE_SANGUIN_CHOIX = [
@@ -126,8 +126,40 @@ class User(AbstractUser):
     def nombre_notifications_non_lues(self):
         return self.notifications.filter(is_read=False).count()
     
-
+    
+    def obtenir_contexte_clinique(self):
+        """Prépare les données pour l'IA"""
+        suivis = self.suivis_grossesse.all()[:1] 
+        historique = []
+        for s in suivis:
+            historique.append({
+                "semaine": s.semaine_grossesse,
+                "tension": f"{s.tension_systolique}/{s.tension_diastolique}",
+                "poids": s.poids,
+                "symptomes": f"Fièvre: {s.temperature}, Stress: {s.niveau_stress}/5, Saignements: {s.saignement}",
+                "notes": s.commentaire
+            })
         
+        return {
+            "profil": {
+                "age": self.age,
+                "imc_depart": self.imc,
+                "groupe_sanguin": self.groupe_sanguin,
+                "antecedents": self.antecedents_medicaux
+            },
+            "historique": historique
+        }
+    
+User = get_user_model()    
+class RapportIA(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="rapports_ia")
+    date_analyse = models.DateTimeField(auto_now_add=True)
+    analyse_textuelle = models.TextField()
+    score_vigilance = models.CharField(max_length=20)
+    conseils = models.JSONField(default=list)
+
+    class Meta:
+        ordering = ['-date_analyse']
     
 class ChatMessage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="messages")
