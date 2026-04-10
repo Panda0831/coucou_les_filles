@@ -1,5 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from django.utils import timezone
+from datetime import timedelta
 
 from pregancy.models import SuiviHebdomadaire
 from .models import User
@@ -16,10 +18,15 @@ class CustomUserCreationForm(UserCreationForm):
             'poids_initial', 
             'groupe_sanguin', 
             'nombre_grossesses_precedentes',
+            'antecedents_medicaux',
             'photo'
         )
         widgets = {
-            'date_dernieres_regles': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'date_dernieres_regles': forms.DateInput(attrs={
+                'type': 'date', 
+                'class': 'form-control',
+                'max': timezone.now().date().isoformat()
+            }),
             'antecedents_medicaux': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
             'age': forms.NumberInput(attrs={'class': 'form-control'}),
             'taille': forms.NumberInput(attrs={'class': 'form-control'}),
@@ -29,8 +36,21 @@ class CustomUserCreationForm(UserCreationForm):
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
         }
 
+    def clean_date_dernieres_regles(self):
+        date_regles = self.cleaned_data.get('date_dernieres_regles')
+        if date_regles:
+            aujourdhui = timezone.now().date()
+            limite_passée = aujourdhui - timedelta(weeks=40)
+
+            if date_regles > aujourdhui:
+                raise forms.ValidationError("La date ne peut pas être dans le futur.")
+            
+            if date_regles < limite_passée:
+                raise forms.ValidationError("La date indiquée dépasse la durée normale d'une grossesse (9 mois).")
+        
+        return date_regles
+
 class CustomUserChangeForm(UserChangeForm):
-    # On retire le mot de passe du formulaire de modification simple
     password = None 
 
     class Meta:
@@ -47,15 +67,32 @@ class CustomUserChangeForm(UserChangeForm):
             'photo'
         )
         widgets = {
-            'date_dernieres_regles': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'date_dernieres_regles': forms.DateInput(attrs={
+                'type': 'date', 
+                'class': 'form-control',
+                'max': timezone.now().date().isoformat()
+            }),
             'age': forms.NumberInput(attrs={'class': 'form-control'}),
             'taille': forms.NumberInput(attrs={'class': 'form-control'}),
             'poids_initial': forms.NumberInput(attrs={'class': 'form-control'}),
             'groupe_sanguin': forms.Select(attrs={'class': 'form-control'}),
             'antecedents_medicaux': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
         }
+
+    def clean_date_dernieres_regles(self):
+        date_regles = self.cleaned_data.get('date_dernieres_regles')
+        if date_regles:
+            aujourdhui = timezone.now().date()
+            limite_passée = aujourdhui - timedelta(weeks=40)
+
+            if date_regles > aujourdhui:
+                raise forms.ValidationError("La date ne peut pas être dans le futur.")
+            
+            if date_regles < limite_passée:
+                raise forms.ValidationError("La date indiquée dépasse la durée normale d'une grossesse.")
         
-        
+        return date_regles
+
 class SuiviHebdomadaireForm(forms.ModelForm):
     class Meta:
         model = SuiviHebdomadaire
@@ -108,23 +145,18 @@ class SuiviHebdomadaireForm(forms.ModelForm):
 
     def clean_temperature(self):
         temperature = self.cleaned_data.get("temperature")
-
         if temperature is not None and (temperature < 30 or temperature > 45):
             raise forms.ValidationError("Température invalide.")
-
         return temperature
 
     def clean_poids(self):
         poids = self.cleaned_data.get("poids")
-
         if poids is not None and poids < 20:
             raise forms.ValidationError("Poids invalide.")
-
         return poids
 
     def clean(self):
         cleaned_data = super().clean()
-
         systolique = cleaned_data.get("tension_systolique")
         diastolique = cleaned_data.get("tension_diastolique")
 
@@ -133,5 +165,4 @@ class SuiviHebdomadaireForm(forms.ModelForm):
                 raise forms.ValidationError(
                     "La tension diastolique doit être inférieure à la systolique."
                 )
-
         return cleaned_data

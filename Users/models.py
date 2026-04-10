@@ -3,6 +3,7 @@ import datetime
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.core.exceptions import ValidationError
 
 
 class User(AbstractUser):
@@ -17,7 +18,7 @@ class User(AbstractUser):
     is_customer = models.BooleanField(default=True)
 
     age = models.PositiveIntegerField(null=True, blank=True, help_text="25")
-    date_dernieres_regles = models.DateField(null=True, blank=True)
+    date_dernieres_regles = models.DateField(null=True, blank=True, help_text="Date des dernières règles)")
     date_prevue_accouchement = models.DateField(null=True, blank=True)
     taille = models.PositiveIntegerField(null=True, blank=True, help_text="En cm")
     poids_initial = models.FloatField(null=True, blank=True, help_text="En kg")
@@ -116,6 +117,8 @@ class User(AbstractUser):
     def alertes_non_lues(self):
         return self.alertemedicale_set.filter(lu=False).order_by("-date_creation")
     
+
+        
     
 class ChatMessage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="messages")

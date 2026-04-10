@@ -10,10 +10,10 @@ from django.contrib import messages
 
 @login_required
 def ajouter_suivi(request):
-    # On récupère la semaine actuelle de la mère
+  
     semaine_actuelle = request.user.semaine_actuelle
     
-    # On vérifie si un suivi existe déjà pour cette semaine
+    
     deja_rempli = SuiviHebdomadaire.objects.filter(
         mere=request.user, 
         semaine_grossesse=semaine_actuelle

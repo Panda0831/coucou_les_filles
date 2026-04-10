@@ -1,78 +1,333 @@
 
-{% extends 'Base/base.html' %}
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
 
-{% block content %}
-<div class="flex items-center justify-center min-h-[60vh]">
-    <div class="max-w-md w-full bg-[var(--surface)] rounded-[32px] shadow-2xl p-8 md:p-10 border border-[var(--line)] transition-colors duration-350">
-        
-        <div class="text-center mb-10">
-            <div class="inline-flex items-center justify-center w-20 h-20 bg-[var(--ink)] text-[var(--paper)] rounded-3xl shadow-xl mb-6 transform rotate-3 hover:rotate-0 transition-transform duration-300">
-                <i class="fas fa-fingerprint text-3xl"></i>
-            </div>
-            <h1 class="text-3xl font-bold text-[var(--ink)] tracking-tight font-serif-display">Ravi de vous revoir</h1>
-            <p class="text-[var(--muted)] text-sm mt-2">Accédez à votre espace en un clin d'œil</p>
-        </div>
+  :root {
+    --rose:        #C4728A;
+    --rose-light:  #F5E6EA;
+    --rose-mid:    #E8C5CF;
+    --rose-dark:   #8B4A5C;
+    --sage:        #7A9E8E;
+    --sage-light:  #E8F2EE;
+    --cream:       #FBF7F4;
+    --ink:         #2A2320;
+    --muted:       #7A6E6A;
+    --line:        #EBE3DF;
+    --white:       #FFFFFF;
+    --ff-display:  'Cormorant Garamond', Georgia, serif;
+    --ff-body:     'DM Sans', system-ui, sans-serif;
+  }
 
-        {% if error %}
-            <div class="mb-6 p-4 rounded-2xl bg-red-50 border border-red-100 text-red-600 text-sm font-medium flex items-center animate-shake">
-                <i class="fas fa-circle-exclamation mr-3"></i>
-                {{ error }}
-            </div>
-        {% endif %}
+  .cx-wrap {
+    font-family: var(--ff-body);
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
 
-        <form method="post" action="{% url 'users:connexion' %}" class="space-y-6">
-            {% csrf_token %}
-            
-            <div class="flex flex-col space-y-2">
-                <label for="username" class="text-xs font-bold text-[var(--muted)] uppercase tracking-widest ml-1">
-                    Nom d'utilisateur
-                </label>
-                <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[var(--muted)] group-focus-within:text-[var(--accent)] transition-colors">
-                        <i class="fas fa-user text-sm"></i>
-                    </div>
-                    <input type="text" name="username" id="username" required placeholder="Votre pseudo"
-                           class="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-[var(--paper)] border-2 border-transparent ring-1 ring-[var(--line)] focus:ring-[var(--accent)] focus:border-transparent outline-none transition-all text-[var(--ink)] text-sm placeholder-[var(--muted)]/50">
-                </div>
-            </div>
+  .cx-panel {
+    width: 100%;
+    max-width: 420px;
+    animation: fadeUp .45s ease both;
+  }
 
-            <div class="flex flex-col space-y-2">
-                <label for="password" class="text-xs font-bold text-[var(--muted)] uppercase tracking-widest ml-1">
-                    Mot de passe
-                </label>
-                <div class="relative group">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-[var(--muted)] group-focus-within:text-[var(--accent)] transition-colors">
-                        <i class="fas fa-key text-sm"></i>
-                    </div>
-                    <input type="password" name="password" id="password" required placeholder="••••••••"
-                           class="w-full pl-11 pr-4 py-3.5 rounded-2xl bg-[var(--paper)] border-2 border-transparent ring-1 ring-[var(--line)] focus:ring-[var(--accent)] focus:border-transparent outline-none transition-all text-[var(--ink)] text-sm placeholder-[var(--muted)]/50">
-                </div>
-            </div>
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
 
-            <div class="pt-4">
-                <button type="submit" class="w-full bg-[var(--ink)] hover:bg-[var(--accent)] text-[var(--paper)] font-bold py-4 rounded-2xl transition-all duration-300 shadow-lg hover:shadow-[var(--accent)]/20 active:scale-[0.98] flex items-center justify-center gap-2 group">
-                    <span>Se connecter</span>
-                    <i class="fas fa-arrow-right text-xs group-hover:translate-x-1 transition-transform"></i>
-                </button>
-            </div>
-        </form>
+  /* ── Logo mark ── */
+  .cx-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.75rem;
+  }
 
-        <div class="mt-10 pt-8 border-t border-[var(--line)] text-center">
-            <p class="text-[var(--muted)] text-sm">
-                Pas encore membre ? 
-                <a href="{% url 'users:inscription' %}" class="text-[var(--ink)] font-bold hover:text-[var(--accent)] transition-colors underline-offset-4 hover:underline">Créer un compte gratuitement</a>
-            </p>
-        </div>
+  .cx-mark__circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--rose-light);
+    border: 1.5px solid var(--rose-mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cx-mark__circle svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  /* ── Heading ── */
+  .cx-heading {
+    text-align: center;
+    margin-bottom: 2.25rem;
+  }
+
+  .cx-heading__title {
+    font-family: var(--ff-display);
+    font-size: 2rem;
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1.15;
+    margin-bottom: 0.45rem;
+  }
+
+  .cx-heading__title em {
+    font-style: italic;
+    color: var(--rose-dark);
+  }
+
+  .cx-heading__sub {
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* ── Error banner ── */
+  .cx-error {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    background: #FEF2F2;
+    border: 1px solid #FCA5A5;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 13px;
+    color: #991B1B;
+    animation: shake .35s ease;
+  }
+
+  .cx-error svg { flex-shrink: 0; margin-top: 1px; }
+
+  @keyframes shake {
+    0%,100% { transform: translateX(0); }
+    20%,60% { transform: translateX(-5px); }
+    40%,80% { transform: translateX(5px); }
+  }
+
+  /* ── Form ── */
+  .cx-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.1rem;
+  }
+
+  .cx-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .cx-field__label {
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+
+  .cx-field__input-wrap {
+    position: relative;
+  }
+
+  .cx-field__icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    pointer-events: none;
+    transition: color .2s;
+    display: flex;
+    align-items: center;
+  }
+
+  .cx-field__icon svg { width: 16px; height: 16px; }
+
+  .cx-field__input-wrap:focus-within .cx-field__icon {
+    color: var(--rose);
+  }
+
+  .cx-field input {
+    width: 100%;
+    height: 46px;
+    padding: 0 1rem 0 2.6rem;
+    font-family: var(--ff-body);
+    font-size: 14px;
+    color: var(--ink);
+    background: var(--cream);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s, background .2s;
+    -webkit-appearance: none;
+  }
+
+  .cx-field input::placeholder { color: #C5BBB7; }
+
+  .cx-field input:hover  { border-color: var(--rose-mid); }
+
+  .cx-field input:focus  {
+    border-color: var(--rose);
+    background: var(--white);
+    box-shadow: 0 0 0 3px rgba(196,114,138,.11);
+  }
+
+  /* ── Submit ── */
+  .cx-submit {
+    margin-top: .35rem;
+    width: 100%;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--rose);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: var(--ff-body);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .2s, transform .1s;
+    letter-spacing: .02em;
+  }
+
+  .cx-submit:hover  { background: var(--rose-dark); }
+  .cx-submit:active { transform: scale(.98); }
+
+  .cx-submit svg { width: 15px; height: 15px; transition: transform .2s; }
+  .cx-submit:hover svg { transform: translateX(3px); }
+
+  /* ── Divider ── */
+  .cx-divider {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin-top: 1.5rem;
+  }
+
+  .cx-divider::before,
+  .cx-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--line);
+  }
+
+  .cx-divider span {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+
+  /* ── Footer ── */
+  .cx-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 13.5px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .cx-footer a {
+    color: var(--rose-dark);
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color .2s;
+  }
+
+  .cx-footer a:hover { border-color: var(--rose-dark); }
+
+  /* ── Responsive ── */
+  @media (max-width: 480px) {
+    .cx-heading__title { font-size: 1.7rem; }
+    .cx-panel { max-width: 100%; }
+  }
+</style>
+
+<div class="cx-wrap">
+  <div class="cx-panel">
+
+    <!-- Mark -->
+    <div class="cx-mark">
+      <div class="cx-mark__circle">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#C4728A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      </div>
     </div>
+
+    <!-- Heading -->
+    <div class="cx-heading">
+      <h1 class="cx-heading__title">Ravi de vous <em>revoir</em></h1>
+      <p class="cx-heading__sub">Accédez à votre espace maternité</p>
+    </div>
+
+    <!-- Error -->
+    {% if error %}
+    <div class="cx-error">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+      </svg>
+      <span>{{ error }}</span>
+    </div>
+    {% endif %}
+
+    <!-- Form -->
+    <form method="post" action="{% url 'users:connexion' %}" class="cx-form">
+      {% csrf_token %}
+
+      <div class="cx-field">
+        <label class="cx-field__label" for="username">Nom d'utilisateur</label>
+        <div class="cx-field__input-wrap">
+          <span class="cx-field__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+          </span>
+          <input type="text" id="username" name="username" placeholder="Votre pseudo" required autocomplete="username" />
+        </div>
+      </div>
+
+      <div class="cx-field">
+        <label class="cx-field__label" for="password">Mot de passe</label>
+        <div class="cx-field__input-wrap">
+          <span class="cx-field__icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
+          </span>
+          <input type="password" id="password" name="password" placeholder="••••••••" required autocomplete="current-password" />
+        </div>
+      </div>
+
+      <button type="submit" class="cx-submit">
+        Se connecter
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </button>
+    </form>
+
+    <div class="cx-divider"><span>ou</span></div>
+
+    <p class="cx-footer">
+      Pas encore membre ?
+      <a href="{% url 'users:inscription' %}">Créer un compte</a>
+    </p>
+
+  </div>
 </div>
 
-<style>
-    @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-5px); }
-        75% { transform: translateX(5px); }
-    }
-    .animate-shake { animation: shake 0.4s ease-in-out; }
-    .font-serif-display { font-family: 'DM Serif Display', serif; }
-</style>
-{% endblock %}
+

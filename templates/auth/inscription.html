@@ -1,151 +1,418 @@
-{% extends 'Base/base.html' %}
 
-{% block content %}
-<div class="flex items-center justify-center min-h-[70vh] py-12">
-  <div
-    class="max-w-2xl w-full bg-[var(--surface)] rounded-[40px] shadow-2xl p-10 md:p-12 border border-[var(--line)] transition-colors duration-350 relative overflow-hidden"
-  >
-    <div
-      class="absolute -top-24 -right-24 w-48 h-48 bg-[var(--accent)] opacity-5 rounded-full blur-3xl"
-    ></div>
-    <div
-      class="absolute -bottom-24 -left-24 w-48 h-48 bg-[var(--ink)] opacity-5 rounded-full blur-3xl"
-    ></div>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
 
-    <div class="text-center mb-12 relative">
-      <div
-        class="inline-flex items-center justify-center w-20 h-20 bg-[var(--ink)] text-[var(--paper)] rounded-3xl shadow-xl mb-8 transform -rotate-6 hover:rotate-0 transition-transform duration-500"
-      >
-        <i class="fas fa-rocket text-3xl"></i>
+  :root {
+    --rg-rose:       #C4728A;
+    --rg-rose-light: #F8EDF0;
+    --rg-rose-mid:   #E8C5CF;
+    --rg-rose-dark:  #8B4A5C;
+    --rg-sage:       #7A9E8E;
+    --rg-sage-light: #E8F2EE;
+    --rg-cream:      #FBF7F4;
+    --rg-ink:        #2A2320;
+    --rg-muted:      #8A7E7A;
+    --rg-line:       #EBE3DF;
+    --rg-white:      #FFFFFF;
+    --rg-ff-display: 'Cormorant Garamond', Georgia, serif;
+    --rg-ff-body:    'DM Sans', system-ui, sans-serif;
+  }
+
+  .rg-page {
+    font-family: var(--rg-ff-body);
+    min-height: 80vh;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 2.5rem 1rem 4rem;
+    background: var(--rg-cream);
+  }
+
+  .rg-panel {
+    width: 100%;
+    max-width: 600px;
+    animation: rg-rise .4s ease both;
+  }
+
+  @keyframes rg-rise {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Header ── */
+  .rg-header {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+
+  .rg-header__mark {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    background: var(--rg-rose-light);
+    border: 1.5px solid var(--rg-rose-mid);
+    border-radius: 50%;
+    margin-bottom: 1.1rem;
+  }
+
+  .rg-header__mark svg { width: 22px; height: 22px; }
+
+  .rg-header__eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .13em;
+    text-transform: uppercase;
+    color: var(--rg-rose);
+    margin-bottom: .45rem;
+  }
+
+  .rg-header h1 {
+    font-family: var(--rg-ff-display);
+    font-size: 2rem;
+    font-weight: 300;
+    color: var(--rg-ink);
+    line-height: 1.15;
+    margin-bottom: .4rem;
+  }
+
+  .rg-header h1 em { font-style: italic; color: var(--rg-rose-dark); }
+
+  .rg-header p {
+    font-size: 13.5px;
+    color: var(--rg-muted);
+    line-height: 1.6;
+  }
+
+  /* ── Card ── */
+  .rg-card {
+    background: var(--rg-white);
+    border: 1px solid var(--rg-line);
+    border-radius: 20px;
+    padding: 2rem 2rem 1.75rem;
+  }
+
+  /* ── Section label ── */
+  .rg-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 1.25rem;
+  }
+
+  .rg-section__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .09em;
+    text-transform: uppercase;
+    color: var(--rg-rose-dark);
+    background: var(--rg-rose-light);
+    border: 1px solid var(--rg-rose-mid);
+    padding: 3px 10px;
+    border-radius: 20px;
+  }
+
+  /* ── Grid ── */
+  .rg-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem 1.1rem;
+  }
+
+  .rg-grid--full { grid-column: 1 / -1; }
+
+  /* ── Field ── */
+  .rg-field {
+    display: flex;
+    flex-direction: column;
+    gap: .38rem;
+  }
+
+  .rg-field label {
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--rg-muted);
+  }
+
+  /* All Django-rendered inputs, selects, textareas, file inputs */
+  .rg-field input[type="text"],
+  .rg-field input[type="email"],
+  .rg-field input[type="password"],
+  .rg-field input[type="number"],
+  .rg-field input[type="date"],
+  .rg-field select,
+  .rg-field textarea {
+    width: 100%;
+    height: 44px;
+    padding: 0 .9rem;
+    font-family: var(--rg-ff-body);
+    font-size: 14px;
+    color: var(--rg-ink);
+    background: var(--rg-cream);
+    border: 1px solid var(--rg-line);
+    border-radius: 9px;
+    outline: none;
+    transition: border-color .18s, box-shadow .18s, background .18s;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .rg-field textarea {
+    height: auto;
+    min-height: 80px;
+    padding: .65rem .9rem;
+    resize: vertical;
+  }
+
+  .rg-field input[type="text"]::placeholder,
+  .rg-field input[type="email"]::placeholder,
+  .rg-field input[type="password"]::placeholder,
+  .rg-field input[type="number"]::placeholder { color: #C2B8B4; }
+
+  .rg-field input:hover,
+  .rg-field select:hover,
+  .rg-field textarea:hover { border-color: var(--rg-rose-mid); }
+
+  .rg-field input:focus,
+  .rg-field select:focus,
+  .rg-field textarea:focus {
+    border-color: var(--rg-rose);
+    background: var(--rg-white);
+    box-shadow: 0 0 0 3px rgba(196,114,138,.11);
+  }
+
+  /* Password strength animation */
+  .rg-field input[type="password"]:focus {
+    letter-spacing: .08em;
+  }
+
+  /* File input */
+  .rg-field input[type="file"] {
+    height: auto;
+    padding: .55rem .9rem;
+    font-size: 13px;
+    color: var(--rg-muted);
+    cursor: pointer;
+    border-style: dashed;
+    background: var(--rg-rose-light);
+    border-color: var(--rg-rose-mid);
+  }
+
+  .rg-field input[type="file"]::-webkit-file-upload-button {
+    background: var(--rg-rose);
+    color: #fff;
+    border: none;
+    padding: .3rem .85rem;
+    border-radius: 6px;
+    font-family: var(--rg-ff-body);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-right: .75rem;
+    transition: background .18s;
+  }
+
+  .rg-field input[type="file"]::-webkit-file-upload-button:hover {
+    background: var(--rg-rose-dark);
+  }
+
+  /* Select arrow */
+  .rg-select-wrap { position: relative; }
+  .rg-select-wrap::after {
+    content: '';
+    position: absolute;
+    right: 13px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0; height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid var(--rg-muted);
+    pointer-events: none;
+  }
+
+  /* Errors from Django */
+  .rg-field__errors {
+    display: flex;
+    flex-direction: column;
+    gap: .18rem;
+    margin-top: .1rem;
+  }
+
+  .rg-field__error {
+    font-size: 11.5px;
+    color: #A83232;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .rg-field__error::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #A83232;
+    flex-shrink: 0;
+  }
+
+  .rg-field.rg-has-error input,
+  .rg-field.rg-has-error select,
+  .rg-field.rg-has-error textarea {
+    border-color: #E07070;
+    box-shadow: 0 0 0 3px rgba(220,80,80,.09);
+  }
+
+  /* ── Divider ── */
+  .rg-divider {
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    margin: 1.5rem 0;
+  }
+  .rg-divider::before, .rg-divider::after {
+    content: ''; flex: 1; height: 1px; background: var(--rg-line);
+  }
+  .rg-divider span {
+    font-size: 11px; color: var(--rg-muted);
+    letter-spacing: .08em; text-transform: uppercase;
+  }
+
+  /* ── Submit ── */
+  .rg-submit {
+    margin-top: 1.5rem;
+    width: 100%;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--rg-rose);
+    color: #fff;
+    border: none;
+    border-radius: 10px;
+    font-family: var(--rg-ff-body);
+    font-size: 14.5px;
+    font-weight: 500;
+    cursor: pointer;
+    letter-spacing: .02em;
+    transition: background .2s, transform .1s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .rg-submit::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0);
+    transition: background .2s;
+  }
+
+  .rg-submit:hover  { background: var(--rg-rose-dark); }
+  .rg-submit:active { transform: scale(.98); }
+
+  .rg-submit svg { width: 15px; height: 15px; transition: transform .2s; }
+  .rg-submit:hover svg { transform: translateX(3px); }
+
+  /* ── Footer ── */
+  .rg-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 13.5px;
+    color: var(--rg-muted);
+  }
+
+  .rg-footer a {
+    color: var(--rg-rose-dark);
+    font-weight: 500;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color .2s;
+  }
+
+  .rg-footer a:hover { border-color: var(--rg-rose-dark); }
+
+  /* ── Responsive ── */
+  @media (max-width: 520px) {
+    .rg-card    { padding: 1.5rem 1.1rem; }
+    .rg-grid    { grid-template-columns: 1fr; }
+    .rg-header h1 { font-size: 1.7rem; }
+  }
+</style>
+
+<div class="rg-page">
+  <div class="rg-panel">
+
+    <!-- Header -->
+    <header class="rg-header">
+      <div class="rg-header__mark">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#C4728A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
       </div>
-      <h1
-        class="text-3xl font-bold text-[var(--ink)] tracking-tight font-serif-display"
-      >
-        Rejoignez l'aventure
-      </h1>
-      <p
-        class="text-[var(--muted)] text-sm mt-3 max-w-[280px] mx-auto leading-relaxed"
-      >
-        Prêt à explorer les possibilités de l'IA ? Créez votre compte en
-        quelques secondes.
-      </p>
-    </div>
+      <p class="rg-header__eyebrow">Suivi de grossesse</p>
+      <h1>Créer votre espace <em>maternité</em></h1>
+      <p>Rejoignez la plateforme et commencez votre suivi personnalisé.</p>
+    </header>
 
-    <form
-      method="post"
-      enctype="multipart/form-data"
-      class="space-y-6 relative"
-    >
-      {% csrf_token %}
+    <!-- Card -->
+    <div class="rg-card">
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {% for field in form %}
-        <div class="flex flex-col space-y-2">
-          <label
-            for="{{ field.id_for_label }}"
-            class="text-[10px] font-black text-[var(--muted)] uppercase tracking-[0.2em] ml-2"
-          >
-            {{ field.label }}
-          </label>
-          <div class="relative group">
-            {{ field }} {% if field.errors %} {% for error in field.errors %}
-            <p
-              class="text-red-500 text-[10px] mt-1.5 ml-2 font-bold flex items-center"
-            >
-              <i class="fas fa-exclamation-triangle mr-1.5"></i> {{ error }}
-            </p>
-            {% endfor %} {% endif %}
-          </div>
+      <div class="rg-section">
+        <span class="rg-section__tag">Inscription</span>
+      </div>
+
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <div class="rg-grid">
+          {% for field in form %}
+            <div class="rg-field {% if field.errors %}rg-has-error{% endif %} {% if field.field.widget.input_type == 'textarea' or field.html_name == 'antecedents_medicaux' %}rg-grid--full{% endif %}">
+
+              <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+
+              {% if field.field.widget.input_type == 'select' %}
+                <div class="rg-select-wrap">{{ field }}</div>
+              {% else %}
+                {{ field }}
+              {% endif %}
+
+              {% if field.errors %}
+                <div class="rg-field__errors">
+                  {% for error in field.errors %}
+                    <span class="rg-field__error">{{ error }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+
+            </div>
+          {% endfor %}
         </div>
-        {% endfor %}
-      </div>
 
-      <div class="pt-8">
-        <button
-          type="submit"
-          class="w-full bg-[var(--ink)] hover:bg-[var(--accent)] text-[var(--paper)] font-bold py-4.5 rounded-2xl transition-all duration-300 shadow-xl hover:shadow-[var(--accent)]/30 active:scale-[0.97] flex items-center justify-center gap-3 group overflow-hidden"
-        >
-          <span class="relative z-10">Créer mon profil</span>
-          <i
-            class="fas fa-sparkles text-sm group-hover:rotate-12 transition-transform relative z-10"
-          ></i>
+        <button type="submit" class="rg-submit">
+          Créer mon espace
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
         </button>
-      </div>
-    </form>
+      </form>
 
-    <div class="mt-12 pt-10 border-t border-[var(--line)] text-center relative">
-      <p class="text-[var(--muted)] text-sm font-medium">
-        Déjà l'un des nôtres ?
-        <a
-          href="{% url 'users:connexion' %}"
-          class="text-[var(--ink)] font-black hover:text-[var(--accent)] transition-colors underline-offset-8 hover:underline decoration-2"
-          >Connectez-vous</a
-        >
-      </p>
     </div>
+
+    <!-- Footer -->
+    <p class="rg-footer">
+      Déjà inscrite ? <a href="{% url 'users:connexion' %}">Se connecter</a>
+    </p>
+
   </div>
 </div>
 
-<style>
-  .font-serif-display {
-    font-family: "DM Serif Display", serif;
-  }
 
-  /* Dynamic field styling */
-  input[type="text"],
-  input[type="email"],
-  input[type="password"],
-  input[type="number"],
-  select,
-  textarea {
-    width: 100% !important;
-    padding: 0.875rem 1.25rem !important;
-    border-radius: 1rem !important;
-    background-color: var(--paper) !important;
-    border: 2px solid transparent !important;
-    box-shadow: 0 0 0 1px var(--line) !important;
-    color: var(--ink) !important;
-    font-size: 0.875rem !important;
-    transition: all 0.2s ease !important;
-    outline: none !important;
-  }
-
-  input:focus,
-  select:focus,
-  textarea:focus {
-    box-shadow: 0 0 0 2px var(--accent) !important;
-    background-color: var(--surface) !important;
-  }
-
-  input[type="file"] {
-    width: 100%;
-    font-size: 0.75rem;
-    color: var(--muted);
-    padding: 0.75rem;
-    background: var(--paper);
-    border-radius: 1rem;
-    border: 1px dashed var(--line);
-  }
-
-  input[type="file"]::-webkit-file-upload-button {
-    background: var(--ink);
-    color: var(--paper);
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    margin-right: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-
-  input[type="file"]::-webkit-file-upload-button:hover {
-    background: var(--accent);
-  }
-
-  .py-4\.5 {
-    padding-top: 1.125rem;
-    padding-bottom: 1.125rem;
-  }
-</style>
-{% endblock %}
