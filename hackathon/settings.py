@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
-
+OPENROUTER_API_KEY = "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"
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 

@@ -1,3 +1,4 @@
+
 {% extends 'Base/base.html' %}
 
 {% block title %}Mon Tableau de Bord - Suivi de Grossesse{% endblock %}
@@ -15,6 +16,52 @@
 {% endblock %}
 
 {% block content %}
+
+<div class="cool-card !p-6 border border-violet-200 dark:border-violet-800">
+    <h3 class="font-bold text-ink mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-robot text-violet-500"></i>
+        Analyse IA Personnalisée
+    </h3>
+
+    <div class="space-y-4">
+        <div>
+            <p class="text-sm font-semibold text-violet-700 dark:text-violet-300 mb-1">
+                Résumé
+            </p>
+            <p class="text-sm text-muted leading-relaxed">
+                {{ analyse_ia.resume }}
+            </p>
+        </div>
+
+        <div>
+            <p class="text-sm font-semibold text-violet-700 dark:text-violet-300 mb-2">
+                Conseils personnalisés
+            </p>
+            <ul class="space-y-2">
+                {% for conseil in analyse_ia.conseils %}
+                <li class="flex items-start gap-2 text-sm text-muted">
+                    <i class="fa-solid fa-check text-emerald-500 mt-1"></i>
+                    <span>{{ conseil }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        {% if analyse_ia.alerte %}
+        <div class="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 p-4 rounded-2xl">
+            <p class="text-sm font-semibold text-amber-700 dark:text-amber-400 mb-1">
+                Attention
+            </p>
+            <p class="text-sm text-amber-700 dark:text-amber-300">
+                {{ analyse_ia.alerte }}
+            </p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<p class="text-xs text-muted mt-4 italic">
+    Ces conseils sont donnés à titre informatif et ne remplacent pas un avis médical.
+</p>
 <div class="container mx-auto px-4 py-8">
     <div class="max-w-7xl mx-auto">
         
@@ -160,6 +207,9 @@
         </div>
     </div>
 </div>
+<a href="{% url 'pregancy:export_dossier_patient' %}" class="btn btn-primary">
+    Exporter mon dossier PDF
+</a>
 {% endblock %}
 
 {% block extra_scripts %}
