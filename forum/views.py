@@ -1,7 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 from .models import Question, Answer
 from .forms import QuestionForm, AnswerForm
+from Users.models import Notification
 
 @login_required
 def like_question(request, pk):
@@ -11,6 +13,16 @@ def like_question(request, pk):
     else:
         question.likes.add(request.user)
         question.dislikes.remove(request.user)
+        
+        # Notification pour l'auteur de la question
+        if question.user != request.user:
+            Notification.objects.create(
+                user=question.user,
+                title="Nouveau like",
+                message=f"{request.user.username} a aimé votre question : {question.title}",
+                url=reverse('forum:question_detail', args=[question.pk])
+            )
+            
     return redirect('forum:question_detail', pk=pk)
 
 @login_required
@@ -31,6 +43,16 @@ def like_answer(request, pk):
     else:
         answer.likes.add(request.user)
         answer.dislikes.remove(request.user)
+        
+        # Notification pour l'auteur de la réponse
+        if answer.user != request.user:
+            Notification.objects.create(
+                user=answer.user,
+                title="Nouveau like",
+                message=f"{request.user.username} a aimé votre réponse à : {answer.question.title}",
+                url=reverse('forum:question_detail', args=[answer.question.pk])
+            )
+            
     return redirect('forum:question_detail', pk=answer.question.pk)
 
 @login_required
@@ -58,6 +80,16 @@ def question_detail(request, pk):
             answer.user = request.user
             answer.question = question
             answer.save()
+            
+            # Notification pour l'auteur de la question
+            if question.user != request.user:
+                Notification.objects.create(
+                    user=question.user,
+                    title="Nouvelle réponse",
+                    message=f"{request.user.username} a répondu à votre question : {question.title}",
+                    url=reverse('forum:question_detail', args=[question.pk])
+                )
+                
             return redirect('forum:question_detail', pk=pk)
     else:
         form = AnswerForm()

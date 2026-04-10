@@ -14,7 +14,7 @@ from django.shortcuts import redirect, render
 from groq import Groq
 
 from .forms import CustomUserChangeForm, CustomUserCreationForm
-from .models import ChatMessage, User
+from .models import ChatMessage, User, Notification
 
 
 def landing(request):
@@ -195,3 +195,21 @@ def chat_with_ai(request):
             print(f"❌ ERREUR IA DÉTECTÉE : {str(e)}")
             return JsonResponse({"error": str(e)}, status=500)
     return JsonResponse({"error": "Invalid request method"}, status=400)
+
+
+@login_required
+def mark_notifications_read(request):
+    request.user.notifications.filter(is_read=False).update(is_read=True)
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
+
+
+@login_required
+def mark_notification_read(request, pk):
+    from django.shortcuts import get_object_or_404
+
+    notification = get_object_or_404(Notification, pk=pk, user=request.user)
+    notification.is_read = True
+    notification.save()
+    if notification.url:
+        return redirect(notification.url)
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))

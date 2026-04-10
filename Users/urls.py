@@ -30,6 +30,16 @@ urlpatterns = [
     path("supprimer_compte/", views.supprimer_compte, name="supprimer_compte"),
     path("chat/", views.chat_page, name="chat_home"),
     path("api/chat/", views.chat_with_ai, name="chat_api"),
+    path(
+        "notifications/mark-read/",
+        views.mark_notifications_read,
+        name="mark_notifications_read",
+    ),
+    path(
+        "notifications/<int:pk>/mark-read/",
+        views.mark_notification_read,
+        name="mark_notification_read",
+    ),
 ]
 
 if settings.DEBUG:

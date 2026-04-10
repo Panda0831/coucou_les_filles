@@ -124,10 +124,13 @@ class SuiviHebdomadaire(models.Model):
         return 0
 
     def save(self, *args, **kwargs):
+        from django.urls import reverse
         risque, messages = self.analyser_risque()
         self.niveau_risque = risque
 
         super().save(*args, **kwargs)
+
+        from Users.models import Notification
 
         for message in messages:
             AlerteMedicale.objects.get_or_create(
@@ -138,6 +141,14 @@ class SuiviHebdomadaire(models.Model):
                     "titre": "Alerte médicale",
                     "niveau_risque": risque,
                 }
+            )
+            
+            # Créer une notification
+            Notification.objects.create(
+                user=self.mere,
+                title=f"Alerte médicale : {risque.capitalize()}",
+                message=message,
+                url=reverse('pregancy:dashboard')
             )
 
     def evolution_poids(self):

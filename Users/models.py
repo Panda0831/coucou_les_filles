@@ -116,6 +116,12 @@ class User(AbstractUser):
 
     def alertes_non_lues(self):
         return self.alertemedicale_set.filter(lu=False).order_by("-date_creation")
+
+    def notifications_non_lues(self):
+        return self.notifications.filter(is_read=False).order_by("-created_at")
+
+    def nombre_notifications_non_lues(self):
+        return self.notifications.filter(is_read=False).count()
     
 
         
@@ -128,3 +134,18 @@ class ChatMessage(models.Model):
 
     def __str__(self):
         return f"Chat de {self.user.username} le {self.created_at.strftime('%d/%m/%Y %H:%M')}"
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    title = models.CharField(max_length=255)
+    message = models.TextField()
+    url = models.CharField(max_length=255, blank=True, null=True)
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"Notification for {self.user.username}: {self.title}"

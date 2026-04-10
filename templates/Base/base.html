@@ -87,6 +87,32 @@
 
                     {% if user.is_authenticated %}
 
+                    <div class="relative group">
+                        <button class="nav-icon-btn">
+                            <i class="fas fa-bell"></i>
+                            {% if user.nombre_notifications_non_lues > 0 %}
+                            <span class="notification-badge">{{ user.nombre_notifications_non_lues }}</span>
+                            {% endif %}
+                        </button>
+                        <div class="notification-dropdown">
+                            <div class="notification-header">
+                                <span>Notifications</span>
+                                <a href="{% url 'users:mark_notifications_read' %}" class="text-xs text-[#E91E63] hover:underline">Tout marquer comme lu</a>
+                            </div>
+                            <div class="notification-list">
+                                {% for notification in user.notifications_non_lues|slice:":5" %}
+                                <a href="{% url 'users:mark_notification_read' notification.pk %}" class="notification-item">
+                                    <div class="notification-title">{{ notification.title }}</div>
+                                    <div class="notification-message">{{ notification.message }}</div>
+                                    <div class="notification-time">{{ notification.created_at|timesince }}</div>
+                                </a>
+                                {% empty %}
+                                <div class="notification-empty">Aucune nouvelle notification</div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
                     <a href="{% url 'users:profile' %}" class="user-pill">
                         {% if user.photo %}
                         <img

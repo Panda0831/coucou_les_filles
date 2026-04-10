@@ -22,7 +22,6 @@ class CustomUserCreationForm(UserCreationForm):
             "groupe_sanguin",
             "nombre_grossesses_precedentes",
             "antecedents_medicaux",
-            "photo",
         )
         widgets = {
             "date_dernieres_regles": forms.DateInput(
