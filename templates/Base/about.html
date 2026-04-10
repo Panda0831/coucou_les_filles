@@ -1,169 +1,122 @@
-{% extends "Base/base.html" %} {% block title %} À Propos · Hackathon
-{%endblock%} {% block content %}
-<div class="max-w-6xl mx-auto space-y-20 py-12">
+{% extends "Base/base.html" %}
+
+{% block title %}À Propos · Hackathon 2026{% endblock %}
+
+{% block content %}
+<div class="container mx-auto px-4 py-16 max-w-7xl">
     <!-- Hero Section -->
-    <div class="text-center space-y-8">
-        <div
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--ink)] text-[var(--paper)] text-[10px] font-black uppercase tracking-[0.2em] shadow-lg"
-        >
-            <i class="fas fa-sparkles text-[var(--accent)]"></i> Hackathon 2026
+    <div class="text-center mb-24 space-y-8 animate-fade-in">
+        <div class="inline-flex items-center gap-2 px-6 py-2 rounded-full bg-grad-primary text-white text-xs font-black uppercase tracking-[0.2em] shadow-lg shadow-primary/20">
+            <i class="fas fa-sparkles"></i> Hackathon 2026
         </div>
-        <h1
-            class="text-5xl md:text-7xl font-black text-[var(--ink)] font-serif-display tracking-tight leading-none"
-        >
+        
+        <h1 class="text-5xl md:text-8xl font-black text-ink tracking-tighter leading-none">
             L'innovation par <br />
-            <span class="text-[var(--accent)]">la collaboration.</span>
+            <span class="text-primary italic">la collaboration.</span>
         </h1>
-        <p
-            class="text-[var(--muted)] text-lg md:text-xl max-w-2xl mx-auto leading-relaxed"
-        >
+        
+        <p class="text-ink-muted text-lg md:text-2xl max-w-3xl mx-auto leading-relaxed font-medium">
             Une équipe passionnée réunie pour repousser les limites de
-            l'intelligence artificielle et du design moderne.
+            l'intelligence artificielle et du design moderne au service des futures mamans.
         </p>
     </div>
 
+    <!-- Team Section Header -->
+    <div class="flex items-center gap-4 mb-12">
+        <h2 class="text-2xl font-black text-ink uppercase tracking-widest whitespace-nowrap">L'Équipe Core</h2>
+        <div class="h-px w-full bg-line"></div>
+    </div>
+
     <!-- Team Grid -->
-    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 mb-32">
         <!-- Ryan -->
-        <div class="cool-card group !p-6">
-            <div
-                class="w-full aspect-square rounded-2xl bg-[var(--paper)] mb-6 overflow-hidden relative"
-            >
-                <div
-                    class="absolute inset-0 flex items-center justify-center text-4xl text-[var(--line)] group-hover:scale-110 transition-transform duration-500"
-                >
+        <div class="cool-card group hover:-translate-y-2 transition-all duration-500">
+            <div class="w-full aspect-square rounded-2xl bg-paper mb-6 overflow-hidden relative border border-line flex items-center justify-center">
+                <div class="text-5xl text-primary/20 group-hover:scale-110 group-hover:text-primary/40 transition-all duration-700">
                     <i class="fas fa-code"></i>
                 </div>
+                <!-- Soft Glow -->
+                <div class="absolute inset-0 bg-grad-primary opacity-0 group-hover:opacity-5 transition-opacity duration-500"></div>
             </div>
-            <h3 class="text-xl font-bold text-[var(--ink)] font-serif-display">
-                Ryan 1
-            </h3>
-            <p
-                class="text-[var(--accent)] text-xs font-black uppercase tracking-widest mt-1"
-            >
-                Backend Wizard
-            </p>
-            <p class="text-[var(--muted)] text-sm mt-4 leading-relaxed">
-                Maître des API et de l'IA. Il donne vie à l'intelligence du
-                système.
+            <h3 class="text-2xl font-black text-ink">Ryan</h3>
+            <p class="text-primary text-[10px] font-black uppercase tracking-[0.2em] mt-1">Backend Wizard & AI</p>
+            <p class="text-ink-muted text-sm mt-4 leading-relaxed font-medium">
+                Maître des API et de l'IA. Il donne vie à l'intelligence du système avec passion.
             </p>
         </div>
 
         <!-- Ando -->
-        <div class="cool-card group !p-6">
-            <div
-                class="w-full aspect-square rounded-2xl bg-[var(--paper)] mb-6 overflow-hidden relative"
-            >
-                <div
-                    class="absolute inset-0 flex items-center justify-center text-4xl text-[var(--line)] group-hover:scale-110 transition-transform duration-500"
-                >
+        <div class="cool-card group hover:-translate-y-2 transition-all duration-500">
+            <div class="w-full aspect-square rounded-2xl bg-paper mb-6 overflow-hidden relative border border-line flex items-center justify-center">
+                <div class="text-5xl text-primary/20 group-hover:scale-110 group-hover:text-primary/40 transition-all duration-700">
                     <i class="fas fa-bezier-curve"></i>
                 </div>
+                <div class="absolute inset-0 bg-grad-primary opacity-0 group-hover:opacity-5 transition-opacity duration-500"></div>
             </div>
-            <h3 class="text-xl font-bold text-[var(--ink)] font-serif-display">
-                Ando 2
-            </h3>
-            <p
-                class="text-[var(--accent)] text-xs font-black uppercase tracking-widest mt-1"
-            >
-                UI/UX Designer
-            </p>
-            <p class="text-[var(--muted)] text-sm mt-4 leading-relaxed">
-                Garante de l'esthétique et de l'ergonomie. Chaque pixel a son
-                importance.
+            <h3 class="text-2xl font-black text-ink">Ando</h3>
+            <p class="text-primary text-[10px] font-black uppercase tracking-[0.2em] mt-1">UI/UX Designer</p>
+            <p class="text-ink-muted text-sm mt-4 leading-relaxed font-medium">
+                Garante de l'esthétique et de l'ergonomie. Chaque pixel est soigneusement orchestré.
             </p>
         </div>
 
         <!-- Tang -->
-        <div class="cool-card group !p-6">
-            <div
-                class="w-full aspect-square rounded-2xl bg-[var(--paper)] mb-6 overflow-hidden relative"
-            >
-                <div
-                    class="absolute inset-0 flex items-center justify-center text-4xl text-[var(--line)] group-hover:scale-110 transition-transform duration-500"
-                >
+        <div class="cool-card group hover:-translate-y-2 transition-all duration-500">
+            <div class="w-full aspect-square rounded-2xl bg-paper mb-6 overflow-hidden relative border border-line flex items-center justify-center">
+                <div class="text-5xl text-primary/20 group-hover:scale-110 group-hover:text-primary/40 transition-all duration-700">
                     <i class="fas fa-rocket"></i>
                 </div>
+                <div class="absolute inset-0 bg-grad-primary opacity-0 group-hover:opacity-5 transition-opacity duration-500"></div>
             </div>
-            <h3 class="text-xl font-bold text-[var(--ink)] font-serif-display">
-                Tang 3
-            </h3>
-            <p
-                class="text-[var(--accent)] text-xs font-black uppercase tracking-widest mt-1"
-            >
-                Project Lead
-            </p>
-            <p class="text-[var(--muted)] text-sm mt-4 leading-relaxed">
-                Le capitaine qui garde le cap. Coordination et vision
-                stratégique.
+            <h3 class="text-2xl font-black text-ink">Tang</h3>
+            <p class="text-primary text-[10px] font-black uppercase tracking-[0.2em] mt-1">Project Lead</p>
+            <p class="text-ink-muted text-sm mt-4 leading-relaxed font-medium">
+                Le capitaine qui garde le cap. Coordination fluide et vision stratégique sans faille.
             </p>
         </div>
 
         <!-- Fanamby -->
-        <div class="cool-card group !p-6">
-            <div
-                class="w-full aspect-square rounded-2xl bg-[var(--paper)] mb-6 overflow-hidden relative"
-            >
-                <div
-                    class="absolute inset-0 flex items-center justify-center text-4xl text-[var(--line)] group-hover:scale-110 transition-transform duration-500"
-                >
+        <div class="cool-card group hover:-translate-y-2 transition-all duration-500">
+            <div class="w-full aspect-square rounded-2xl bg-paper mb-6 overflow-hidden relative border border-line flex items-center justify-center">
+                <div class="text-5xl text-primary/20 group-hover:scale-110 group-hover:text-primary/40 transition-all duration-700">
                     <i class="fas fa-cubes"></i>
                 </div>
+                <div class="absolute inset-0 bg-grad-primary opacity-0 group-hover:opacity-5 transition-opacity duration-500"></div>
             </div>
-            <h3 class="text-xl font-bold text-[var(--ink)] font-serif-display">
-                Fanamby 4
-            </h3>
-            <p
-                class="text-[var(--accent)] text-xs font-black uppercase tracking-widest mt-1"
-            >
-                Full Stack Dev
-            </p>
-            <p class="text-[var(--muted)] text-sm mt-4 leading-relaxed">
-                Le couteau suisse de l'équipe. Intégration fluide du front au
-                back.
+            <h3 class="text-2xl font-black text-ink">Fanamby</h3>
+            <p class="text-primary text-[10px] font-black uppercase tracking-[0.2em] mt-1">Full Stack Dev</p>
+            <p class="text-ink-muted text-sm mt-4 leading-relaxed font-medium">
+                Le couteau suisse de l'équipe. Intégration impeccable du front au back-end.
             </p>
         </div>
     </div>
 
     <!-- Vision Section -->
-    <div
-        class="cool-card !p-12 md:!p-20 bg-[var(--ink)] text-[var(--paper)] relative overflow-hidden"
-    >
-        <div
-            class="absolute top-0 right-0 w-64 h-64 bg-[var(--accent)] opacity-10 rounded-full blur-[100px] -mr-32 -mt-32"
-        ></div>
+    <div class="relative">
+        <!-- Decorative Background Element -->
+        <div class="absolute -inset-4 bg-grad-primary opacity-5 blur-3xl rounded-[3rem]"></div>
+        
+        <div class="cool-card !p-12 md:!p-20 bg-grad-primary text-white relative overflow-hidden shadow-2xl shadow-primary/20">
+            <!-- Abstract Shapes -->
+            <div class="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full blur-[100px] -mr-48 -mt-48"></div>
+            <div class="absolute bottom-0 left-0 w-64 h-64 bg-black/10 rounded-full blur-[80px] -ml-32 -mb-32"></div>
 
-        <div class="max-w-3xl relative z-10">
-            <h2 class="text-3xl md:text-5xl font-bold font-serif-display mb-8">
-                Notre Vision
-            </h2>
-            <p
-                class="text-lg md:text-xl opacity-80 leading-relaxed font-medium"
-            >
-                Nous croyons que chaque maman et chaque bébé méritent une
-                attention constante et bienveillante. Notre mission est
-                d’utiliser la technologie pour transformer les symptômes en
-                informations utiles, afin d’accompagner, rassurer et protéger la
-                santé de la mère et de son enfant à chaque étape de la
-                grossesse.
-            </p>
-            <div class="mt-12 flex gap-6">
-                <div class="flex-1 border-l-2 border-[var(--accent)] pl-6">
-                    <div class="text-3xl font-bold font-serif-display">
-                        100%
+            <div class="max-w-4xl relative z-10">
+                <h2 class="text-4xl md:text-6xl font-black mb-10 tracking-tight">Notre Vision</h2>
+                <p class="text-xl md:text-3xl opacity-90 leading-relaxed font-medium mb-16">
+                    Nous croyons que chaque maman mérite une attention constante et bienveillante. 
+                    Notre mission est d’utiliser la technologie pour transformer les incertitudes en 
+                    informations rassurantes, accompagnant chaque étape de ce voyage unique.
+                </p>
+                
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-10">
+                    <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20">
+                        <div class="text-5xl font-black mb-2">100%</div>
+                        <div class="text-xs font-black uppercase tracking-[0.3em] opacity-60">Engagement Total</div>
                     </div>
-                    <div
-                        class="text-xs font-bold uppercase tracking-widest opacity-50 mt-1"
-                    >
-                        Passionné
-                    </div>
-                </div>
-                <div class="flex-1 border-l-2 border-[var(--accent)] pl-6">
-                    <div class="text-3xl font-bold font-serif-display">∞</div>
-                    <div
-                        class="text-xs font-bold uppercase tracking-widest opacity-50 mt-1"
-                    >
-                        Détermination
+                    <div class="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20">
+                        <div class="text-5xl font-black mb-2">∞</div>
+                        <div class="text-xs font-black uppercase tracking-[0.3em] opacity-60">Innovation Continue</div>
                     </div>
                 </div>
             </div>
@@ -172,8 +125,10 @@
 </div>
 
 <style>
-    .font-serif-display {
-        font-family: "DM Serif Display", serif;
+    @keyframes fade-in {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
     }
+    .animate-fade-in { animation: fade-in 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
 </style>
 {% endblock %}
